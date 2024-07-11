@@ -25,10 +25,10 @@
     "view": {
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 14,
-            "Playgrounds_Play": 17,
-            "Playgrounds_Etc": 18,
-            "activity": 7
+            "Playgrounds_Park": 12,
+            "Playgrounds_Play": 16,
+            "Playgrounds_Etc": 16,
+            "activity": 8
         },
         "poiFilter": "filter" // listTable更新時 all:全て / filter:絞り込み / "":非連動
     },
@@ -36,6 +36,20 @@
         "editMode": true, // 編集メニューの表示/非表示
         "thumbnailWidth": "240",
         "splashUrl": "./image/ogimage.png"
+    },
+    "selectItem": { // 選択リストの内容を手動記載 / 空の時は "" とする
+        "menu": "",
+        /*{
+        "2010年時点の地図(日本)": "Japan2010",
+        "2012年時点の地図(日本)": "Japan2012",
+        "2014年時点の地図(日本)": "Japan2014",
+        "2016年時点の地図(日本)": "Japan2016",
+        "2018年時点の地図(日本)": "Japan2018",
+        "2020年時点の地図(日本)": "Japan2020",
+        "2022年時点の地図(日本)": "Japan2022",
+        "最新地図(全世界)": "OSMFJ"
+    },*/
+        "action": "" // ChangeMap:背景地図切り替え
     },
     "listTable": {
         "category": "tags", // カテゴリ選択 / activity:アクティビティリスト / tags:タグ

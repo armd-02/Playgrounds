@@ -132,18 +132,18 @@ img.normal {
     background-size: cover;
     float: left;
     padding: 4px !important;
-    height: 32px !important;
-    width: 32px !important;
+    height: 24px !important;
+    width: 24px !important;
     object-fit: contain;
 }
 
 img.attention {
-    background: url("./image/icon_circle_attention.svg");
+    background: url("./image/icon_circle_attention2.svg");
     background-size: cover;
     float: left;
     padding: 8px !important;
-    height: 48px;
-    width: 48px;
+    height: 42px;
+    width: 42px;
     object-fit: contain;
 }
 

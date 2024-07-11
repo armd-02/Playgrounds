@@ -15,7 +15,7 @@
     },
     "tile": {
         "OSMFJ": {
-            "style": "./data/style.json"
+            "style": "./tiles/osmfj.json"
         },
         "OSM_Standard": {
             "style": {
