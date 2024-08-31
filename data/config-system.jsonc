@@ -15,7 +15,7 @@
     },
     "tile": {
         "OSMFJ": {
-            "style": "./tiles/osmfj.json"
+            "style": "./tiles/osmfj_nopoi.json"
         },
         "OSM_Standard": {
             "style": {
@@ -81,7 +81,7 @@
                     {
                         "id": "raster-tiles",
                         "type": "raster",
-                        "source": "rtile",
+                        "source": "rtile"
                     }
                 ]
             }
@@ -115,5 +115,13 @@
             "size": 14,
             "color": "black"
         }
+    },
+    "skyStyle": {
+        "sky-color": "#60A0E0",
+        "sky-horizon-blend": 0.5,
+        "horizon-color": "#C0D0F0",
+        "horizon-fog-blend": 0.5,
+        "fog-color": "#0000ff",
+        "fog-ground-blend": 0.5
     }
 }

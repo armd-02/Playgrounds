@@ -27,8 +27,54 @@ class modal_Activities {
         let ymd = "YYYY/MM/DD";
         let tModal = document.createElement("div");
         let template = document.createElement("div");
-        let result = "", newmode = "";
-        let wikimq = [];
+        let result = "", newmode = "", wikimq = [];
+        let makehtml = function (form, act) {
+            let chtml = ""
+            Object.keys(form).forEach((key) => {
+                if (form[key].viewHidden !== true) {
+                    chtml += `<div class='row'>`;
+                    let gdata = act[form[key].gsheet] == undefined ? "" : String(act[form[key].gsheet]);
+                    gdata = basic.htmlspecialchars(gdata).replace(/\r?\n/g, '<br>');
+                    switch (form[key].type) {
+                        case "date":
+                            chtml += `<div class='col-12'>${glot.get(form[key].glot)}</div><div class='col-12'>${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
+                            break;
+                        case "select":
+                        case "text":
+                        case "textarea":
+                        case "quiz_choice":
+                            if (key !== "quiz_answer" && key !== "title" && gdata !== "") {
+                                gdata = basic.autoLink(gdata)
+                                chtml += `<div class='col-12'><span class="font-weight-bold">${glot.get(form[key].glot)}</span>${gdata.replace(/\r?\n/g, '<br>')}</div>`;
+                            }
+                            break
+                        case "quiz_textarea":
+                            chtml += `<div class='col-12'>${glot.get(form[key].glot)}</div><div class='col-12'>${gdata.replace(/\r?\n/g, '<br>')}</div>`;
+                            break;
+                        case "url":
+                            if (gdata !== "http://" && gdata !== "https://" && gdata !== "") {
+                                chtml += `<div class='col-12'><span class="font-weight-bold">${glot.get(form[key].glot)}</span><a href="${gdata}">${gdata}</a></div>`;
+                            }
+                            break
+                        case "image_url":
+                            if (gdata !== "http://" && gdata !== "https://" && gdata !== "") {
+                                if (gdata.slice(0, 5) == "File:") {  // Wikimedia Commons
+                                    let id = act.id.replace("/", "") + "_" + key;
+                                    wikimq.push([gdata, id]);
+                                    chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modal_activities.viewImage(this)" id="${id}"><span id="${id}-copyright"></span></div>`;
+                                } else {
+                                    chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modal_activities.viewImage(this)" src="${gdata}"></div>`;
+                                }
+                            }
+                            break
+                        default:   // 何もしない
+                            break
+                    }
+                    chtml += "</div>"
+                }
+            })
+            return chtml
+        }
         template.innerHTML = this.html;
         actlists.sort((a, b) => { return a.updatetime < b.updatetime ? -1 : 1 });   // sort by update.
         result = modal_activities.make_activity_list(actlists);
@@ -57,49 +103,7 @@ class modal_Activities {
                     chtml += "<strong>" + glot.get("libc_ymd") + `</strong><br>${act_ymd}<br><br>`;
                     break;
                 default:    // event
-                    Object.keys(form).forEach((key) => {
-                        if (form[key].viewHidden !== true) {
-                            chtml += `<div class='row'>`;
-                            let gdata = act[form[key].gsheet] == undefined ? "" : String(act[form[key].gsheet]);
-                            gdata = basic.htmlspecialchars(gdata).replace(/\r?\n/g, '<br>');
-                            switch (form[key].type) {
-                                case "date":
-                                    chtml += `<div class='col-12'>${glot.get(form[key].glot)}</div><div class='col-12'>${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
-                                    break;
-                                case "select":
-                                case "text":
-                                case "textarea":
-                                case "quiz_choice":
-                                    if (key !== "quiz_answer" && key !== "title" && gdata !== "") {
-                                        gdata = basic.autoLink(gdata)
-                                        chtml += `<div class='col-12'><span class="font-weight-bold">${glot.get(form[key].glot)}</span>${gdata.replace(/\r?\n/g, '<br>')}</div>`;
-                                    }
-                                    break
-                                case "quiz_textarea":
-                                    chtml += `<div class='col-12'>${glot.get(form[key].glot)}</div><div class='col-12'>${gdata.replace(/\r?\n/g, '<br>')}</div>`;
-                                    break;
-                                case "url":
-                                    if (gdata !== "http://" && gdata !== "https://" && gdata !== "") {
-                                        chtml += `<div class='col-12'><span class="font-weight-bold">${glot.get(form[key].glot)}</span><a href="${gdata}">${gdata}</a></div>`;
-                                    }
-                                    break
-                                case "image_url":
-                                    if (gdata !== "http://" && gdata !== "https://" && gdata !== "") {
-                                        if (gdata.slice(0, 5) == "File:") {  // Wikimedia Commons
-                                            let id = act.id.replace("/", "") + "_" + key;
-                                            wikimq.push([gdata, id]);
-                                            chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modal_activities.viewImage(this)" id="${id}"><span id="${id}-copyright"></span></div>`;
-                                        } else {
-                                            chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modal_activities.viewImage(this)" src="${gdata}"></div>`;
-                                        }
-                                    }
-                                    break;
-                                case "attention":   // 何もしない
-                                    break;
-                            };
-                            chtml += "</div>";
-                        };
-                    });
+                    chtml += makehtml(form, act)
                     break;
             };
             body.innerHTML = chtml;
@@ -116,14 +120,11 @@ class modal_Activities {
         if (actlists.length > 1) {
             let html = "<ul class='ml-0 pl-4'>"
             for (let act of actlists) {
-                //console.log("modal_Activities: " + act.id)
                 html += `<li><span class="pointer" onclick="document.getElementById('${act.id.replace('/', '')}').scrollIntoView({behavior: 'smooth'})">${act.title}<span></li>`;
             }
-            return html + "</ul>";
+            return html + "</ul>"
         }
-        else {
-            return "";
-        }
+        return ""
     }
 
     // edit activity

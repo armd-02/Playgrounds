@@ -7,14 +7,16 @@
             },
             "amenity": {
                 "arts_centre": "arts_centre.svg",
-                "bar": "bar.svg",
                 "bank": "bank-JP.svg",
+                "bar": "bar.svg",
                 "bbq": "bbq.svg",
                 "bench": "bench.svg",
                 "bicycle_parking": "parking-bicycle.svg",
                 "bicycle_rental": "bicycle_rental.svg",
+                "biergarten": "beer-solid.svg",
                 "bus_station": "board_bus.svg",
                 "cafe": "cafe.svg",
+                "cinema": "cinema.svg",
                 "clinic": "doctor.svg",
                 "clock": "clock.svg",
                 "college": "college.svg",
@@ -22,7 +24,6 @@
                 "courthouse": "courthouse.svg",
                 "coworking_space": "commercial.svg",
                 "crematorium": "marker-stroked.svg",
-                "cinema": "cinema.svg",
                 "dentist": "dentist.svg",
                 "doctors": "doctor.svg",
                 "drinking_water": "drinking-water.svg",
@@ -31,15 +32,17 @@
                 "fire_station": "fire-station.svg",
                 "food_court": "restaurant.svg",
                 "fountain": "fountain.svg",
+                "gambling": "coins-solid.svg",
                 "grave_yard": "marker-stroked.svg",
                 "hospital": "hospital.svg",
                 "ice_cream": "ice-cream.svg",
                 "internet_cafe": "internet_cafe.svg",
                 "karaoke_box": "karaoke.svg",
                 "kindergarten": "marker-stroked.svg",
+                "language_school": "temaki_school.svg",
                 "library": "library.svg",
-                "nightclub": "music.svg",
                 "marketplace": "shopping-basket.svg",
+                "nightclub": "music.svg",
                 "parking": "parking.svg",
                 "pharmacy": "pharmacy.svg",
                 "photo_booth": "photo.svg",
@@ -82,6 +85,7 @@
             },
             "building": {
                 "apartments": "home.svg",
+                "detached": "home.svg",
                 "museum": "museum.svg",
                 "office": "town_hall.svg",
                 "public": "home.svg",
@@ -91,7 +95,10 @@
                 "yes": "home.svg"
             },
             "craft": {
+                "brewery": "storage_fermenter.svg",
+                "carpenter": "anvil_and_hammer.svg",
                 "confectionery": "confectionery.svg",
+                "lighting": "bulb-light.svg",
                 "photographer": "attraction.svg"
             },
             "diplomatic": {
@@ -100,8 +107,14 @@
             "disused:amenity": {
                 "school": "ruins.svg"
             },
+            "healthcare": {
+                "alternative": "house-medical-solid.svg"
+            },
             "office": {
                 "company": "briefcase.svg",
+                "coworking": "suitcase.svg",
+                "estate_agent": "real_estate_agency.svg",
+                "foundation": "briefcase.svg",
                 "government": "town_hall.svg"
             },
             "shop": {
@@ -175,6 +188,7 @@
                 "travel_agency": "briefcase.svg",
                 "variety_store": "shop.svg",
                 "water": "water.svg",
+                "watches": "watch.svg",
                 "wine": "alcohol-shop.svg"
             },
             "natural": {
@@ -219,7 +233,7 @@
                 "horizontal_bar": "horizontal_bar.svg",
                 "ladder": "playground.svg",
                 "map": "compass.svg",
-                "monkey_bars":"monkey_bars.svg",
+                "monkey_bars": "monkey_bars.svg",
                 "mound": "circle-stroked.svg",
                 "playhouse": "play_structure.svg",
                 "play_sculpture": "sculpture.svg",
@@ -305,7 +319,10 @@
                 "recreation_ground": "pitch.svg"
             },
             "leisure": {
+                "adult_gaming_centre": "coins-solid.svg",
                 "amusement_arcade": "gaming.svg",
+                "dance": "music.svg",
+                "fitness_centre": "gym.svg",
                 "garden": "garden-centre.svg",
                 "pitch": "pitch.svg",
                 "park": "tree_and_bench.svg",

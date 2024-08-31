@@ -12,12 +12,13 @@
             "bench": "ベンチ",
             "bicycle_parking": "駐輪場(バイク)",
             "bicycle_rental": "レンタサイクル",
+            "biergarten": "ビアガーデン",
             "bus_station": "バスターミナル",
             "cafe": "カフェ/喫茶店",
             "clinic": "クリニック",
             "clock": "時計",
             "college": "大学",
-            "community_centre": "公民館",
+            "community_centre": "コミュニティセンター・スペース",
             "courthouse": "裁判所",
             "coworking_space": "コワーキングスペース",
             "crematorium": "火葬場",
@@ -37,6 +38,7 @@
             "internet_cafe": "インターネットカフェ",
             "karaoke_box": "カラオケボックス",
             "kindergarten": "幼稚園",
+            "language_school": "語学学校",
             "library": "図書館",
             "nightclub": "クラブ/ライブハウス",
             "marketplace": "市場",
@@ -82,6 +84,7 @@
         },
         "building": {
             "apartments": "アパート",
+            "detached": "一戸建て",
             "museum": "博物館",
             "office": "事務所",
             "public": "公共建築",
@@ -91,7 +94,10 @@
             "yes": "建物"
         },
         "craft": {
+            "brewery": "醸造所",
+            "carpenter": "工務店",
             "confectionery": "菓子工房",
+            "lighting": "照明工房",
             "photographer": "写真館"
         },
         "diplomatic": {
@@ -100,8 +106,14 @@
         "disused:amenity": {
             "school": "廃校"
         },
+        "healthcare": {
+            "alternative": "治療院"
+        },
         "office": {
-            "company": "company",
+            "company": "会社",
+            "coworking": "コワーキング(事務所)",
+            "estate_agent": "不動産屋",
+            "foundation": "財団・協会",
             "government": "政府機関"
         },
         "shop": {
@@ -175,6 +187,7 @@
             "travel_agency": "旅行代理店",
             "variety_store": "雑貨店",
             "water": "飲料水専門店",
+            "watches":"時計店",
             "wine": "ワイン専門店"
         },
         "natural": {
@@ -217,7 +230,7 @@
             "horizontal_bar": "鉄棒",
             "ladder": "はしご",
             "map": "マップ",
-            "monkey_bars":"うんてい",
+            "monkey_bars": "雲梯",
             "mound": "円丘",
             "playhouse": "プレイハウス",
             "play_sculpture": "遊具彫刻",
@@ -290,8 +303,11 @@
             "works": "工場"
         },
         "leisure": {
+            "adult_gaming_centre":"パチンコ/パチスロ",
             "amusement_arcade": "ゲームセンター",
             "garden": "庭",
+            "dance": "ダンスホール",
+            "fitness_centre": "フィットネスセンター",
             "pitch": "グラウンド",
             "park": "公園",
             "playground": "児童公園",
@@ -333,14 +349,9 @@
         "bookmarked": "スターつき"
     },
     "category_sub": {
-        "gambling": {
+        "amenity": {
             "gambling": {
                 "mahjong": "麻雀"
-            }
-        },
-        "social_facility": {
-            "social_facility": {
-                "shelter": "一時避難所"
             }
         },
         "artwork": {
@@ -361,6 +372,11 @@
                 "streetart": "ストリートアート",
                 "street_art": "ストリートアート",
                 "azulejo": "アズレージョ"
+            }
+        },
+        "healthcare": {
+            "healthcare:speciality": {
+                "acupuncture": "鍼灸院"
             }
         },
         "restaurant": {
@@ -463,6 +479,11 @@
         "parking": {
             "access": {
                 "private": "私用"
+            }
+        },
+        "social_facility": {
+            "social_facility": {
+                "shelter": "一時避難所"
             }
         },
         "tree": {

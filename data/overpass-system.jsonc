@@ -7,6 +7,7 @@
                 "operator"
             ]
         },
+        /*
         "arts": {
             "overpass": [
                 "node[\"tourism\"=\"artwork\"]",
@@ -682,6 +683,7 @@
                 "operator"
             ]
         },
+        */
         "wikipedia": {
             "marker": "wikipedia.svg",
             "api_": "wikipedia.org/w/api.php?format=json&action=query&prop=extracts%7Cimages&exintro=&explaintext=&titles=",

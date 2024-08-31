@@ -6,7 +6,8 @@
             135.774,
             34.363
         ],
-        "viewPitch": 40,
+        "viewPitch": 30,
+        "maxPitch": 50,
         "maxbounds": "",
         "_maxBounds": [
             [
@@ -25,7 +26,7 @@
     "view": {
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 12,
+            "Playgrounds_Park": 13,
             "Playgrounds_Play": 16,
             "Playgrounds_Etc": 16,
             "activity": 8

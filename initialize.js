@@ -12,8 +12,9 @@ const FILES = [
 const glot = new Glottologist();
 var modal_activities = new modal_Activities();
 var modal_wikipedia = new modal_Wikipedia();
+var modal_osmbasic = new modal_OSMbasic();
 var basic = new Basic();
-var OvPassCnt = new OverPassControl();
+var overPassCont = new OverPassControl();
 var mapLibre = new Maplibre();
 var geoCont = new GeoCont();
 var listTable = new ListTable();
@@ -42,7 +43,7 @@ window.addEventListener("DOMContentLoaded", function () {
 		document.title = glot.get("site_title");							// Title
 		winCont.splash(true);
 		listTable.init();
-		winCont.window_resize();												// Set Window Size(mapidのサイズ指定が目的)
+		winCont.window_resize();											// Set Window Size(mapidのサイズ指定が目的)
 
 		Promise.all([
 			gSheet.get(Conf.google.AppScript), cMapMaker.load_static(), mapLibre.init(Conf)	// get_zoomなどMapLibreの情報が必要なためMapLibre.init後に実行
@@ -109,8 +110,8 @@ window.addEventListener("DOMContentLoaded", function () {
 			let osmids = poiCont.pois().acts.map(act => { return act.osmid })
 			osmids = osmids.filter(Boolean)
 			if (osmids.length > 0 && !Conf.static.mode) {
-				basic.retry(() => OvPassCnt.getOsmIds(osmids),5).then(geojson => {
-					poiCont.add_geojson(geojson)
+				basic.retry(() => overPassCont.getOsmIds(osmids),5).then(geojson => {
+					poiCont.addGeojson(geojson)
 					poiCont.setActlnglat()
 					init_close()
 				})

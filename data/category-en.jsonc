@@ -12,6 +12,7 @@
             "bench": "bench",
             "bicycle_parking": "bicycle parking",
             "bicycle_rental": "bicycle rental",
+            "biergarten": "biergarten",
             "bus_station": "bus station",
             "cafe": "cafe",
             "clinic": "clinic",
@@ -37,6 +38,7 @@
             "internet_cafe": "internet cafe",
             "karaoke_box": "karaoke box",
             "kindergarten": "kindergarten",
+            "language_school": "language school",
             "library": "library",
             "nightclub": "nightclub",
             "marketplace": "marketplace",
@@ -82,6 +84,7 @@
         },
         "building": {
             "apartments": "apartments",
+            "detached": "detached",
             "museum": "museum",
             "office": "office",
             "public": "public",
@@ -91,7 +94,10 @@
             "yes": "building"
         },
         "craft": {
+            "brewery": "brewery",
+            "carpenter": "carpenter",
             "confectionery": "confectionery",
+            "lighting": "craft lighting",
             "photographer": "photographer"
         },
         "diplomatic": {
@@ -100,8 +106,14 @@
         "disused:amenity": {
             "school": "school(disused)"
         },
+        "healthcare": {
+            "alternative": "alternative"
+        },
         "office": {
             "company": "company",
+            "coworking": "coworking",
+            "estate_agent": "estate agent",
+            "foundation": "foundation",
             "government": "government"
         },
         "shop": {
@@ -175,6 +187,7 @@
             "travel_agency": "travel agency",
             "variety_store": "variety",
             "water": "water",
+            "watches": "watches",
             "wine": "wine"
         },
         "natural": {
@@ -217,7 +230,7 @@
             "horizontal_bar": "horizontal_bar",
             "ladder": "ladder",
             "map": "map",
-            "monkey_bars":"monkey bars",
+            "monkey_bars": "monkey_bars",
             "mound": "mound",
             "playhouse": "playhouse",
             "play_sculpture": "play sculpture",
@@ -290,7 +303,10 @@
             "works": "works"
         },
         "leisure": {
+            "adult_gaming_centre":"adult gaming centre",
             "amusement_arcade": "amusement arcade",
+            "dance": "dance",
+            "fitness_centre": "fitness center",
             "garden": "garden",
             "pitch": "pitch",
             "park": "park",
@@ -338,28 +354,30 @@
                 "mahjong": "mahjong"
             }
         },
-        "social_facility": {
-            "social_facility": {
-                "shelter": "temporary sleeping"
+        "artwork": {
+            "artwork_type": {
+                "bust": "bust",
+                "sculpture": "sculpture",
+                "mural": "mural",
+                "graffiti": "graffiti",
+                "installation": "installation",
+                "statue": "statue",
+                "stone": "stone",
+                "painting": "painting",
+                "architecture": "architecture",
+                "mosaic": "mosaic",
+                "tilework": "tilework",
+                "relief": "relief",
+                "fountain": "fountain",
+                "streetart": "streetart",
+                "street_art": "street_art",
+                "azulejo": "azulejo"
             }
         },
-        "artwork_type": {
-            "bust": "bust",
-            "sculpture": "sculpture",
-            "mural": "mural",
-            "graffiti": "graffiti",
-            "installation": "installation",
-            "statue": "statue",
-            "stone": "stone",
-            "painting": "painting",
-            "architecture": "architecture",
-            "mosaic": "mosaic",
-            "tilework": "tilework",
-            "relief": "relief",
-            "fountain": "fountain",
-            "streetart": "streetart",
-            "street_art": "street_art",
-            "azulejo": "azulejo"
+        "healthcare": {
+            "healthcare:speciality": {
+                "acupuncture": "acupuncture"
+            }
         },
         "restaurant": {
             "cuisine": {
@@ -461,6 +479,11 @@
         "parking": {
             "access": {
                 "private": "private"
+            }
+        },
+        "social_facility": {
+            "social_facility": {
+                "shelter": "temporary sleeping"
             }
         },
         "tree": {
