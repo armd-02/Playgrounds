@@ -285,8 +285,8 @@ class CMapMaker {
 				}
 			}
 			console.log("eventMoveMap: Start.");
-			if (this.moveMapBusy > 1 || !poizoom) return; 		// 処理中 or 表示ズーム未満の時は戻る
-			if (this.moveMapBusy == 1) clearTimeout(this.id);	// no break and cancel old timer.
+			if (this.moveMapBusy > 1 || !poizoom) { resolve(); return }	// 処理中 or 表示ズーム未満の時は戻る
+			if (this.moveMapBusy == 1) clearTimeout(this.id);			// no break and cancel old timer.
 			this.moveMapBusy = 1;
 			this.id = setTimeout(() => {
 				console.log("eventMoveMap: End.");
