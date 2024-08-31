@@ -19,7 +19,7 @@
                 34.80000
             ]
         ],
-        "initZoom": 7,
+        "initZoom": 8,
         "maxZoom": 23,
         "modalZoom": 19 // モーダルダイアログ表示時のズームサイズ   
     },
