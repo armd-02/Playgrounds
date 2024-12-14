@@ -21,12 +21,12 @@ class CMapMaker {
 
 	about() {
 		let msg = { msg: glot.get("about_message"), ttl: glot.get("about") }
-		winCont.modal_open({ "title": msg.ttl, "message": msg.msg, "mode": "close", callback_close: winCont.modal_close, "menu": false });
+		winCont.modal_open({ "title": msg.ttl, "message": msg.msg, "mode": "close", callback_close: winCont.closeModal, "menu": false });
 	}
 
 	licence() {			// About license
 		let msg = { msg: glot.get("licence_message") + glot.get("more_message"), ttl: glot.get("licence_title") };
-		winCont.modal_open({ "title": msg.ttl, "message": msg.msg, "mode": "close", callback_close: winCont.modal_close, "menu": false });
+		winCont.modal_open({ "title": msg.ttl, "message": msg.msg, "mode": "close", callback_close: winCont.closeModal, "menu": false });
 	};
 
 	mode_change(newmode) {	// mode change(list or map)
@@ -40,12 +40,12 @@ class CMapMaker {
 			this.last_modetime = Date.now();
 			this.status = "normal";
 			winCont.window_resize();
-		};
-	};
+		}
+	}
 
 	changeMap() {	// Change Map Style(rotation)
 		mapLibre.changeMap();
-	};
+	}
 
 	load_static() {	// check static osm mode
 		return new Promise((resolve, reject) => {
@@ -66,15 +66,15 @@ class CMapMaker {
 		})
 	}
 
-	viewArea(targets) {			// Areaを表示させる
-		console.log(`viewArea: Start.`);
-		targets = targets[0] == "-" ? Object.keys(Conf.view.poiZoom) : targets;	// '-'はすべて表示
-		let pois = poiCont.getPois(targets);
+	viewArea(targets) {			// Area(敷地など)を表示させる
+		console.log(`viewArea: Start.`)
+		targets = targets[0] == "-" ? poiCont.getTargets() : targets;	// '-'はすべて表示
 		targets.forEach((target) => {
-			console.log("viewArea: " + target);
-			mapLibre.addLine({ "type": "FeatureCollection", "features": pois.geojson }, target);
-		});
-		console.log("viewArea: End.");
+			console.log("viewArea: " + target)
+			let pois = poiCont.getPois(target)
+			mapLibre.addPolygon({ "type": "FeatureCollection", "features": pois.geojson }, target)
+		})
+		console.log("viewArea: End.")
 	}
 
 	viewPoi(targets) {		// Poiを表示させる
@@ -83,8 +83,9 @@ class CMapMaker {
 		nowselect = nowselect[0] == "" ? "-" : nowselect[nowselect.length - 1]
 		console.log(`viewPoi: Start(now select ${nowselect}).`)
 		poiMarker.delete_all()
-		targets = targets[0] == "-" ? Object.keys(Conf.view.poiZoom) : targets;					// '-'はすべて表示
-		let subcategory = Object.keys(Conf.view.poiZoom).indexOf(nowselect) > -1 || nowselect == "-" ? false : true;	// サブカテゴリ選択時はtrue
+		targets = targets[0] == "-" ? poiCont.getTargets() : targets;					// '-'はすべて表示
+		targets = Conf.etc.editMode ? targets.concat(Object.keys(Conf.view.editZoom)) : targets	// 編集時はeditZoom追加
+		let subcategory = poiCont.getTargets().indexOf(nowselect) > -1 || nowselect == "-" ? false : true;	// サブカテゴリ選択時はtrue
 		if (subcategory) {	// targets 内に選択肢が含まれていない場合（サブカテゴリ選択時）
 			poiMarker.setPoi("", false, listTable.flist)
 			setcount = setcount + listTable.flist.length
@@ -92,7 +93,9 @@ class CMapMaker {
 			console.log("viewPoi: " + targets.concat())
 			let nowzoom = mapLibre.getZoom(false)
 			targets.forEach((target) => {
-				if ((target == nowselect || nowselect == "-") && nowzoom >= Conf.view.poiZoom[target]) {	// 選択している種別の場合
+				let poiView = Conf.google.targetName == target ? true : Conf.osm[target].expression.poiView	// activity以外はexp.poiViewを利用
+				let flag = nowzoom >= Conf.view.poiZoom[target] || (Conf.etc.editMode && nowzoom >= Conf.view.editZoom[target])
+				if ((target == nowselect || nowselect == "-") && flag && poiView) {	// 選択している種別の場合
 					poiMarker.setPoi(target, target == Conf.google.targetName)
 					setcount++
 				}
@@ -103,13 +106,13 @@ class CMapMaker {
 
 	// 画面内のActivity画像を表示させる
 	makeImages() {
-		let LL = mapLibre.get_LL(true);
+		let LL = mapLibre.get_LL(true)
 		let acts = poiCont.adata.filter(act => { return geoCont.checkInner(act.lnglat, LL) && act.picture_url1 !== "" });
 		acts = acts.map(act => {
-			let urls = [];
-			let actname = act.id.split("/")[0];
-			let forms = Conf.activities[actname].form;
-			Object.keys(forms).forEach(key => { if (forms[key].type == "image_url") urls.push(act[key]) });
+			let urls = []
+			let actname = act.id.split("/")[0]
+			let forms = Conf.activities[actname].form
+			Object.keys(forms).forEach(key => { if (forms[key].type == "image_url") urls.push(act[key]) })
 			return { "src": urls, "osmid": act.osmid, "title": act.title }
 		});
 		winCont.setImages(images, acts);
@@ -120,11 +123,16 @@ class CMapMaker {
 		return new Promise((resolve) => {
 			console.log("cMapMaker: updateOsmPoi: Start");
 			winCont.spinner(true);
-			var keys = (targets !== undefined && targets !== "") ? targets : Object.keys(Conf.view.poiZoom);
+			var keys = (targets !== undefined && targets !== "") ? targets : poiCont.getTargets();
 			let PoiLoadZoom = 99;
 			for (let [key, value] of Object.entries(Conf.view.poiZoom)) {
 				if (key !== Conf.google.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
 			};
+			if (Conf.etc.editMode) {
+				for (let [key, value] of Object.entries(Conf.view.editZoom)) {
+					if (key !== Conf.google.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
+				}
+			}
 			if ((mapLibre.getZoom(true) < PoiLoadZoom)) {
 				winCont.spinner(false);
 				console.log("[success]cMapMaker: updateOsmPoi End(more zoom).");
@@ -153,22 +161,22 @@ class CMapMaker {
 		};
 	};
 
-	viewImage(imgdom) {
-		console.log("viewImage: Start.");
+	viewImageList(imgdom) {
+		console.log("viewImageList: Start.");
 		let osmid = imgdom.getAttribute("osmid");
 		let poi = poiCont.get_osmid(osmid);
 		let zoomlv = Math.max(mapLibre.getZoom(true), Conf.map.modalZoom);
 		if (poi !== undefined) {
 			mapLibre.flyTo(poi.lnglat, zoomlv);
 			cMapMaker.viewDetail(osmid);
-			console.log("viewImage: View OK.");
+			console.log("viewImageList: View OK.");
 		}
 	}
 
 	viewDetail(osmid, openid) {	// PopUpを表示(marker,openid=actlst.id)
 		const detail_close = () => {
 			let catname = listTable.getSelCategory() !== "-" ? `?category=${listTable.getSelCategory()}` : "";
-			winCont.modal_close();
+			winCont.closeModal();
 			history.replaceState('', '', location.pathname + catname + location.hash);
 			this.open_osmid = "";
 			this.detail = false;
@@ -209,10 +217,10 @@ class CMapMaker {
 
 		// append activity
 		let catname = listTable.getSelCategory() !== "-" ? `&category=${listTable.getSelCategory()}` : "";
-		let actlists = poiCont.get_actlist(osmid);
+		let actlists = poiCont.getActlistByOsmid(osmid);
 		history.replaceState('', '', location.pathname + "?" + osmid + (!openid ? "" : "." + openid) + catname + location.hash);
 		if (actlists.length > 0) {	// アクティビティ有り
-			message += modal_activities.make(actlists);
+			message += modalActs.make(actlists);
 			winCont.modal_open({ "title": title, "message": message, "append": Conf.menu.buttons, "mode": "close", "callback_close": detail_close, "menu": true, "openid": openid });
 		} else {					// アクティビティ無し
 			winCont.modal_open({ "title": title, "message": message, "append": Conf.menu.buttons, "mode": "close", "callback_close": detail_close, "menu": true, "openid": openid });
@@ -279,9 +287,11 @@ class CMapMaker {
 		const MoveMapPromise = function (resolve, reject) {
 			let poizoom = false;	// 一つでもズーム表示かチェック
 			for (let [key, value] of Object.entries(Conf.view.poiZoom)) {
-				if (mapLibre.getZoom(false) >= value) {
-					console.log(value + " / " + mapLibre.getZoom(false))
-					poizoom = true
+				if (mapLibre.getZoom(false) >= value) poizoom = true
+			}
+			if (Conf.etc.editMode) {
+				for (let [key, value] of Object.entries(Conf.view.editZoom)) {
+					if (mapLibre.getZoom(false) >= value) poizoom = true
 				}
 			}
 			console.log("eventMoveMap: Start.");
@@ -337,6 +347,11 @@ class CMapMaker {
 		let poizoom = false;
 		for (let [key, value] of Object.entries(Conf.view.poiZoom)) {
 			if (mapLibre.getZoom(false) >= value) poizoom = true
+		}
+		if (Conf.etc.editMode) {
+			for (let [key, value] of Object.entries(Conf.view.editZoom)) {
+				if (mapLibre.getZoom(false) >= value) poizoom = true
+			}
 		}
 		let message = `${glot.get("zoomlevel")}${mapLibre.getZoom(true)} `
 		if (!poizoom) message += `<br>${glot.get("morezoom")}`

@@ -7,10 +7,6 @@
 		"ja": "編集",
 		"en": "Edit information"
 	},
-	"act_category": {
-		"ja": "カテゴリ",
-		"en": "Category"
-	},
 	"act_name": {
 		"ja": "ニックネーム",
 		"en": "Name"
@@ -23,6 +19,10 @@
 		"ja": "パスワード",
 		"en": "Password"
 	},
+	"act_attention": {
+		"ja": "写真URLにWikimedia Commonsを指定する時は、タイトルを入力してください(例 File:遊具名.jpg)",
+		"en": "When specifying Wikimedia Commons for the photo URL, enter the title (e.g. File: Play equipment name.jpg)"
+	},
 	"act_confirm": {
 		"ja": "上記の内容でデータを登録・更新しますか？",
 		"en": "register / update data with this contents?"
@@ -30,6 +30,10 @@
 	"act_error": {
 		"ja": "登録失敗。ユーザー名とパスワードを確認してください",
 		"en": "failed. Please check your username and password"
+	},
+	"category": {
+		"ja": "カテゴリ",
+		"en": "Category"
 	},
 	"title": {
 		"ja": "タイトル",
@@ -154,141 +158,5 @@
 	"osm_open": {
 		"ja": "OpenStreetMapで見る",
 		"en": "See in OpenStreetMap"
-	},
-	"target_activity": {
-		"ja": "口コミ",
-		"en": "activity"
-	},
-	"target_arts": {
-		"ja": "アート",
-		"en": "arts"
-	},
-	"target_bath":{
-		"ja": "銭湯",
-		"en": "bath"
-	},
-	"target_pub": {
-		"ja": "居酒屋・パブ",
-		"en": "pub"
-	},
-	"target_restaurant": {
-		"ja": "レストラン",
-		"en": "restaurant"
-	},
-	"target_shop": {
-		"ja": "ショップ",
-		"en": "shop"
-	},
-	"target_forest": {
-		"ja": "森・林",
-		"en": "forest"
-	},
-	"target_takeout": {
-		"ja": "持ち帰り",
-		"en": "takeout"
-	},
-	"target_disaster": {
-		"ja": "防災",
-		"en": "disaster"
-	},
-	"target_government": {
-		"ja": "行政",
-		"en": "government"
-	},
-	"target_library": {
-		"ja": "図書館",
-		"en": "library"
-	},
-	"target_museum": {
-		"ja": "博物館",
-		"en": "museum"
-	},
-	"target_telephone": {
-		"ja": "公衆電話",
-		"en": "telephone"
-	},
-	"target_theatre": {
-		"ja": "劇場・映画館",
-		"en": "theatre"
-	},
-	"target_centre": {
-		"ja": "公民館・センター",
-		"en": "centre"
-	},
-	"target_park": {
-		"ja": "公園",
-		"en": "park"
-	},
-	"target_garden": {
-		"ja": "庭・農地",
-		"en": "garden"
-	},
-	"target_information": {
-		"ja": "案内",
-		"en": "information"
-	},
-	"target_wayside_shrine": {
-		"ja": "祠・地蔵",
-		"en": "wayside shrine"
-	},
-	"target_historic_area": {
-		"ja": "遺跡・古墳",
-		"en": "historic(area)"
-	},
-	"target_historic_poi": {
-		"ja": "石碑・道祖神",
-		"en": "historic(poi)"
-	},
-	"target_hospital": {
-		"ja": "病院",
-		"en": "hospital"
-	},
-	"target_water": {
-		"ja": "水域",
-		"en": "water"
-	},
-	"target_worship": {
-		"ja": "宗教施設",
-		"en": "worship"
-	},
-	"target_amusement_arcade": {
-		"ja": "ゲームセンター",
-		"en": "amusement arcade"
-	},
-	"target_station": {
-		"ja": "駅",
-		"en": "station"
-	},
-	"target_swimming_pool": {
-		"ja": "水泳プール",
-		"en": "swimming pool"
-	},
-	"target_toilets": {
-		"ja": "トイレ",
-		"en": "toilets"
-	},
-	"target_vending_machine": {
-		"ja": "自動販売機",
-		"en": "vending machine"
-	},
-	"target_post_box": {
-		"ja": "郵便ポスト",
-		"en": "post box"
-	},
-	"target_place": {
-		"ja": "場所・地域",
-		"en": "place"
-	},
-	"target_wikipedia": {
-		"ja": "Wikipedia",
-		"en": "Wikipedia"
-	},
-	"changing_table": {
-		"ja": "おむつ交換台",
-		"en": "diaper hanging table"
-	},
-	"wheelchair": {
-		"ja": "車椅子対応",
-		"en": "wheelchair"
 	}
 }
