@@ -127,7 +127,7 @@
         "modal": [
             {
                 "glot-model": "act_add",
-                "linkto": "javascript:modal_activities.edit({form:'Playgrounds'})",
+                "linkto": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "divider": false
             },
             {
@@ -145,7 +145,7 @@
         "buttons": [
             {
                 "btn_class": "btn btn-light border-secondary mr-2",
-                "code": "javascript:modal_activities.edit({form:'Playgrounds'})",
+                "code": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "icon_class": "fas fa-plus",
                 "btn_glot_name": "add_activity"
             },
