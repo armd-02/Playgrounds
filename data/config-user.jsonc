@@ -40,7 +40,7 @@
     },
     "etc": {
         "editMode": true, // 編集メニューの表示/非表示
-        "thumbnailWidth": "240",
+        "thumbnailWidth": "280",
         "splashUrl": "./image/ogimage.png"
     },
     "selectItem": { // 選択リストの内容を手動記載 / 空の時は "" とする

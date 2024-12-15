@@ -281,6 +281,8 @@ class modal_Activities {
             let src_org = e.getAttribute("src_org");
             image.src = src_org == null ? e.src : src_org;
             try {
+                PinchImageBK.style.display = "block"
+                winCont.spinner(true)
                 await image.decode();
                 let xy = basic.calcImageSize(image.naturalWidth, image.naturalHeight, window.innerWidth, window.innerHeight)
                 image.style.width = xy[0] + "px";
@@ -292,10 +294,11 @@ class modal_Activities {
                 image.style.display = "block";
                 image.style.transform = `translate(0px, 0px) scale(1)`;
                 console.log("block: " + xy[0] + "px, " + xy[1] + "px");
-                PinchImageBK.style.display = "block";
+                winCont.spinner(false)
                 modalActs.pinchImage(true)
             } catch (encodingError) {
                 console.log("viewImage: decode error.");
+                winCont.spinner(false)
             }
         }
         loadImage(e);
