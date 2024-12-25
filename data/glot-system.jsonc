@@ -64,7 +64,7 @@
 		"en": "add Activity"
 	},
 	"morezoom": {
-		"ja": "もっとズームしてください",
+		"ja": "ズームすると表示が増えます",
 		"en": "Please zoom more."
 	},
 	"button_ok": {
@@ -132,8 +132,8 @@
 		"en": "close"
 	},
 	"source_wikipedia": {
-		"ja": "(出典: Wikipedia)",
-		"en": "(Source: Wikipedia)"
+		"ja": "(出典/記事: Wikipedia)",
+		"en": "(Source/Article: Wikipedia)"
 	},
 	"undefined": {
 		"ja": "(名称不明)",

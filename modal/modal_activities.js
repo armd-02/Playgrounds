@@ -27,9 +27,7 @@ class modal_Activities {
         let ymd = "YYYY/MM/DD";
         let tModal = document.createElement("div");
         let template = document.createElement("div");
-        let result = "",
-            newmode = "",
-            wikimq = [];
+        let result = "", newmode = "", wikimq = [];
         let makehtml = function (form, act) {
             let chtml = "";
             Object.keys(form).forEach((key) => {
@@ -39,18 +37,18 @@ class modal_Activities {
                     gdata = basic.htmlspecialchars(gdata).replace(/\r?\n/g, "<br>");
                     switch (form[key].type) {
                         case "date":
-                            chtml += `<div class='col-12'>${glot.get(form[key].glot)}</div><div class='col-12'>${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
+                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small> ${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
                             break;
                         case "textarea":
                             gdata = basic.autoLink(gdata);
-                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small><big>${gdata.replace(/\r?\n/g, "<br>")}</big></p></div>`;
+                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small><big> ${gdata.replace(/\r?\n/g, "<br>")}</big></p></div>`;
                             break;
                         case "select":
                         case "text":
                         case "quiz_choice":
                             if (key !== "quiz_answer" && key !== "title" && gdata !== "") {
                                 gdata = basic.autoLink(gdata);
-                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small>${gdata.replace(/\r?\n/g, "<br>")}</p></div>`;
+                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small> ${gdata.replace(/\r?\n/g, "<br>")}</p></div>`;
                             }
                             break;
                         case "quiz_textarea":
@@ -101,28 +99,13 @@ class modal_Activities {
                 head.setAttribute("id", act.id.replace("/", ""));
                 let edit = Conf.etc.editMode ? `[<a href="javascript:modalActs.edit({id:'${act.id}',form:'${newmode}'})">${glot.get("act_edit")}</a>]` : "";
                 let chtml = Conf.etc.editMode ? `<div class="float-end">${glot.get("update")} ${updated}${edit}</div><br>` : "";
-                switch (newmode) {
-                    case "libc":
-                        let mm = !parseInt(act.mm) ? "--" : ("00" + act.mm).substr(-2);
-                        let dd = !parseInt(act.dd) ? "--" : ("00" + act.dd).substr(-2);
-                        let act_ymd = `${act.yyyy}/${mm}/${dd}`;
-                        clone.querySelector("span").innerHTML = act_ymd + " " + act.title;
-                        chtml += `<strong>${glot.get("libc_title")}</strong><br>${act_ymd} ${act.title}<br><br>`;
-                        chtml += "<strong>" + glot.get("libc_agency") + "</strong><br>" + act.agency + "<br><br>";
-                        chtml += "<strong>" + glot.get("libc_authority") + "</strong><br>" + act.authority.replace(/\r?\n/g, "<br>") + "<br><br>";
-                        chtml += "<strong>" + glot.get("libc_area") + "</strong><br>" + act.area + "<br><br>";
-                        chtml += "<strong>" + glot.get("libc_ymd") + `</strong><br>${act_ymd}<br><br>`;
-                        break;
-                    default: // event
-                        chtml += makehtml(form, act);
-                        break;
-                }
+                chtml += makehtml(form, act);
                 body.innerHTML = chtml;
                 result += clone.outerHTML;
             }
         });
         wikimq.forEach((q) => {
-            basic.getWikiMediaImage(q[0], Conf.etc.thumbnailWidth, q[1]);
+            basic.getWikiMediaImage(q[0], Conf.etc.modalThumbWidth, q[1]);
         }); // WikiMedia Image 遅延読み込み
         tModal.remove();
         template.remove();
@@ -278,8 +261,8 @@ class modal_Activities {
     viewImage(e) {
         const loadImage = async (e) => {
             let image = document.getElementById("PinchImage");
-            let src_org = e.getAttribute("src_org");
-            image.src = src_org == null ? e.src : src_org;
+            let src_thumb = e.getAttribute("src_thumb");          // サムネイル画像を表示させる
+            image.src = src_thumb == null ? e.src : src_thumb;
             try {
                 PinchImageBK.style.display = "block"
                 winCont.spinner(true)

@@ -26,22 +26,24 @@
     "view": {
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 14,
-            "Playgrounds_Play": 17,
-            "Playgrounds_Etc": 17,
+            "Playgrounds_Park": 13.8,
+            "Playgrounds_Play": 16,
+            "Playgrounds_Etc": 16,
             "activity": 8
         },
         "poiFilter": "filter", // listTable更新時 all:全て / filter:絞り込み / "":非連動
         "editZoom": {
             // 編集時に追加するpoiZoom
-            "Playgrounds_Park": 17,
-            "Playgrounds_Play": 17
+            "Playgrounds_Park": 16,
+            "Playgrounds_Play": 16
         }
     },
     "etc": {
         "editMode": true, // 編集メニューの表示/非表示
-        "thumbnailWidth": "280",
-        "splashUrl": "./image/ogimage.png"
+        "slideThumbWidth": "240",
+        "modalThumbWidth": "800",
+        "splashUrl": "./image/ogimage.png",
+        "loadingUrl": "./image/loading.gif"
     },
     "selectItem": { // 選択リストの内容を手動記載 / 空の時は "" とする
         "menu": "",
@@ -104,7 +106,7 @@
             },
             {
                 "glot-model": "owner",
-                "linkto": "https://k-sakanoshita.medium.com/1173cab3fd72",
+                "linkto": "https://note.com/barsaka/n/n110a4c3121d6",
                 "divider": true
             },
             {
@@ -144,7 +146,7 @@
         // 詳細モーダルの追加ボタン 
         "buttons": [
             {
-                "btn_class": "btn btn-light border-secondary mr-2",
+                "btn_class": "btn btn-light border-secondary me-2",
                 "code": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "icon_class": "fas fa-plus",
                 "btn_glot_name": "add_activity"

@@ -88,11 +88,20 @@ div.showcase {
 	overflow-x: scroll;
 	width: 100vw;
 	display: flex;
-	scrollbar-width: none;
 }
 
 div.showcase::-webkit-scrollbar {
-	display: none;
+	display: block;
+	height: 4px;
+}
+
+div.showcase::-webkit-scrollbar-track {
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+div.showcase::-webkit-scrollbar-thumb {
+	height: 5px;
+	background-color: #404080;
 }
 
 /* fade out */
@@ -120,8 +129,6 @@ img.thumbnail {
 }
 
 img.slide {
-	background-image: url("./image/loading.gif");
-	background-size: cover;
 	height: 12vh;
 	max-width: 100% !important;
 	margin: 2px;
@@ -141,6 +148,18 @@ img.normal {
 	height: 24px !important;
 	width: 24px !important;
 	object-fit: contain;
+	animation: rotation 0.5s ease-in-out 1;
+}
+
+img.middle {
+	background: url("./image/icon_circle_attention1.svg");
+	background-size: cover;
+	float: left;
+	padding: 8px !important;
+	height: 42px;
+	width: 42px;
+	object-fit: contain;
+	animation: rotation 0.5s ease-in-out 1;
 }
 
 img.attention {
@@ -151,6 +170,13 @@ img.attention {
 	height: 42px;
 	width: 42px;
 	object-fit: contain;
+	animation: rotation 0.5s ease-in-out 1;
+}
+
+img.attention:active,
+img.middle:active,
+img.normal:active {
+	margin-top: 10px;
 }
 
 img.w100 {
@@ -167,7 +193,8 @@ h2.zoom {
 	font-size: 16px;
 	color: rgba(0, 0, 0, 1);
 	background-color: rgba(255, 255, 255, 0.5);
-	padding: 10px;
+	padding: 6px;
+	margin: 0px;
 }
 
 .menu {
@@ -255,14 +282,6 @@ span.fs-14 {
 	overflow-x: hidden;
 }
 
-.leaflet-div-icon {
-	border: 0px !important;
-}
-
-.leaflet-popup-content {
-	width: 30vw;
-}
-
 input[type="search"] {
 	font-size: 14px;
 	display: inline-block;
@@ -300,63 +319,14 @@ tr.selected td {
 	bottom: 0px;
 }
 
-.card-header,
-.card-body {
-	padding: 0px !important;
-}
-
 .modal-title {
 	height: 2rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bg-clear-old {
-	width: 38px;
-	height: 18px;
-	background-position: 0px 0px, 8px 8px;
-	background-size: 16px 16px;
-	background-image: -webkit-linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc 100%), -webkit-linear-gradient(45deg, #ccc 25%, white 25%, white 75%, #ccc 75%, #eee 100%);
-	background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc 100%), linear-gradient(45deg, #ccc 25%, white 25%, white 75%, #ccc 75%, #ccc 100%);
-}
-
-.bg-clear {
-	background: transparent url("./image/transparent.png") !important;
-}
-
-.leaflet-container a {
-	color: initial !important;
-}
-
-.leaflet-touch .leaflet-control-layers-toggle {
-	width: 30px !important;
-	height: 30px !important;
-}
-
 .cursor-pointer {
 	cursor: pointer;
-}
-
-h5[aria-expanded="false"]:before {
-	content: "";
-	display: inline-block;
-	background-image: url(./image/arrow-right.svg);
-	background-size: contain;
-	width: 18px;
-	height: 18px;
-	margin-right: 0px;
-	vertical-align: middle;
-}
-
-h5[aria-expanded="true"]:before {
-	content: "";
-	display: inline-block;
-	background-image: url(./image/arrow-down.svg);
-	background-size: contain;
-	width: 18px;
-	height: 18px;
-	margin-right: 0px;
-	vertical-align: middle;
 }
 
 #PinchImage {
@@ -368,14 +338,40 @@ h5[aria-expanded="true"]:before {
 }
 
 #PinchImageBK {
-	display: none; 
+	display: none;
 	width: 100vw;
 	height: 100vh;
 	z-index: 9999;
-    position: absolute;
-    background-color: #000000A0;
-    top: 0px;
-    left: 0px;
+	position: absolute;
+	background-color: #000000A0;
+	top: 0px;
+	left: 0px;
+}
+
+#scrollHand {
+	z-index: 3000;
+	position: absolute;
+	width: 100vw;
+}
+
+@keyframes jump {
+	0%, 100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(6px);
+	}
+}
+
+@keyframes swing {
+	0%, 100% {
+		transform: translateX(0);
+	}
+
+	50% {
+		transform: translateX(10px);
+	}
 }
 
 @keyframes rotation {
@@ -388,15 +384,15 @@ h5[aria-expanded="true"]:before {
 	}
 
 	30% {
-		transform: scale(1.3, 0.8) translate(0%, 10%);
+		transform: scale(1.1, 0.8) translate(0%, 8%);
 	}
 
 	50% {
-		transform: scale(0.8, 1.3) translate(0%, -10%);
+		transform: scale(0.8, 1.1) translate(0%, -8%);
 	}
 
 	70% {
-		transform: scale(1.1, 0.9) translate(0%, 5%);
+		transform: scale(1.0, 0.9) translate(0%, 5%);
 	}
 
 	100% {

@@ -17,6 +17,8 @@ class CMapMaker {
 		mapLibre.on('zoomend', this.eventZoomMap.bind(cMapMaker))			// ズーム終了時に表示更新
 		list_keyword.addEventListener('change', this.eventChangeKeyword.bind(cMapMaker))	// 
 		list_category.addEventListener('change', this.eventChangeCategory.bind(cMapMaker))	// category change
+		this.eventMoveMap();
+		this.eventZoomMap();
 	}
 
 	about() {
@@ -114,8 +116,9 @@ class CMapMaker {
 			let forms = Conf.activities[actname].form
 			Object.keys(forms).forEach(key => { if (forms[key].type == "image_url") urls.push(act[key]) })
 			return { "src": urls, "osmid": act.osmid, "title": act.title }
-		});
-		winCont.setImages(images, acts);
+		})
+		winCont.setImages(images, acts, Conf.etc.loadingUrl)
+		winCont.scrollHint()
 	}
 
 	// OSMとGoogle SpreadSheetからPoiを取得してリスト化
@@ -314,6 +317,7 @@ class CMapMaker {
 									listTable.makeSelectList(Conf.listTable.category)
 								}
 								listTable.filterCategory(listTable.getSelCategory())
+								if (window.getSelection) window.getSelection().removeAllRanges();
 								this.viewArea(targets)	// in targets
 								this.viewPoi(targets)	// in targets
 								this.makeImages()
@@ -344,17 +348,18 @@ class CMapMaker {
 
 	// EVENT: View Zoom Level & Status Comment
 	eventZoomMap() {
-		let poizoom = false;
+		let morezoom = 0;
 		for (let [key, value] of Object.entries(Conf.view.poiZoom)) {
-			if (mapLibre.getZoom(false) >= value) poizoom = true
+			morezoom = value > morezoom ? value : morezoom
 		}
 		if (Conf.etc.editMode) {
 			for (let [key, value] of Object.entries(Conf.view.editZoom)) {
-				if (mapLibre.getZoom(false) >= value) poizoom = true
+				morezoom = value > morezoom ? value : morezoom
 			}
 		}
+		let poizoom = mapLibre.getZoom(true) >= morezoom ? false : true
 		let message = `${glot.get("zoomlevel")}${mapLibre.getZoom(true)} `
-		if (!poizoom) message += `<br>${glot.get("morezoom")}`
+		if (poizoom) message += `<br>${glot.get("morezoom")}`
 		zoomlevel.innerHTML = "<h2 class='zoom'>" + message + "</h2>"
 	}
 
