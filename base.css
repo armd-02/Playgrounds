@@ -88,6 +88,7 @@ div.showcase {
 	overflow-x: scroll;
 	width: 100vw;
 	display: flex;
+	user-select: none;
 }
 
 div.showcase::-webkit-scrollbar {
@@ -145,10 +146,11 @@ img.normal {
 	background-size: cover;
 	float: left;
 	padding: 4px !important;
-	height: 24px !important;
-	width: 24px !important;
+	height: 28px !important;
+	width: 28px !important;
 	object-fit: contain;
 	animation: rotation 0.5s ease-in-out 1;
+	filter: drop-shadow(2px 2px 2px #000);
 }
 
 img.middle {
@@ -160,6 +162,7 @@ img.middle {
 	width: 42px;
 	object-fit: contain;
 	animation: rotation 0.5s ease-in-out 1;
+	filter: drop-shadow(2px 2px 2px #000);
 }
 
 img.attention {
@@ -171,6 +174,7 @@ img.attention {
 	width: 42px;
 	object-fit: contain;
 	animation: rotation 0.5s ease-in-out 1;
+	filter: drop-shadow(2px 2px 2px #000);
 }
 
 img.attention:active,
@@ -355,7 +359,9 @@ tr.selected td {
 }
 
 @keyframes jump {
-	0%, 100% {
+
+	0%,
+	100% {
 		transform: translateY(0);
 	}
 
@@ -365,7 +371,9 @@ tr.selected td {
 }
 
 @keyframes swing {
-	0%, 100% {
+
+	0%,
+	100% {
 		transform: translateX(0);
 	}
 

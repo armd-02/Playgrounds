@@ -66,7 +66,7 @@ window.addEventListener("DOMContentLoaded", function () {
 		glot.data = Object.assign(glot.data, JSON5.parse(texts[9])); // import glot data
 		glot.data = Object.assign(glot.data, JSON5.parse(texts[10])); // import glot data
 		window.onresize = winCont.window_resize; // 画面サイズに合わせたコンテンツ表示切り替え
-		document.title = glot.get("site_title"); // Title
+		// document.title = glot.get("site_title"); // Google検索のインデックス反映が読めないので一旦なし
 		let UrlParams = setUrlParams();
 		if (UrlParams.edit) Conf.etc["editMode"] = true;
 		winCont.splash(true);
