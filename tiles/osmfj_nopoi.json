@@ -3459,12 +3459,12 @@
                     "type": "identity",
                     "property": "render_min_height"
                 },
-                "fill-extrusion-color": "rgba(189, 185, 181, 1)",
+                "fill-extrusion-color": "rgba(220, 210, 210, 1)",
                 "fill-extrusion-height": {
                     "type": "identity",
                     "property": "render_height"
                 },
-                "fill-extrusion-opacity": 0.3
+                "fill-extrusion-opacity": 0.5
             },
             "metadata": {},
             "filter": [
@@ -5728,7 +5728,7 @@
                 "text-size": 12,
                 "icon-image": "{class}_11",
                 "text-field": "{name}",
-                "visibility": "visible",
+                "visibility": "none",
                 "text-anchor": "top",
                 "text-offset": [
                     0,
@@ -5792,7 +5792,7 @@
                 "text-size": 12,
                 "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
-                "visibility": "visible",
+                "visibility": "none",
                 "text-anchor": "top",
                 "text-offset": [
                     0,

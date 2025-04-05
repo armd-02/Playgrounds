@@ -3,8 +3,8 @@
     "map": {
         "tileName": "OSMFJ", // タイル一覧は config-system.jsonc へ
         "viewCenter": [
-            135.774,
-            34.363
+            135.495697,
+            34.702363
         ],
         "viewPitch": 30,
         "maxPitch": 60,
@@ -19,17 +19,18 @@
                 34.80000
             ]
         ],
-        "initZoom": 8,
+        "initZoom": 11,
         "maxZoom": 23,
         "modalZoom": 19 // モーダルダイアログ表示時のズームサイズ   
     },
     "view": {
+        "poiActLoad": true, // 起動時にActivityを読み込むか
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 14,
+            "Playgrounds_Park": 13.5,
             "Playgrounds_Play": 15,
             "Playgrounds_Etc": 16,
-            "activity": 8
+            "activity": 10
         },
         "poiFilter": "filter", // listTable更新時 all:全て / filter:絞り込み / "":非連動
         "editZoom": {
