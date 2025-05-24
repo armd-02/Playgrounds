@@ -55,3 +55,4 @@
              Wikimedia Commonsの多重リクエスト修正
              cssファイルの分割、タイルスタイルの修正
              起動時にActivityのOSMを取得するか設定追加他
+* 2025/05/24 Overpass APIのサーバを一旦切り替え
