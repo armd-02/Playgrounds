@@ -1,6 +1,5 @@
 {
     "list": {
-        "height": 0.2,
         "columns": {
             "common": [
                 {
@@ -23,14 +22,14 @@
                     "width": "20%"
                 }
             ],
-            "poi_fields": [
+            "poiFields": [
                 "id",
                 "#category",
                 "#parent.name,name",
                 "min_age"
             ],
-            "act_fields": [
-                "id",
+            "actFields": [ //#付きはOSMタグ、ただし#categoryのみタグからのカテゴリ名判定結果
+                "id", // 最初の列はid固定(#idにするとOSMのPoiでユニークになりActが欠落する)
                 "#category",
                 "#name",
                 "#min_age"

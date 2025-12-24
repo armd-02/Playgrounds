@@ -1,69 +1,89 @@
 // Community Mapmaker User Config
 {
     "map": {
-        "tileName": "OSMFJ", // タイル一覧は config-system.jsonc へ
+        "changeMap": true, // 地図切り替え時はtrue
+        "tileName": "OSMFJ_NOPOI", // タイル一覧は config-system.jsonc へ
         "viewCenter": [
             135.495697,
             34.702363
         ],
-        "viewPitch": 30,
-        "maxPitch": 60,
-        "maxbounds": "",
-        "_maxBounds": [
+        "viewPitch": 0,
+        "maxPitch": 75,
+        "maxBounds": "", // 地図の表示範囲(左下[]、右上[])。未指定時は""
+        "_maxBounds": [ // 地図の表示範囲(左下、右上)
             [
-                135.30000,
-                34.54000
+                133.57441,
+                34.810416
             ],
             [
-                135.80000,
-                34.80000
+                134.47147,
+                35.37144
             ]
         ],
         "initZoom": 11,
-        "maxZoom": 23,
-        "modalZoom": 19 // モーダルダイアログ表示時のズームサイズ   
+        "maxZoom": 20,
+        "detailZoom": 17, // モーダルダイアログ表示時のズームサイズ
+        "textFont": [
+            "Noto Sans Bold"
+        ], // 使用可能なフォント（spriteに依存）
+        "textSize": 12,
+        "polygonMarker": { // ポリゴン設定
+            "fill-color": "#CC6666",
+            "fill-opacity": 0.3
+        }
     },
-    "view": {
+    "minimap": { // 地球儀表示時の初期設定
+        "use": false, // 地球儀利用時はtrue
+        "height": 200,
+        "initZoom": 2,
+        "viewCenter": [
+            135,
+            34
+        ]
+    },
+    "icon": {
+        "fgPath": "icon",
+        "bgPath": "image",
+        "shadow": 0.7,
+        "attention": 0.8,
+        "green": 0.6,
+        "middle": 0.8,
+        "visited": 0.4,
+        "normal": 0.8,
+        "flag": 0.5,
+        "textFont": [
+            "Noto Sans Regular"
+        ], // 使用可能なフォント（spriteに依存）
+        "textSize": 12,
+        "textViewZoom": 13 // アイコンに文字を表示するズームレベル
+    },
+    "poiView": {
         "poiActLoad": true, // 起動時にActivityを読み込むか
+        "poiFilter": "", // poiView時の表示範囲 all:画面外も表示 / "":画面内だけを表示
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 13.5,
-            "Playgrounds_Play": 15,
-            "Playgrounds_Etc": 16,
-            "activity": 10
+            "Playgrounds_Park": 13,
+            "Playgrounds_Play": 14,
+            "Playgrounds_Etc": 15,
+            "activity": 14
         },
-        "poiFilter": "filter", // listTable更新時 all:全て / filter:絞り込み / "":非連動
         "editZoom": {
             // 編集時に追加するpoiZoom
             "Playgrounds_Park": 16,
             "Playgrounds_Play": 16
         }
     },
-    "etc": {
-        "editMode": true, // 編集メニューの表示/非表示
-        "slideThumbWidth": "240",
-        "modalThumbWidth": "800",
-        "splashUrl": "./image/ogimage.png",
-        "loadingUrl": "./image/loading.gif"
-    },
     "selectItem": { // 選択リストの内容を手動記載 / 空の時は "" とする
+        "default": "",
         "menu": "",
-        /*{
-        "2010年時点の地図(日本)": "Japan2010",
-        "2012年時点の地図(日本)": "Japan2012",
-        "2014年時点の地図(日本)": "Japan2014",
-        "2016年時点の地図(日本)": "Japan2016",
-        "2018年時点の地図(日本)": "Japan2018",
-        "2020年時点の地図(日本)": "Japan2020",
-        "2022年時点の地図(日本)": "Japan2022",
-        "最新地図(全世界)": "OSMFJ"
-    },*/
-        "action": "" // ChangeMap:背景地図切り替え
+        "action": "ChangePoi" // ChangeMap:背景地図切り替え / ChangePoi:メニューに会ったOverpass名のPOIを表示 / "":google Spreadseedのcategory
     },
     "listTable": {
-        "category": "tags", // カテゴリ選択 / activity:アクティビティリスト / tags:タグ
-        "target": "tags", // target名:overpass名を表示 / activity:google sheetsを表示 / tags:osm poi種別名を表示
-        "allActs": true, // true: 全てのactivityを常に表示 / false: 画面内のActivityのみ表示
+        "backgroundImage": "./image/bgimage.png",
+        "height": 0.6, // リスト時の高さ(1を最大とした割合)
+        "category": "tags", // カテゴリ選択 / activity:アクティビティリスト / tags:タグ / menu: タグベースの手動カテゴリ
+        "target": "", // targets:指定したtargetだけ表示 / activity:google sheetsのデータのみ表示 // 空:両方表示
+        "allActs": false, // true: 全てのactivityを常に表示 / false: 画面内のActivityのみ表示
         "playback": {
             "view": false,
             "zoomLevel": 15,
@@ -71,23 +91,19 @@
         },
         "download": false
     },
-    "PoiView": {
-        "targets": [
-            "Playgrounds_Park",
-            "Playgrounds_Play",
-            "Playgrounds_Etc",
-            "activity"
-        ],
-        "update_mode": "filter" // listTable更新時 all:全て / filter:絞り込み / "":非連動
+    "thumbnail": {
+        "use": true,
+        "limits": 20, // 画像の制限数
+        "slideThumbWidth": "320",
+        "modalThumbWidth": "800"
     },
     "google": {
-        "Analytics": "",
-        "AppScript": "https://script.google.com/macros/s/AKfycby_WVOYp7ykDAgxWJUJcLfiN8ZuJ__ZEnuwcEHZYgenUAJC6r1smHrTq3qnzU8pLJqW/exec",
+        "AppScript": "https://script.google.com/macros/s/AKfycbyt12vxIYsI8JfWBdAZ_9tnnuve3KozYpl9pWcXZZn7a3fJqDKtY6ARcpj1EmUtSFrH/exec",
         "targetName": "activity"
     },
     "static": {
-        "mode": false,
-        "osmjson": ""
+        "use": false,
+        "osmjsons": []
     },
     "wikipedia": {
         "marker": "wikipedia.svg",
@@ -96,6 +112,13 @@
         "domain": "wikipedia.org",
         "tag": "wikipedia",
         "image": true
+    },
+    "etc": {
+        "localSave": "", // 訪問済み機能フラグ(有効時はアプリ名、無効時は"")
+        "reverseIcon": false, // true:訪問済みを目立たせる / false:訪問済みを目立たせない
+        "editMode": true, // 編集メニューの表示/非表示
+        "splashUrl": "./image/ogimage.png",
+        "loadingUrl": "./image/loading.gif"
     },
     "menu": {
         "main": [
@@ -106,18 +129,13 @@
                 "divider": false
             },
             {
-                "glot-model": "owner",
-                "linkto": "https://note.com/barsaka/n/n110a4c3121d6",
-                "divider": true
-            },
-            {
                 "glot-model": "licence_title",
                 "linkto": "javascript:cMapMaker.licence()",
                 "divider": false
             },
             {
                 "glot-model": "develop_site",
-                "linkto": "https://github.com/armd-02/Playgrounds",
+                "linkto": "https://armd-02.github.io/Playgrounds/",
                 "divider": false
             },
             {
@@ -126,37 +144,69 @@
                 "divider": false
             }
         ],
+        "mainSystem": [
+            /*
+            {
+                "glot-model": "export_visited",
+                "linkto": "javascript:poiStatusCont.export()",
+                "divider": false
+            },
+            {
+                "glot-model": "import_visited",
+                "linkto": "javascript:poiStatusCont.import()",
+                "divider": false
+            }
+                */
+        ],
         // 詳細表示のハンバーガーメニュー
         "modal": [
             {
                 "glot-model": "act_add",
-                "linkto": "javascript:modalActs.edit({form:'Playgrounds'})",
+                "linkto": "javascript:modalActs.edit({form:'expo2025'})",
+                "divider": false
+            },
+            {
+                "glot-model": "copyShareLink",
+                "linkto": "javascript:cMapMaker.shareURL()",
                 "divider": false
             },
             {
                 "glot-model": "osm_open",
                 "linkto": "javascript:winCont.osm_open(cMapMaker.open_osmid)",
                 "divider": false
-            },
-            {
-                "glot-model": "button_close",
-                "linkto": "javascript:winCont.modal_close()",
-                "divider": false
             }
         ],
-        // 詳細モーダルの追加ボタン 
-        "buttons": [
+        // 詳細モーダルの追加ボタン
+        "activities": [
+            /*
             {
-                "btn_class": "btn btn-light border-secondary me-2",
-                "code": "javascript:modalActs.edit({form:'Playgrounds'})",
-                "icon_class": "fas fa-plus",
-                "btn_glot_name": "add_activity"
-            },
+                "btn_class": "btn btn-light border-secondary",
+                "code": "javascript:modalActs.edit({form:'expo2025'})",
+                "icon_class": "fas fa-clone",
+                "btn_glot_name": "act_add"
+            }
             {
                 "btn_class": "btn btn-light border-secondary",
                 "code": "javascript:cMapMaker.shareURL()",
                 "icon_class": "fas fa-clone",
                 "btn_glot_name": "share_link"
+            }
+            */
+        ],
+        "editActivity": [
+            {
+                "btn_class": "btn btn-light border-secondary p-1 btn-max pe-auto",
+                "code": "javascript:modalActs.save()",
+                "icon_class": "fa-solid fa-cloud-arrow-up",
+                "btn_glot_name": "act_save"
+            }
+        ],
+        "visited": [
+            {
+                "btn_class": "btn btn-light border-secondary pe-auto",
+                "code": "javascript:poiStatusCont.import_load()",
+                "icon_class": "fa-solid fa-cloud-arrow-up",
+                "btn_glot_name": "act_upload"
             }
         ]
     }

@@ -7,43 +7,59 @@ const GTAG = '<script async src="https://www.googletagmanager.com/gtag/js?id=';
 const LANG = (window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage).substr(0, 2) == "ja" ? "ja" : "en";
 const FILES = [
     "./baselist.html",
-    "./data/config-user.jsonc",
-    "./data/config-system.jsonc",
+    "./data/config-user.jsonc", "./data/config-system.jsonc",
     "./data/config-activities.jsonc",
     `./data/marker.jsonc`,
-    `./data/category-${LANG}.jsonc`,
-    `data/listtable-${LANG}.jsonc`,
-    "./data/overpass-system.jsonc",
-    `./data/overpass-custom.jsonc`,
-    `./data/glot-custom.jsonc`,
-    `data/glot-system.jsonc`,
+    `./data/category-${LANG}.jsonc`, `./data/listtable-${LANG}.jsonc`,
+    "./data/overpass-system.jsonc", `./data/overpass-custom.jsonc`,
+    `./data/glot-custom.jsonc`, `./data/glot-system.jsonc`,
 ];
 const glot = new Glottologist();
-var modalActs = new modal_Activities();
-var modal_wikipedia = new modal_Wikipedia();
-var modal_osmbasic = new modal_OSMbasic();
+var modalActs = new Activities();
+var wikipedia = new Wikipedia();
+var osmBasic = new OSMbasic();
 var basic = new Basic();
+var poiStatusCont = new PoiStatusCont();
 var overPassCont = new OverPassControl();
 var mapLibre = new Maplibre();
 var geoCont = new GeoCont();
 var listTable = new ListTable();
-var poiMarker = new PoiMarker();
 var cMapMaker = new CMapMaker();
 var poiCont = new PoiCont();
 var gSheet = new GoogleSpreadSheet();
 
+var PoiStatusIndex = {
+    VISITED: 0,
+    FAVORITE: 1,
+    MEMO: 2,
+};
+
+var PoiStatusCsvIndex = {
+    KEY: 0,
+    CATEGORY: 1,
+    NAME: 2,
+    VISITED: 3,
+    FAVORITE: 4,
+    MEMO: 5,
+};
+
+var PoiStatusCsvIndexOld = {
+    KEY: 0,
+    CATEGORY: 1,
+    NAME: 2,
+    VISITED: 3,
+    MEMO: 4,
+};
+
 // initialize
 console.log("Welcome to Community Map Maker.");
 console.log("initialize: Start.");
+poiStatusCont.migrateLocalStorageData();
 window.addEventListener("DOMContentLoaded", function () {
     const fetchUrls = FILES.map((url) => fetch(url).then((res) => res.text()));
-    const setUrlParams = function () {
-        // URLから引数を取得して返す関数
+    const setUrlParams = function () {  // URLから引数を取得して返す関数
         let keyValue = {};
-        let search = location.search
-            .replace(/[?&]fbclid.*/, "")
-            .replace(/%2F/g, "/")
-            .slice(1); // facebook対策
+        let search = location.search.replace(/[?&]fbclid.*/, "").replace(/%2F/g, "/").slice(1); // facebook対策
         search = search.slice(-1) == "/" ? search.slice(0, -1) : search; // facebook対策(/が挿入される)
         let params = search.split("&"); // -= -> / and split param
         history.replaceState("", "", location.pathname + "?" + search + location.hash); // fixURL
@@ -53,7 +69,7 @@ window.addEventListener("DOMContentLoaded", function () {
             keyValue[keyv[0]] = keyv[1];
         }
         return keyValue;
-    };
+    }
 
     Promise.all(fetchUrls).then((texts) => {
         let basehtml = texts[0]; // Get Menu HTML
@@ -65,90 +81,101 @@ window.addEventListener("DOMContentLoaded", function () {
         Conf.category_subkeys = Object.keys(Conf.category_sub); // Make Conf.category_subkeys
         glot.data = Object.assign(glot.data, JSON5.parse(texts[9])); // import glot data
         glot.data = Object.assign(glot.data, JSON5.parse(texts[10])); // import glot data
-        window.onresize = winCont.window_resize; // 画面サイズに合わせたコンテンツ表示切り替え
+        window.onresize = winCont.resizeWindow; // 画面サイズに合わせたコンテンツ表示切り替え
         // document.title = glot.get("site_title"); // Google検索のインデックス反映が読めないので一旦なし
         let UrlParams = setUrlParams();
         if (UrlParams.edit) Conf.etc["editMode"] = true;
-        winCont.splash(true);
+        if (UrlParams.static) Conf.static["mode"] = basic.parseBoolean(UrlParams.static);
+
+        winCont.viewSplash(true);
         listTable.init();
-        winCont.window_resize(); // Set Window Size(mapidのサイズ指定が目的)
+        poiCont.init(Conf.minimap.use);
 
         Promise.all([
             gSheet.get(Conf.google.AppScript),
-            cMapMaker.load_static(),
+            loadStatic(),
             mapLibre.init(Conf), // get_zoomなどMapLibreの情報が必要なためMapLibre.init後に実行
         ]).then((results) => {
             // MapLibre add control
             console.log("initialize: gSheet, static, MapLibre OK.");
             mapLibre.addControl("top-left", "baselist", basehtml, "mapLibre-control m-0 p-0"); // Make: base list
+            if (Conf.etc.localSave !== "") filter_menu.classList.remove('d-none')
             mapLibre.addNavigation("bottom-right");
-            mapLibre.addControl("bottom-right", "maplist", "<button onclick='cMapMaker.changeMap()'><i class='fas fa-layer-group fa-lg'></i></button>", "maplibregl-ctrl-group");
+            if (Conf.map.changeMap) mapLibre.addControl("bottom-right", "maplist", "<button onclick='cMapMaker.changeMap()'><i class='fas fa-layer-group fa-lg'></i></button>", "maplibregl-ctrl-group");
             mapLibre.addControl("bottom-right", "global_status", "", "text-information"); // Make: progress
             mapLibre.addControl("bottom-right", "global_spinner", "", "spinner-border text-primary d-none");
             mapLibre.addControl("bottom-left", "images", "", "showcase"); // add images
             mapLibre.addControl("bottom-left", "zoomlevel", "");
             winCont.playback(Conf.listTable.playback.view); // playback control view:true/false
             winCont.download(Conf.listTable.download); // download view:true/false
-            cMapMaker.mode_change("map"); // initialize last_modetime
-            winCont.menu_make(Conf.menu.main, "main_menu");
-            winCont.mouseDragScroll(images, cMapMaker.viewImageList); // set Drag Scroll on images
-            glot.render();
+            cMapMaker.changeMode("map"); // initialize last_modetime
+            const mergedMenu = [...Conf.menu.main, ...Conf.menu.mainSystem];
+            winCont.menu_make(mergedMenu, "main_menu");
+            winCont.mouseDragScroll(images, cMapMaker.eventViewThumb); // set Drag Scroll on images
+            glot.render()
+            winCont.setSidebar("")
 
             const init_close = function () {
-                if (Conf.selectItem.menu == "") {
-                    listTable.makeSelectList(Conf.listTable.category); // Must be executed before eventMoveMap
-                } else {
-                    // Make SelectItem(Manual)
-                    Object.keys(Conf.selectItem.menu).forEach((key) => {
-                        winCont.select_add("list_category", key, Conf.selectItem.menu[key]);
-                    });
-                }
-                let eventMoveMap = cMapMaker.eventMoveMap.bind(cMapMaker);
-                eventMoveMap().then(() => {
-                    winCont.splash(false);
-                    if (UrlParams.category) {
-                        if (Conf.selectItem.menu == "") {
-                            // listTableリンク時
-                            listTable.selectCategory(UrlParams.category);
-                        } else {
-                            // 手動時は直接指定
-                            list_category.value = UrlParams.category;
-                        }
-                        cMapMaker.eventChangeCategory();
-                        delete UrlParams.category;
-                    }
+                let cat = (UrlParams.category !== "" && UrlParams.category !== undefined) ? UrlParams.category : Conf.selectItem.default;
+                cat = decodeURI(cat);
+                cMapMaker.updateView(cat).then(() => {     // 初期データロード
+                    mapLibre.addCountryFlagsImage(poiCont.getAllOSMCountryCode())
+                    cMapMaker.addEvents()
+                    winCont.viewSplash(false)
+                    setTimeout(() => { cMapMaker.eventMoveMap() }, 300) // 本来なら不要だがfirefoxだとタイミングの関係で必要
                     if (UrlParams.node || UrlParams.way || UrlParams.relation) {
                         let keyv = Object.entries(UrlParams).find(([key, value]) => value !== undefined);
-                        let param = keyv[0] + "/" + keyv[1];
-                        let subparam = param.split("."); // split child elements(.)
-                        cMapMaker.viewDetail(subparam[0], subparam[1]);
+                        let param = keyv[0] + "/" + keyv[1]
+                        let subparam = param.split(".") // split child elements(.)
+                        let geojson = poiCont.get_osmid(subparam[0]).geojson
+                        cMapMaker.viewDetail(subparam[0], subparam[1]).then(() => {
+                            if (geojson !== undefined) {
+                                geoCont.flashPolygon(geojson)
+                                geoCont.writePoiCircle(geojson)
+                            }
+                        })
                     }
-                    cMapMaker.addEvents();
-                });
-            };
+                })
+            }
 
-            // Load gSheet's OSM Data(件数が増えるとサーバから拒否されるので停止)
             poiCont.setActdata(results[0]); // gSheetをPoiContにセット(座標は無いのでOSM読み込み時にマッチング)
-            if (Conf.view.poiActLoad) {
-                let osmids = poiCont.pois().acts.map((act) => {
-                    return act.osmid;
-                });
+            if (Conf.poiView.poiActLoad) {
+                let osmids = poiCont.pois().acts.map((act) => { return act.osmid; });
                 osmids = osmids.filter(Boolean);
-                if (osmids.length > 0 && !Conf.static.mode) {
-                    basic
-                        .retry(() => overPassCont.getOsmIds(osmids), 5)
-                        .then((geojson) => {
-                            poiCont.addGeojson(geojson);
-                            poiCont.setActlnglat();
-                            init_close();
-                        });
+                if (osmids.length > 0 && !Conf.static.use) {
+                    basic.retry(() => overPassCont.getOsmIds(osmids), 5).then((geojson) => {
+                        poiCont.addGeojson(geojson)
+                        poiCont.setActlnglat()
+                        init_close();
+                    });
                 } else {
                     poiCont.setActlnglat();
-                    init_close();
+                    init_close()
                 }
             } else {
-                init_close();
+                init_close()
             }
-        });
-    });
-});
+        })
+    })
+})
+
+function loadStatic() {
+    return new Promise((resolve, reject) => {
+        if (!Conf.static.use) {
+            resolve();
+        } else {
+            console.log("cMapMaker: no static mode");
+            const fetchUrls = Conf.static.osmjsons.map((url) => fetch(url).then((res) => res.text()));
+            Promise.all(fetchUrls).then((datas) => {
+                datas.forEach(data => {
+                    let json = JSON5.parse(data)
+                    let ovanswer = overPassCont.setOsmJson(json);
+                    poiCont.addGeojson(ovanswer);
+                })
+                poiCont.setActlnglat();
+                console.log("cMapMaker: static load done.");
+                resolve();
+            })
+        }
+    })
+}
