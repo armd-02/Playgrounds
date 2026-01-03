@@ -162,7 +162,7 @@
         "modal": [
             {
                 "glot-model": "act_add",
-                "linkto": "javascript:modalActs.edit({form:'expo2025'})",
+                "linkto": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "divider": false
             },
             {
@@ -178,20 +178,12 @@
         ],
         // 詳細モーダルの追加ボタン
         "activities": [
-            /*
             {
                 "btn_class": "btn btn-light border-secondary",
-                "code": "javascript:modalActs.edit({form:'expo2025'})",
+                "code": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "icon_class": "fas fa-clone",
                 "btn_glot_name": "act_add"
             }
-            {
-                "btn_class": "btn btn-light border-secondary",
-                "code": "javascript:cMapMaker.shareURL()",
-                "icon_class": "fas fa-clone",
-                "btn_glot_name": "share_link"
-            }
-            */
         ],
         "editActivity": [
             {
