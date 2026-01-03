@@ -5902,19 +5902,18 @@
             "source-layer": "poi",
             "minzoom": 11,
             "layout": {
-                "icon-size": 0.9,
+                "icon-size": 1.0,
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans"
                 ],
-                "text-size": 16,
+                "text-size": 14,
                 "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
                 "visibility": "visible",
                 "text-anchor": "left",
                 "text-offset": [
-                    0.9,
-                    0
+                    0.7,
+                    -0.1
                 ],
                 "text-padding": 2,
                 "text-max-width": 9,

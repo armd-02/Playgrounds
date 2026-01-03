@@ -2,7 +2,7 @@
 {
     "map": {
         "changeMap": true, // 地図切り替え時はtrue
-        "tileName": "OSMFJ_NOPOI", // タイル一覧は config-system.jsonc へ
+        "tileName": "OSMFJ_POI", // タイル一覧は config-system.jsonc へ
         "viewCenter": [
             135.495697,
             34.702363

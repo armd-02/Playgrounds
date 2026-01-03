@@ -17,8 +17,8 @@
         ]
     },
     "tile": {
-        "OSMFJ_NOPOI": { // for planet globe
-            "style": "./tiles/osmfj_nopoi.json",
+        "OSMFJ_POI": { // for planet globe
+            "style": "./tiles/osmfj_poi.json",
             "name": "OpenStreetMap(3D/OSMFJ提供)",
             "skip": false
         },

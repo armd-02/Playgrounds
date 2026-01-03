@@ -61,7 +61,7 @@ class CMapMaker {
         }
         const loadStatic = function () {
             return new Promise((resolve, reject) => {
-                if (!Conf.static.mode) {
+                if (!Conf.static.use) {
                     resolve();
                 } else {
                     console.log("cMapMaker: Static mode");
@@ -102,7 +102,7 @@ class CMapMaker {
 
             winCont.viewSplash(true);
             listTable.init();
-            poiCont.init(Conf.map.miniMap);
+            poiCont.init(Conf.minimap.use);
 
             Promise.all([
                 gSheet.get(Conf.google.AppScript),
@@ -160,7 +160,7 @@ class CMapMaker {
                 if (Conf.poiView.poiActLoad) {
                     let osmids = poiCont.pois().acts.map((act) => { return act.osmid; });
                     osmids = osmids.filter(Boolean);
-                    if (osmids.length > 0 && !Conf.static.mode) {   // osmidsがある&非static時
+                    if (osmids.length > 0 && !Conf.static.use) {   // osmidsがある&非static時
                         basic.retry(() => overPassCont.getOsmIds(osmids), 5).then((geojson) => {
                             poiCont.addGeojson(geojson)
                             poiCont.setActlnglat()
@@ -172,6 +172,8 @@ class CMapMaker {
                             init_close()
                         })
                     }
+                } else if (Conf.static.use) {       // actLoadしない&Static時
+                    loadStatic().then(() => init_close())
                 } else {
                     init_close()
                 }
@@ -218,6 +220,8 @@ class CMapMaker {
         winCont.showMessage(Conf.tile[styleName].name);
         setTimeout(() => {
             this.eventMoveMap()
+            let snow = styleName.indexOf("SNOW") > -1;      // SNOWの文字列があれば雪を降らす
+            winCont.fallsSnow(snow)
         }, 1000)
     }
 
@@ -239,7 +243,7 @@ class CMapMaker {
         targets.forEach((target) => {
             let osmConf = Conf.osm[target] == undefined ? { expression: { viewArea: true } } : Conf.osm[target]
             if (osmConf.expression.viewArea) {   // viewArea: trueが対象
-                let pois = poiCont.getPois(target, true)
+                let pois = poiCont.getPois(target, false)
                 let titleTag = "";
                 if (!osmConf.expression.poiView) {  // poiViewがfalseの時(true時はpoiView側で表示するため)
                     titleTag = ["format", ["case", ["all", ["has", "ref"], ["!=", ["get", "ref"], ""]],
