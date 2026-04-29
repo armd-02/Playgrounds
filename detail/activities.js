@@ -64,9 +64,9 @@ class Activities {
                                     // Wikimedia Commons
                                     let id = act.id.replace("/", "") + "_" + key;
                                     wikimq.push([gdata, id]);
-                                    chtml += `<div class="col-12"><img class="thumbnail" onclick="modalActs.viewImage(this)" id="${id}"><span id="${id}-copyright"></span></div>`;
+                                    chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modalActs.viewImage(this)" src="${Conf.etc.loadingUrl}" id="${id}"><span id="${id}-copyright"></span></div>`;
                                 } else {
-                                    chtml += `<div class="col-12"><img class="thumbnail" onclick="modalActs.viewImage(this)" src="${gdata}"></div>`;
+                                    chtml += `<div class="col-12 text-center"><img class="thumbnail" onclick="modalActs.viewImage(this)" src="${gdata}"></div>`;
                                 }
                             }
                             break;
@@ -103,9 +103,9 @@ class Activities {
                 result += clone.outerHTML;
             }
         });
-        wikimq.forEach((q) => {
-            basic.getWikiMediaImage(q[0], Conf.thumbnail.modalThumbWidth, q[1]);
-        }); // WikiMedia Image 遅延読み込み
+        setTimeout(() => {
+            wikimq.forEach((q) => { basic.getWikiMediaImage(q[0], Conf.thumbnail.modalThumbWidth, q[1]); }); // WikiMedia Image 遅延読み込み
+        }, 500)
         tModal.remove();
         template.remove();
         return result;

@@ -1,11 +1,11 @@
 {
     "act_add": {
-        "ja": "追加",
-        "en": "Add"
+        "ja": "情報追加",
+        "en": "Add Information"
     },
     "act_edit": {
-        "ja": "編集",
-        "en": "Edit"
+        "ja": "情報編集",
+        "en": "Edit Information"
     },
     "act_save": {
         "ja": "保存",
@@ -76,7 +76,7 @@
         "en": "add Activity"
     },
     "morezoom": {
-        "ja": "ズームしてください",
+        "ja": "もっとズームしてください",
         "en": "Please zoom more."
     },
     "button_ok": {
@@ -302,5 +302,13 @@
     "searchKeyword": {
         "ja": "キーワード検索",
         "en": "searchKeyword"
+    },
+    "UseOVCacheYes": {
+        "ja": "キャッシュオン(キャッシュを利用します)",
+        "en": "Cache on (use cached information)"
+    },
+    "UseOVCacheNo": {
+        "ja": "キャッシュオフ(最新情報を取得します)",
+        "en": "Cache off (get the latest information)"
     }
 }

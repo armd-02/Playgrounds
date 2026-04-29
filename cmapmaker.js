@@ -115,10 +115,9 @@ class CMapMaker {
                 if (Conf.etc.localSave !== "") filter_menu.classList.remove('d-none')
                 mapLibre.addNavigation("bottom-right");
                 if (Conf.map.changeMap) mapLibre.addControl("bottom-right", "maplist", "<button onclick='cMapMaker.changeMap()'><i class='fas fa-layer-group fa-lg'></i></button>", "maplibregl-ctrl-group");
-                mapLibre.addControl("bottom-right", "global_status", "", "text-information"); // Make: progress
-                mapLibre.addControl("bottom-right", "global_spinner", "", "spinner-border text-primary d-none");
                 mapLibre.addControl("bottom-left", "images", "", "showcase"); // add images
-                mapLibre.addControl("bottom-left", "zoomlevel", "");
+                mapLibre.addControl("bottom-left", "globalStatus", "", "vw-100 d-flex align-items-center justify-content-center gap-2");
+                globalStatus.innerHTML = '<div id="globalSpinner" class="spinner-border text-primary d-none"></div><span id="globalMessage" class="globalMessage"></span>';
                 winCont.playback(Conf.listTable.playback.view); // playback control view:true/false
                 winCont.download(Conf.listTable.download); // download view:true/false
                 cMapMaker.changeMode("map"); // initialize last_modetime
@@ -145,7 +144,8 @@ class CMapMaker {
                             let keyv = Object.entries(UrlParams).find(([key, value]) => value !== undefined)
                             let param = keyv[0] + "/" + keyv[1]
                             let subparam = param.split(".") // split child elements(.)
-                            let geojson = poiCont.get_osmid(subparam[0]).geojson
+                            let osmdata = poiCont.get_osmid(subparam[0])
+                            let geojson = osmdata !== undefined ? osmdata.geojson : undefined
                             cMapMaker.viewDetail(subparam[0], subparam[1]).then(() => {
                                 if (geojson !== undefined) {
                                     geoCont.flashPolygon(geojson)
@@ -168,7 +168,7 @@ class CMapMaker {
                         });
                     } else {    // static時
                         loadStatic().then(() => {
-                            poiCont.setActlnglat();
+                            poiCont.setActlnglat()
                             init_close()
                         })
                     }
@@ -188,9 +188,10 @@ class CMapMaker {
     }
 
     about() {
-        let msg = { msg: glot.get("about_message"), ttl: glot.get("about") }
+        let msg = glot.get("about_message");
+        msg = msg.replace(/\n/g, "<br>")  // 改行コードを<br>に変換
         mapLibre.viewMiniMap(false)
-        winCont.makeDetail({ "title": msg.ttl, "message": msg.msg, "mode": "close", "menu": false })
+        winCont.makeDetail({ "title": glot.get("about"), "message": msg, "mode": "close", "menu": false })
         winCont.setSidebar("view")
     }
 
@@ -223,6 +224,13 @@ class CMapMaker {
             let snow = styleName.indexOf("SNOW") > -1;      // SNOWの文字列があれば雪を降らす
             winCont.fallsSnow(snow)
         }, 1000)
+    }
+
+    // OverPassキャッシュモード設定
+    setCacheMode(mode) {
+        let UseCache = overPassCont.useCache(mode)
+        globalMessage.innerHTML = glot.get(UseCache ? "UseOVCacheYes" : "UseOVCacheNo");
+        setTimeout(() => { globalMessage.innerHTML = "" }, 3000)
     }
 
     setVisitedFilter(visitedFilterStatus) {
@@ -261,7 +269,7 @@ class CMapMaker {
     viewPoi(targets) {		// Poiを表示させる
         let nowselect = listTable.getSelCategory()          // tags,key=valueの複数値
         nowselect = nowselect[0] == "" ? "-" : nowselect[nowselect.length - 1]
-        console.log(`viewPoi: Start(now select ${nowselect}).`)
+        //console.log(`viewPoi: Start(now select ${nowselect}).`)
         targets = targets[0] == "-" || targets[0] == "" ? poiCont.getTargets() : targets;		// '-' or ''はすべて表示
         targets = targets.filter(target => {                                                    // poiView=trueのみ返す
             return Conf.osm[target] !== undefined ? Conf.osm[target].expression.poiView : false;
@@ -354,19 +362,20 @@ class CMapMaker {
                         poiCont.setActlnglat()
                     };
                     console.log("[success]cMapMaker: updateOsmPoi End.");
-                    global_status.innerHTML = "";
+                    globalMessage.innerHTML = "";
                     resolve({ "update": true });
                 }).catch(() => {
                     winCont.spinner(false);
                     console.log("[error]cMapMaker: updateOsmPoi end.");
-                    global_status.innerHTML = "";
+                    globalMessage.innerHTML = "";
                     resolve({ "update": false });
                 });
             }
         })
 
         function status_write(progress) {
-            global_status.innerHTML = progress;
+            let message = "Loading... " + progress + "byte.<br>";
+            globalMessage.innerHTML = globalMessage.innerHTML + message;
         }
     }
 
@@ -555,7 +564,7 @@ class CMapMaker {
     // EVENT: map moveend発生時のイベント
     eventMoveMap() {
         if (cMapMaker.moveMapBusy || cMapMaker.status !== "normal") return;
-        console.log("eventMoveMap: Start. ");
+        //console.log("eventMoveMap: Start. ");
         cMapMaker.moveMapBusy = true;
 
         const zoom = mapLibre.getZoom(false);
@@ -597,17 +606,17 @@ class CMapMaker {
     eventZoomMap() {
         let morezoom = 0;
         for (let [key, value] of Object.entries(Conf.poiView.poiZoom)) {
-            morezoom = value > morezoom ? value : morezoom
+            morezoom = value >= morezoom ? value : morezoom
         }
         if (Conf.etc.editMode) {
             for (let [key, value] of Object.entries(Conf.poiView.editZoom)) {
-                morezoom = value > morezoom ? value : morezoom
+                morezoom = value >= morezoom ? value : morezoom
             }
         }
         let poizoom = mapLibre.getZoom(true) >= morezoom ? false : true
         let message = `${glot.get("zoomlevel")}${mapLibre.getZoom(true)} `
         if (poizoom) message += `(${glot.get("morezoom")})`
-        zoomlevel.innerHTML = "<span class='zoom'>" + message + "</span>"
+        globalMessage.innerHTML = message
     }
 }
 const cMapMaker = new CMapMaker();

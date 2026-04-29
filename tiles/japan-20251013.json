@@ -2072,7 +2072,6 @@
             },
             "paint": {
                 "fill-color": "rgba(255, 255, 255, 1)",
-                "fill-pattern": "pedestrian_polygon",
                 "fill-antialias": false,
                 "fill-outline-color": "rgba(255, 255, 255, 1)",
                 "fill-translate-anchor": "viewport"
@@ -5035,7 +5034,6 @@
             "minzoom": 0,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5071,7 +5069,6 @@
             "minzoom": 0,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5108,7 +5105,6 @@
             "maxzoom": 24,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5149,7 +5145,6 @@
             "maxzoom": 24,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5189,7 +5184,6 @@
             "minzoom": 0,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5229,7 +5223,6 @@
             "minzoom": 0,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
@@ -5269,8 +5262,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 14,
                 "icon-image": "{subclass}_11",
@@ -5350,8 +5342,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 14,
                 "icon-image": "{subclass}_11",
@@ -5431,8 +5422,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5512,8 +5502,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5593,8 +5582,7 @@
             "minzoom": 15,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5658,8 +5646,7 @@
             "minzoom": 15,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5724,8 +5711,7 @@
             "layout": {
                 "icon-size": 0.9,
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5788,8 +5774,7 @@
             "layout": {
                 "icon-size": 0.9,
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "icon-image": "{class}_11",
@@ -5852,7 +5837,7 @@
             "layout": {
                 "icon-size": 1.2,
                 "text-font": [
-                    "Noto Sans Bold"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 16,
                 "icon-image": "railway_11",
@@ -5905,8 +5890,7 @@
             "layout": {
                 "icon-size": 0.9,
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 16,
                 "icon-image": "{class}_11",
@@ -6058,7 +6042,6 @@
             "minzoom": 12,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6105,7 +6088,6 @@
             "minzoom": 12,
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6406,8 +6388,7 @@
             "minzoom": 14,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "base": 1.2,
@@ -6460,7 +6441,7 @@
             "maxzoom": 24,
             "layout": {
                 "text-font": [
-                    "Noto Sans"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 12,
                 "text-field": "{name:ja}",
@@ -6499,7 +6480,6 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6544,7 +6524,6 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6590,7 +6569,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6654,7 +6632,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Regular",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6719,7 +6696,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Medium",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6786,7 +6762,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Medium",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6853,7 +6828,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Medium",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6901,7 +6875,6 @@
             "layout": {
                 "visibility": "none",
                 "text-font": [
-                    "Roboto Medium",
                     "Noto Sans Regular"
                 ],
                 "text-size": {
@@ -6947,8 +6920,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -6997,8 +6969,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7047,8 +7018,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7102,8 +7072,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7157,8 +7126,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7212,8 +7180,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7267,8 +7234,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7322,8 +7288,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": {
                     "stops": [
@@ -7378,8 +7343,7 @@
             "maxzoom": 1,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 13,
                 "text-field": "{name}",
@@ -7413,8 +7377,7 @@
             "maxzoom": 1,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
-                    "Noto Sans Italic"
+                    "Noto Sans Regular"
                 ],
                 "text-size": 13,
                 "text-field": "{name:ja}",
@@ -7444,8 +7407,8 @@
     "metadata": {
         "openmaptiles:version": "3.x"
     },
-    "sprite": "https://tile.openstreetmap.jp/styles/osm-bright/sprite",
-    "glyphs": "https://tile.openstreetmap.jp/fonts/{fontstack}/{range}.pbf",
+    "sprite": "https://armd-01.sakura.ne.jp/tiles/japan/sprite",
+    "glyphs": "https://armd-01.sakura.ne.jp/tiles/fonts/{fontstack}/{range}.pbf",
     "bearing": 0,
     "pitch": 30,
     "center": [

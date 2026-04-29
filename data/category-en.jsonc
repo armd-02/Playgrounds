@@ -112,6 +112,7 @@
             "office": "office",
             "public": "public",
             "temple": "temple",
+            "train_station": "train station",
             "residential": "residential",
             "retail": "retail",
             "roof": "roof",
@@ -309,6 +310,7 @@
             "apartment": "apartment",
             "attraction": "attraction",
             "artwork": "artwork",
+            "aquarium": "aquarium",
             "gallery": "gallery",
             "guest_house": "guest house",
             "hostel": "hostel",
@@ -328,27 +330,23 @@
             "building": "historic buidling",
             "castle": "castle",
             "cannon": "cannon",
+            "heritage": "heritage",
+            "locomotive": "locomotive",
             "memorial": "memorial",
             "monument": "monument",
             "milestone": "milestone",
-            "heritage": "heritage",
-            "tomb": "tomb",
-            "locomotive": "locomotive",
+            "ruins": "ruins",
             "street_lamp": "street lamp",
+            "stone": "histric stone",
+            "tomb": "tomb",
             "wayside_shrine": "wayside shrine",
             "wayside_cross": "cross",
-            "vehicle": "vehicle"
-        },
-        "information": {
-            "board": "board",
-            "terminal": "terminal",
-            "audioguide": "audioguide",
-            "map": "map",
-            "tactile_map": "tactile map",
-            "guidepost": "guidepost"
+            "vehicle": "vehicle",
+            "yes": "historic"
         },
         "man_made": {
             "bridge": "bridge",
+            "ceremonial_gate": "ceremonial gate",
             "flagpole": "flagpole",
             "torii": "torii",
             "lamp": "lantern",
@@ -569,9 +567,13 @@
         },
         "tourism": {
             "information": {
-                "map": "map",
+                "audioguide": "audioguide",
                 "board": "board",
-                "office": "office"
+                "guidepost": "guidepost",
+                "map": "map",
+                "office": "office",
+                "tactile_map": "tactile map",
+                "terminal": "terminal"
             }
         }
     }

@@ -12,8 +12,8 @@
         "en": "playground equipment map development site"
     },
     "about_message": {
-        "ja": "公園の良さをみんなで共有するため、公園や遊具の情報を集めてマップを作る活動です。詳しくは<a href='https://k-sakanoshita.medium.com/1173cab3fd72'>プロジェクトのブログへ</a>",
-        "en": "In order to share the goodness of the park with everyone, this is an activity to collect information on the park and playground equipment and create a map."
+        "ja": "みんなで公園マッププロジェクトは、各地の公園の魅力や遊具・設備の情報を、みんなで集めて共有するプロジェクトです。\n親子で行ける公園、運動しやすい公園、のんびり過ごせる公園など、公園ごとの特徴を見つけやすくすることを目指しています。\nこの「遊具のある公園マップ」では、公園の場所だけでなく、ブランコ、シーソー、砂場など公園内の施設も地図上で確認できます。\n\nプロジェクトでは、OpenStreetMapのデータを活用しながら、公園や遊具に関する情報が少ない地域のデータ整備も進めようとしています。\n活動内容は公園や遊具の雰囲気・利用した感想・写真などの口コミ情報の提供と、公園や遊具をOpenStreetMapへマッピングすることです。\n\n詳しくは、<a href=\"https://note.com/barsaka/n/n110a4c3121d6\">プロジェクトのサイト</a>をご覧ください。",
+        "en": "The Minna de Koen Map Project is a project to collect and share information about the appeal, playground equipment, and facilities of parks in different areas. It aims to make it easier to find parks with different features, such as parks suitable for families with children, parks for exercise, and parks where people can relax. Its first public release, the “Playgrounds Map,” allows users to check not only the locations of parks, but also facilities within them, such as swings, seesaws, and sandboxes.\nThe project uses OpenStreetMap data while also working to improve data coverage in areas where information about parks and playground equipment is still limited. Its activities mainly consist of two parts: sharing review-style information such as the atmosphere of parks, user impressions, and photos, and mapping the locations of parks and playground equipment on OpenStreetMap.\nFor more details, please visit the <a href=\"https://note.com/barsaka/n/n110a4c3121d6\">project site</a>."
     },
     "owner": {
         "ja": "プロジェクトのブログ・サイトへ",

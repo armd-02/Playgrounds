@@ -55,17 +55,17 @@
             "Noto Sans Regular"
         ], // 使用可能なフォント（spriteに依存）
         "textSize": 12,
-        "textViewZoom": 13 // アイコンに文字を表示するズームレベル
+        "textViewZoom": 14 // アイコンに文字を表示するズームレベル
     },
     "poiView": {
-        "poiActLoad": true, // 起動時にActivityを読み込むか
+        "poiActLoad": false, // 起動時にActivityを読み込むか
         "poiFilter": "", // poiView時の表示範囲 all:画面外も表示 / "":画面内だけを表示
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 13,
-            "Playgrounds_Play": 14,
+            "Playgrounds_Park": 12.5,
+            "Playgrounds_Play": 15,
             "Playgrounds_Etc": 15,
-            "activity": 14
+            "activity": 15
         },
         "editZoom": {
             // 編集時に追加するpoiZoom
@@ -93,7 +93,7 @@
     },
     "thumbnail": {
         "use": true,
-        "limits": 20, // 画像の制限数
+        "limits": 16, // 画像の制限数
         "slideThumbWidth": "320",
         "modalThumbWidth": "800"
     },
@@ -141,6 +141,16 @@
             {
                 "glot-model": "openstreetmap",
                 "linkto": "https://www.openstreetmap.org/about",
+                "divider": true
+            },
+            {
+                "glot-model": "UseOVCacheYes",
+                "linkto": "javascript:cMapMaker.setCacheMode(true)",
+                "divider": false
+            },
+            {
+                "glot-model": "UseOVCacheNo",
+                "linkto": "javascript:cMapMaker.setCacheMode(false)",
                 "divider": false
             }
         ],

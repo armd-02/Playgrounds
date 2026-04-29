@@ -112,6 +112,7 @@
             "office": "事務所",
             "public": "公共建築",
             "temple": "寺院",
+            "train_station": "駅舎",
             "residential": "住居",
             "retail": "店舗",
             "roof": "屋根",
@@ -309,6 +310,7 @@
             "apartment": "リゾートマンション",
             "attraction": "観光名所",
             "artwork": "アート作品",
+            "aquarium": "水族館",
             "gallery": "ギャラリー",
             "guest_house": "ゲストハウス",
             "hotel": "ホテル",
@@ -328,27 +330,23 @@
             "building": "歴史的建築物",
             "castle": "お城",
             "cannon": "大砲(展示)",
+            "heritage": "遺産",
+            "locomotive": "機関車(引退済み)",
             "memorial": "石碑",
             "monument": "記念建造物",
             "milestone": "一里塚",
-            "heritage": "遺産",
-            "tomb": "墓",
-            "locomotive": "機関車(引退済み)",
+            "ruins": "廃墟",
             "street_lamp": "照明（保存）",
+            "stone": "歴史的な岩/石",
+            "tomb": "墓",
             "wayside_shrine": "地蔵・道祖神",
             "wayside_cross": "十字架",
-            "vehicle": "車両(展示)"
-        },
-        "information": {
-            "board": "掲示板",
-            "terminal": "情報端末",
-            "audioguide": "音声ガイド",
-            "map": "地図",
-            "tactile_map": "触地図",
-            "guidepost": "道しるべ"
+            "vehicle": "車両(展示)",
+            "yes": "歴史的遺物"
         },
         "man_made": {
             "bridge": "橋",
+            "ceremonial_gate": "儀式用の門",
             "flagpole": "旗竿",
             "torii": "鳥居",
             "lamp": "灯籠",
@@ -569,9 +567,13 @@
         },
         "tourism": {
             "information": {
-                "map": "地図版",
+                "audioguide": "音声ガイド",
                 "board": "案内板",
-                "office": "事務所"
+                "guidepost": "道しるべ",
+                "map": "地図",
+                "office": "事務所",
+                "tactile_map": "触地図",
+                "terminal": "情報端末"
             }
         }
     }

@@ -10,11 +10,11 @@
     },
     "system": {
         "OverPassServer": [
+            "https://armd-01.sakura.ne.jp/api/interpreter",
             "https://overpass-api.de/api/interpreter",
-            "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
-            "https://overpass.kumi.systems/api/interpreter",
-            "https://overpass.openstreetmap.jp/api/interpreter"
-        ]
+            "https://overpass.private.coffee/api/interpreter"
+        ],
+        "NoChacheServer": "https://overpass-api.de/api/interpreter"
     },
     "tile": {
         "OSMFJ_POI": { // for planet globe

@@ -46,7 +46,7 @@
                 "fountain": "fountain.png",
                 "fuel": "fuel.png",
                 "gambling": "coins-solid.png",
-                "grave_yard": "marker-stroked.png",
+                "grave_yard": "cemetery.png",
                 "hospital": "hospital.png",
                 "ice_cream": "ice-cream.png",
                 "internet_cafe": "internet_cafe.png",
@@ -115,6 +115,7 @@
                 "office": "town_hall.png",
                 "public": "home.png",
                 "temple": "place-of-worship.png",
+                "train_station": "building.png",
                 "residential": "residential-community.png",
                 "retail": "shop.png",
                 "roof": "home.png",
@@ -312,6 +313,7 @@
                 "apartment": "lodging.png",
                 "attraction": "star.png",
                 "artwork": "art-gallery.png",
+                "aquarium": "aquarium.png",
                 "gallery": "art-gallery2.png",
                 "guest_house": "lodging.png",
                 "hostel": "bunk_beds.png",
@@ -331,27 +333,23 @@
                 "building": "row_houses.png",
                 "castle": "castle-JP.png",
                 "cannon": "cannon.png",
+                "heritage": "archaeological-site.png",
+                "locomotive": "ruins.png",
                 "memorial": "monument.png",
                 "monument": "monument.png",
                 "milestone": "milestone.png",
-                "heritage": "archaeological-site.png",
+                "ruins": "ruins.png",
+                "street_lamp": "street_lamp_arm.png",
+                "stone": "boulder2.png",
                 "tomb": "cemetery-JP.png",
-                "locomotive": "ruins.png",
-                "street_lamp": "marker-stroked.png",
                 "wayside_shrine": "ojizou.png",
                 "wayside_cross": "cross_christ.png",
-                "vehicle": "car.png"
-            },
-            "information": {
-                "board": "info_board.png",
-                "terminal": "app_terminal.png",
-                "audioguide": "information.png",
-                "map": "info_board.png",
-                "tactile_map": "info_board.png",
-                "guidepost": "map-signs.png"
+                "vehicle": "car.png",
+                "yes": "monument.png"
             },
             "man_made": {
                 "bridge": "bridge.png",
+                "ceremonial_gate": "archway-solid-full.png",
                 "flagpole": "flag.png",
                 "torii": "shinto.png",
                 "lamp": "lantern.png",
@@ -431,8 +429,13 @@
             },
             "tourism=information": {
                 "information": {
-                    "map": "Map-14.png",
-                    "board": "info_board.png"
+                    "audioguide": "information.png",
+                    "board": "info_board.png",
+                    "guidepost": "map-signs.png",
+                    "map": "info_board.png",
+                    "office": "info_board.png",
+                    "tactile_map": "info_board.png",
+                    "terminal": "app_terminal.png"
                 }
             },
             "tourism=artwork": {
@@ -464,6 +467,11 @@
                     "Cherry blossom": "sakura.png",
                     "Cerasus itosakura": "sakura.png",
                     "Cerasus × yedoensis": "sakura.png"
+                }
+            },
+            "man_made=ceremonial_gate": {
+                "ceremonial_gate": {
+                    "torii": "torii.png"
                 }
             }
         }

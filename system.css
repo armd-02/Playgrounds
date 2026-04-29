@@ -41,22 +41,12 @@ a {
     color: rgb(0 117 58);
 }
 
-/*
-#article {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-*/
-
 #mapid {
     height: 100%;
 }
 
 .two-pane {
     display: flex;
-    flex-direction: column;
-    /* デフォルト = 縦並び */
 }
 
 #top-pane {
@@ -143,10 +133,9 @@ h4 img {
     margin-right: 0.3em;
 }
 
-span.zoom {
-    font-size: 12px;
+span.globalMessage {
     color: rgba(0, 0, 0, 1);
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.6);
     padding: 6px;
     margin: 0px;
 }
@@ -169,7 +158,7 @@ p {
 }
 
 span {
-    font-size: 1rem;
+    font-size: 16px;
 }
 
 /* マーカーのフォントサイズ選択 */
@@ -187,7 +176,8 @@ span.fs-14 {
 
 /* button for select way color */
 .modal-backdrop.show {
-    opacity: 0;
+    background-color: var(--splash-bg-color);
+    opacity: 1 !important;
 }
 
 .modal-dialog-fluid {
@@ -414,23 +404,4 @@ tr.selected td {
     color: #000;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 6px;
-}
-
-/* モバイル */
-@media (min-width: 1080px) {
-    .two-pane {
-        flex-direction: row;
-        height: 100vh;
-    }
-
-    .two-pane aside {
-        width: 480px;
-        flex: 0 0 0px;
-        height: 100vh;
-    }
-
-    .two-pane main {
-        flex: 1 1 auto;
-        height: 100vh;
-    }
 }

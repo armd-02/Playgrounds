@@ -2,17 +2,26 @@
 <html>
 
 <head>
-    <title>遊具のある公園マップ ver 2025/12/25</title>
+    <title>遊具のある公園マップ ｜ すべり台・ブランコなど公園遊具を地図で探せます</title>
     <meta name="google-site-verification" content="TwbTRVYGqZKuaBwbe1gbdD9HEf1tc9eueQG6uTVb60Q" />
     <meta charset="utf-8" />
-    <meta name="description" content="遊具のある公園マップ by みんなで公園マッププロジェクト">
-    <meta property="og:description" content="遊具のある公園マップ by みんなで公園マッププロジェクト" />
+    <meta name="description"
+        content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
+
+    <meta property="og:description"
+        content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
     <meta property="og:url" content="https://armd-02.github.io/Playgrounds/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="遊具のある公園マップ" />
+    <meta property="og:title" content="遊具のある公園マップ｜すべり台・ブランコなど公園遊具を地図で探せます" />
     <meta property="og:image" content="https://armd-02.github.io/Playgrounds/image/ogimage.png" />
     <meta property="og:image:width" content="1640" />
     <meta property="og:image:height" content="924" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="遊具のある公園マップ｜すべり台・ブランコなど公園遊具を地図で探せます" />
+    <meta name="twitter:description"
+        content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
+    <meta name="twitter:image" content="https://armd-02.github.io/Playgrounds/image/ogimage.png" />
 
     <link rel="icon" href="./favicon.ico" sizes="any">
     <meta name="viewport"
@@ -42,7 +51,7 @@
                     </div>
                 </div>
                 <div id="btmWindow" class="" tabindex="-1">
-                    <div class="m-1">
+                    <div class="m-2">
                         <div id="mini-map" class="d-none mx-auto"></div>
                         <div id="btmWindow_message"></div>
                         <div class="footerSpace"></div>
@@ -75,15 +84,11 @@
     </div>
 
     <div id="splashImage" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document" data-keyboard="false">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="" style="width: 100%;float: none !important" id="splashSrc"><br>
-                    <div class="d-flex justify-content-center mt-2">
-                        <div class="spinner-border text-primary mx-auto" role="status"> <span
-                                class="sr-only">Loading...</span>
-                        </div>
-                    </div>
+        <div class="modal-dialog modal-lg" role="document" data-keyboard="false">
+            <div class="modal-body">
+                <img src="" style="width: 100%;float: none !important" id="splashSrc"><br>
+                <div class="d-flex justify-content-center mt-2">
+                    <div class="spinner-border text-primary mx-auto" role="status"> </div>
                 </div>
             </div>
         </div>

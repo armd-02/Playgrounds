@@ -2072,7 +2072,6 @@
             },
             "paint": {
                 "fill-color": "rgba(255, 255, 255, 1)",
-                "fill-pattern": "pedestrian_polygon",
                 "fill-antialias": false,
                 "fill-outline-color": "rgba(255, 255, 255, 1)",
                 "fill-translate-anchor": "viewport"
@@ -5273,7 +5272,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
-                "icon-image": "{subclass}_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5354,7 +5352,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
-                "icon-image": "{subclass}_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5435,7 +5432,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5516,7 +5512,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5597,7 +5592,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5662,7 +5656,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5728,7 +5721,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5792,7 +5784,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
-                "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -5855,7 +5846,6 @@
                     "Noto Sans Bold"
                 ],
                 "text-size": 16,
-                "icon-image": "railway_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "left",
@@ -5909,7 +5899,6 @@
                     "Noto Sans Italic"
                 ],
                 "text-size": 16,
-                "icon-image": "{class}_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "left",
@@ -5969,7 +5958,6 @@
                         ]
                     ]
                 },
-                "icon-image": "oneway",
                 "visibility": "none",
                 "icon-rotate": 90,
                 "icon-padding": 2,
@@ -6019,7 +6007,6 @@
                         ]
                     ]
                 },
-                "icon-image": "oneway",
                 "visibility": "none",
                 "icon-rotate": -90,
                 "icon-padding": 2,
@@ -6156,7 +6143,6 @@
                     "Noto Sans Regular"
                 ],
                 "text-size": 10,
-                "icon-image": "road_{ref_length}",
                 "text-field": "{ref}",
                 "visibility": "visible",
                 "symbol-spacing": 200,
@@ -6213,7 +6199,6 @@
                     "Noto Sans Regular"
                 ],
                 "text-size": 9,
-                "icon-image": "{network}_{ref_length}",
                 "text-field": "{ref}",
                 "symbol-spacing": 200,
                 "symbol-placement": {
@@ -6271,7 +6256,6 @@
                     "Noto Sans Regular"
                 ],
                 "text-size": 9,
-                "icon-image": "{network}_{ref_length}",
                 "text-field": "{ref}",
                 "symbol-spacing": 200,
                 "symbol-placement": {
@@ -6326,7 +6310,6 @@
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
-                "icon-image": "airport_11",
                 "text-field": "{name}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -6368,7 +6351,6 @@
                     "Noto Sans Regular"
                 ],
                 "text-size": 12,
-                "icon-image": "airport_11",
                 "text-field": "{name:ja}",
                 "visibility": "none",
                 "text-anchor": "top",
@@ -6606,19 +6588,6 @@
                         ]
                     ]
                 },
-                "icon-image": {
-                    "base": 1,
-                    "stops": [
-                        [
-                            0,
-                            "circle-stroked_16"
-                        ],
-                        [
-                            10,
-                            ""
-                        ]
-                    ]
-                },
                 "text-field": "{name}",
                 "text-anchor": "bottom",
                 "text-offset": [
@@ -6667,19 +6636,6 @@
                         [
                             11,
                             12
-                        ]
-                    ]
-                },
-                "icon-image": {
-                    "base": 1,
-                    "stops": [
-                        [
-                            0,
-                            "circle-stroked_16"
-                        ],
-                        [
-                            10,
-                            ""
                         ]
                     ]
                 },
@@ -6735,19 +6691,6 @@
                         ]
                     ]
                 },
-                "icon-image": {
-                    "base": 1,
-                    "stops": [
-                        [
-                            0,
-                            "circle-stroked_16"
-                        ],
-                        [
-                            10,
-                            ""
-                        ]
-                    ]
-                },
                 "text-field": "{name}",
                 "text-anchor": "bottom",
                 "text-offset": [
@@ -6799,19 +6742,6 @@
                         [
                             11,
                             16
-                        ]
-                    ]
-                },
-                "icon-image": {
-                    "base": 1,
-                    "stops": [
-                        [
-                            0,
-                            "circle-stroked_16"
-                        ],
-                        [
-                            10,
-                            ""
                         ]
                     ]
                 },

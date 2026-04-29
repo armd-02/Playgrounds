@@ -51,7 +51,7 @@ class OSMbasic {
         if (website !== undefined) {
             let httpn = website.replace(/^https?:\/\//, "");
             let trunc = httpn.length > 19 ? httpn.substring(0, 29) + "..." : httpn;
-            html += `<div class="flex-row mt-1 me-3"> <i class="fas fa-globe"></i> <a href="${website}" target="_blank">${trunc}</a></div>`;
+            html += `<div class="flex-row mt-1 me-3"> <i class="fas fa-globe"></i> <a href="${website}" target="_new">${trunc}</a></div>`;
             elements++;
         }
 
@@ -78,7 +78,7 @@ class OSMbasic {
         if (instagram !== undefined) {
             instagram = this.getInstagramProfileUrl(instagram);
             if (instagram !== null) {
-                html += `<div class="flex-row mt-1 me-3"> <i class="fa-brands fa-instagram"></i> <a href="${instagram[0]}" target="_blank">${instagram[1]}</a></div>`;
+                html += `<div class="flex-row mt-1 me-3"> <i class="fa-brands fa-instagram"></i> <a href="${instagram[0]}" target="_new">${instagram[1]}</a></div>`;
                 elements++;
             }
         }
