@@ -230,7 +230,7 @@ class CMapMaker {
     setCacheMode(mode) {
         let UseCache = overPassCont.useCache(mode)
         globalMessage.innerHTML = glot.get(UseCache ? "UseOVCacheYes" : "UseOVCacheNo");
-        setTimeout(() => { globalMessage.innerHTML = "" }, 3000)
+        setTimeout(() => { globalMessage.innerHTML = "" }, 4000)
     }
 
     setVisitedFilter(visitedFilterStatus) {
