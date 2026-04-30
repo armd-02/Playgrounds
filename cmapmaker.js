@@ -374,8 +374,12 @@ class CMapMaker {
         })
 
         function status_write(progress) {
-            let message = "Loading... " + progress + "byte.<br>";
-            globalMessage.innerHTML = globalMessage.innerHTML + message;
+            const message = document.createElement("div");
+            message.innerHTML = "Loading... " + progress + "byte.";
+            globalMessage.appendChild(message);
+            while (globalMessage.children.length > 5) {
+                globalMessage.removeChild(globalMessage.firstChild);
+            }
         }
     }
 
