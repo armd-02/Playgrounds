@@ -10,9 +10,39 @@
                     "gsheet": "actdate"
                 },
                 "title": {
-                    "glot": "title",
+                    "glot": "act_title",
                     "type": "text",
                     "gsheet": "title"
+                },
+                "score": {
+                    "glot": "act_score",
+                    "type": "select",
+                    "gsheet": "score",
+                    "values": [ // カンマ区切り禁止
+                        "act_score_1",
+                        "act_score_2",
+                        "act_score_3",
+                        "act_score_4",
+                        "act_score_5",
+                        "act_score_6"
+                    ]
+                },
+                "good_points": {
+                    "glot": "act_good_points",
+                    "type": "checkbox",
+                    "gsheet": "good_points",
+                    "values": [ // カンマ区切り禁止
+                        "act_good_points_1",
+                        "act_good_points_2",
+                        "act_good_points_3",
+                        "act_good_points_4",
+                        "act_good_points_5",
+                        "act_good_points_6",
+                        "act_good_points_7",
+                        "act_good_points_8",
+                        "act_good_points_9",
+                        "act_good_points_10"
+                    ]
                 },
                 "memo": {
                     "glot": "act_memo",
@@ -24,9 +54,9 @@
                     "type": "url",
                     "gsheet": "detail_url"
                 },
-                "attention":{
-                    "glot":"act_attention",
-                    "type":"attention"
+                "attention": {
+                    "glot": "act_attention",
+                    "type": "attention"
                 },
                 "picture_url1": {
                     "glot": "act_picture_url1",
@@ -52,8 +82,11 @@
                     "glot": "act_picture_url5",
                     "type": "image_url",
                     "gsheet": "picture_url5"
+                },
+                "license_attention": {
+                    "glot": "act_license_attention",
+                    "type": "attention"
                 }
-
             }
         }
     }

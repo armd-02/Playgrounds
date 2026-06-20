@@ -39,6 +39,14 @@
         "ja": "登録失敗。ユーザー名とパスワードを確認してください",
         "en": "failed. Please check your username and password"
     },
+    "confirmCloseTitle": {
+        "ja": "データ破棄の確認",
+        "en": "Confirm Data Discard"
+    },
+    "confirmCloseDetail": {
+        "ja": "編集中のデータがあります。編集内容を破棄して画面を切り替えますか？",
+        "en": "There is data being edited. Do you want to discard the edited content and switch the screen?"
+    },
     "category": {
         "ja": "カテゴリ",
         "en": "Category"
@@ -130,6 +138,10 @@
     "sverror_message": {
         "ja": "データ取得に失敗。30秒後やり直して下さい。",
         "en": "Data acquisition failed. Please try again after 30 seconds."
+    },
+    "noDataDownload": {
+        "ja": "ダウンロードするデータがありません",
+        "en": "No data to download"
     },
     "wikipedia": {
         "ja": "Wikipedia",

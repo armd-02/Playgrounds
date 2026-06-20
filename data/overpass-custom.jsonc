@@ -37,7 +37,9 @@
         "Playgrounds_Etc": {
             "overpass": [
                 "nwr[\"amenity\"=\"toilets\"]",
-                "nwr[\"amenity\"=\"drinking_water\"]"
+                "nwr[\"amenity\"=\"bench\"]",
+                "nwr[\"amenity\"=\"drinking_water\"]",
+                "nwr[\"amenity\"=\"vending_machine\"]"
             ],
             "tags": [
                 "amenity"

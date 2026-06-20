@@ -3,22 +3,13 @@ class Activities {
 
     constructor() {
         this.busy = false;
-        this.html = "";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "./detail/activities.html", true);
-        xhr.onerror = function () {
-            console.log("[error]Detail Activities:");
-            console.log(xhr);
-        };
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 400) {
-                this.html = xhr.response;
-            } else {
-                console.log("[error]Detail Activities:");
-                console.log(xhr);
-            }
-        }.bind(this);
-        xhr.send();
+        this.html = `
+        <div class="body mb-2">
+            <div class="bg-light-subtle.bg-gradient">
+                <h5 class="border-bottom border-top border-success-subtle m-1 p-1"></h5>
+                <div class="p-1"></div>
+            </div>
+        </div>`;
     }
 
     // make activity detail list
@@ -36,18 +27,35 @@ class Activities {
                     gdata = basic.htmlspecialchars(gdata).replace(/\r?\n/g, "<br>");
                     switch (form[key].type) {
                         case "date":
-                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small> ${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
+                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span> ${basic.formatDate(new Date(gdata), "YYYY/MM/DD")}</div>`;
                             break;
                         case "textarea":
                             gdata = basic.autoLink(gdata);
-                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small><big> ${gdata.replace(/\r?\n/g, "<br>")}</big></p></div>`;
+                            chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span> <big> ${gdata.replace(/\r?\n/g, "<br>")}</big></p></div>`;
+                            break;
+                        case "checkbox":
+                            if (gdata !== "") {
+                                let values = gdata.split(","), label = "";
+                                values.forEach((value) => {
+                                    let idx = form[key].values.indexOf(value);
+                                    if (idx > -1) {
+                                        label += `<span class="fs-6 badge bg-success me-1 mb-1">${glot.get(form[key].values[idx])}</span>`;
+                                    }
+                                });
+                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span> ${label}</div>`;
+                            }
                             break;
                         case "select":
+                            if (gdata !== "") {
+                                let label = `<span class="fs-6 badge bg-primary me-1 mb-1">${glot.get(gdata)}</span>`;
+                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span> ${label}</div>`;
+                            }
+                            break;
                         case "text":
                         case "quiz_choice":
                             if (key !== "quiz_answer" && key !== "title" && gdata !== "") {
                                 gdata = basic.autoLink(gdata);
-                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small> ${gdata.replace(/\r?\n/g, "<br>")}</p></div>`;
+                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span> ${gdata.replace(/\r?\n/g, "<br>")}</p></div>`;
                             }
                             break;
                         case "quiz_textarea":
@@ -55,7 +63,7 @@ class Activities {
                             break;
                         case "url":
                             if (gdata !== "http://" && gdata !== "https://" && gdata !== "") {
-                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</span></small><a href="${gdata}">${gdata}</a></p></div>`;
+                                chtml += `<div class='col-12'><p><span class="fw-bold"><small>${glot.get(form[key].glot)}</small></span><a href="${gdata}">${gdata}</a></p></div>`;
                             }
                             break;
                         case "image_url":
@@ -104,7 +112,7 @@ class Activities {
             }
         });
         setTimeout(() => {
-            wikimq.forEach((q) => { basic.getWikiMediaImage(q[0], Conf.thumbnail.modalThumbWidth, q[1]); }); // WikiMedia Image 遅延読み込み
+            wikimq.forEach((q) => { wikimedia.getWikiMediaImage(q[0], Conf.thumbnail.modalThumbWidth, q[1]); }); // WikiMedia Image 遅延読み込み
         }, 500)
         tModal.remove();
         template.remove();
@@ -133,7 +141,7 @@ class Activities {
     edit(params = {}) {
         let title = glot.get(params.id === void 0 ? "act_add" : "act_edit");
         let html = "", act = Conf.activities;
-        let data = params.id === void 0 ? { osmid: cMapMaker.open_osmid } : poiCont.get_actid(params.id);
+        let data = params.id === void 0 ? { osmid: cMapMaker.openOSMid } : poiCont.get_actid(params.id);
         let fname = params.form == undefined ? Object.keys(Conf.activities)[0] : params.form;
 
         html = "<div class='container'>";
@@ -150,13 +158,21 @@ class Activities {
                     break;
                 case "select":
                     html += `<div class='col-2 p-1'>${glot.get(`${form.glot}`)}</div>`;
-                    let selects = "",
-                        category = form.category;
-                    for (let idx in form.category) {
-                        let selected = category[idx] !== data.category ? "" : "selected";
-                        selects += `<option value="${category[idx]}" ${selected}>${category[idx]}</option>`;
+                    let selects = "";
+                    for (let idx in form.values) {
+                        let selected = form.values[idx] !== defvalue ? "" : "selected";
+                        selects += `<option value="${form.values[idx]}" ${selected}>${glot.get(`${form.values[idx]}`)}</option>`;
                     }
-                    html += `<div class="col-10 p-1"><select id="${akey}" class="form-control form-control-sm">${selects}</select></div>`;
+                    html += `<div class="col-10 p-1"><select id="${akey}" class="form-select">${selects}</select></div>`;
+                    break;
+                case "checkbox":
+                    html += `<div class='col-2 p-1'>${glot.get(`${form.glot}`)}</div>`;
+                    let checks = "", values = defvalue.split(",");
+                    for (let idx in form.values) {
+                        let checked = values.includes(form.values[idx]) ? "checked" : "";
+                        checks += `<input type="checkbox" name="${akey}" value="${form.values[idx]}" ${checked}> ${glot.get(`${form.values[idx]}`)}</input><br>`;
+                    }
+                    html += `<div class="col-10 p-1">${checks}</div>`;
                     break;
                 case "textarea":
                 case "quiz_textarea":
@@ -187,10 +203,10 @@ class Activities {
         html += "<hr>";
         html += `<div class="row mb-1 align-items-center">`;
         html += `<div class="col-12 p-1"><h5>${glot.get("act_confirm")}</h5></div>`;
-        html += `<div class="col-4 p-1">${glot.get("act_userid")}</div>`;
-        html += `<div class="col-8 p-1"><input type="text" id="act_userid" class="form-control form-control-sm"></input></div>`;
-        html += `<div class="col-4 p-1">${glot.get("act_passwd")}</div>`;
-        html += `<div class="col-8 p-1"><input type="password" id="act_passwd" class="form-control form-control-sm"></input></div>`;
+        html += `<div class="col-3 p-1">${glot.get("act_userid")}</div>`;
+        html += `<div class="col-9 p-1"><input type="text" id="act_userid" class="form-control form-control-sm"></input></div>`;
+        html += `<div class="col-3 p-1">${glot.get("act_passwd")}</div>`;
+        html += `<div class="col-9 p-1"><input type="password" id="act_passwd" class="form-control form-control-sm"></input></div>`;
         html += `</div></div>`;
         html += `<input type="hidden" id="act_id" value="${params.id === void 0 ? "" : params.id}"></input>`;
         html += `<input type="hidden" id="act_osmid" value="${data.osmid}"></input>`;
@@ -198,6 +214,7 @@ class Activities {
         winCont.setProgress(0);
         mapLibre.viewMiniMap(false)
         winCont.makeDetail({ title: title, message: html, menu: true, append: Conf.menu.editActivity });
+        cMapMaker.changeMode("edit");
     }
 
     save() {
@@ -212,7 +229,16 @@ class Activities {
             let senddata = { id: act_id.value, osmid: act_osmid.value };
             Object.keys(act[fname].form).forEach((key) => {
                 let field = act[fname].form[key];
-                if (field.gsheet !== "" && field.gsheet !== undefined) senddata[field.gsheet] = document.getElementById("act_" + key).value;
+                if (field.gsheet !== "" && field.gsheet !== undefined) {
+                    if (field.type === "checkbox") {
+                        let checks = document.getElementsByName("act_" + key);
+                        let checkdata = [];
+                        checks.forEach((check) => { if (check.checked) checkdata.push(check.value) });
+                        senddata[field.gsheet] = checkdata.join(",");
+                    } else {
+                        senddata[field.gsheet] = document.getElementById("act_" + key).value;
+                    }
+                }
             });
             gSheet
                 .get_salt(Conf.google.AppScript, userid)
@@ -230,22 +256,25 @@ class Activities {
                     winCont.setProgress(100);
                     if (e.status.indexOf("ok") > -1) {
                         console.log("save: ok");
-                        winCont.clearDatail();
+                        cMapMaker.clearDatail();
                         gSheet.get(Conf.google.AppScript).then((jsonp) => {
                             poiCont.setActdata(jsonp);
                             let targets = Conf.listTable.target == "targets" ? [listTable.getSelCategory()] : ["-"];
                             cMapMaker.viewArea();
                             cMapMaker.viewPoi(targets); // in targets
+                            cMapMaker.changeMode("map"); // in targets
+                            winCont.setProgress(0);
                             modalActs.busy = false;
                         });
                     } else {
                         console.log("save: ng");
                         alert(glot.get("act_error"));
+                        winCont.setProgress(0);
                         modalActs.busy = false;
                     }
-                    //}).catch(() => {
-                    //    winCont.setProgress(0);
-                    //    modalActs.busy = false;
+                }).catch(() => {
+                    winCont.setProgress(0);
+                    modalActs.busy = false;
                 });
         } else if (userid == "" || passwd == "") {
             alert(glot.get("act_error"));

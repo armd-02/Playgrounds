@@ -17,11 +17,18 @@
         "NoChacheServer": "https://overpass-api.de/api/interpreter"
     },
     "tile": {
-        "OSMFJ_POI": { // for planet globe
+        "OSMFJ_POI": {
             "style": "./tiles/osmfj_poi.json",
             "name": "OpenStreetMap(3D/OSMFJ提供)",
             "skip": false
         },
+        /*
+        "OSMFJ_POI(SNOW)": {
+            "style": "./tiles/osmfj_nopoi_snow.json",
+            "name": "OpenStreetMap(3D/OSMFJ提供・雪景色)",
+            "skip": false
+        },
+        */
         "OSM_Standard": {
             "style": {
                 "version": 8,

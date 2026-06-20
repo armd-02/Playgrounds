@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>遊具のある公園マップ ｜ すべり台・ブランコなど公園遊具を地図で探せます</title>
+    <title>遊具のある公園マップ | すべり台・ブランコなど公園遊具を地図で探せます</title>
     <meta name="google-site-verification" content="TwbTRVYGqZKuaBwbe1gbdD9HEf1tc9eueQG6uTVb60Q" />
     <meta charset="utf-8" />
     <meta name="description"
@@ -12,13 +12,13 @@
         content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
     <meta property="og:url" content="https://armd-02.github.io/Playgrounds/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="遊具のある公園マップ｜すべり台・ブランコなど公園遊具を地図で探せます" />
+    <meta property="og:title" content="遊具のある公園マップ | すべり台・ブランコなど公園遊具を地図で探せます" />
     <meta property="og:image" content="https://armd-02.github.io/Playgrounds/image/ogimage.png" />
     <meta property="og:image:width" content="1640" />
     <meta property="og:image:height" content="924" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="遊具のある公園マップ｜すべり台・ブランコなど公園遊具を地図で探せます" />
+    <meta name="twitter:title" content="遊具のある公園マップ | すべり台・ブランコなど公園遊具を地図で探せます" />
     <meta name="twitter:description"
         content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
     <meta name="twitter:image" content="https://armd-02.github.io/Playgrounds/image/ogimage.png" />
@@ -32,48 +32,98 @@
 
 <body>
     <div class="container-fluid m-0 p-0">
-        <article id="article" class="two-pane">
+        <article id="article" class="two-pane d-none">
             <main id="top-pane">
-                <div id="mapid">
-                </div>
+                <div id="mapid"><canvas id="snow"></canvas></div>
             </main>
-            <aside id="bottom-pane">
-                <div id="btmHeader" class="row p-1 m-1 sticky-top">
-                    <div id="panelProgress" class="col-12 p-0 mb-2 progress progress-bar bg-success"></div>
+            <aside id="bottom-pane" class="row m-0">
+                <div id="btmHeader" class="accordion p-2 h-100">
 
-                    <div class="col-12 p-0 d-flex">
-                        <div class="dropdown-menu" aria-labelledby="btnMenu" id="btnMenu"></div>
-                        <button class="btn btn-light border-secondary p-0 me-1 d-none" data-bs-toggle="dropdown"
-                            aria-expanded="true" style="width: 30px; height: 30px">
-                            <i class="fas fa-bars text-black"></i>
-                        </button>
-                        <span class="detailTitle" id="btmWindow_title"></span>
+                    <!-- Detail -->
+                    <div id="detailMenu" class="accordion-item mb-2">
+
+                        <h2 id="detailHeader" class="d-flex align-items-center m-0 p-2">
+                            <div class="dropdown me-2">
+                                <button class="btn btn-light border-secondary p-0" type="button" id="btnMenuButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px">
+                                    <i class="fas fa-bars text-black"></i>
+                                </button>
+
+                                <div class="dropdown-menu" aria-labelledby="btnMenuButton" id="btnMenu"></div>
+                            </div>
+
+                            <span class="detailTitle d-flex align-items-center" id="btmWindow_title"></span>
+                        </h2>
+
+                        <div id="detailArea">
+                            <div class="accordion-body p-0">
+                                <div id="mini-map" class="d-none mx-auto"></div>
+                                <div id="btmWindow_message" class="p-1"></div>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-                <div id="btmWindow" class="" tabindex="-1">
-                    <div class="m-2">
-                        <div id="mini-map" class="d-none mx-auto"></div>
-                        <div id="btmWindow_message"></div>
-                        <div class="footerSpace"></div>
+
+                    <!-- list -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="listHeader">
+                            <div class="accordion-button p-2" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#listAccordion" aria-expanded="true" aria-controls="listAccordion">
+                                <span class="detailTitle ms-1" id="listTitle"></span>
+                            </div>
+                        </h2>
+
+                        <div id="listAccordion" class="accordion-collapse collapse show" aria-labelledby="listHeader">
+                            <div class="accordion-body p-0">
+                                <!-- リスト -->
+                                <div class="col-12 p-0" id="listArea"></div>
+
+                                <!-- プレイバック操作 -->
+                                <div class="col-12 d-flex align-items-center" id="list_playback_control">
+                                    <button class="btn btn-light float-left border-secondary ms-2 me-2"
+                                        onclick="cMapMaker.playback(listTable.getFilterList());"><i id="list_playback"
+                                            class="fas fa-play"></i></button>
+                                    <input type="range" class="form-range me-2" id="list_speed" />
+                                </div>
+
+                                <!-- ダウンロード -->
+                                <div class="col-12 text-center" id="list_download">
+                                    <button class="btn btn-light btn-lg border-secondary w-50 m-2 p-1"
+                                        onclick="cMapMaker.download()">
+                                        <i class="fas fa-download"></i>
+                                        <span glot-model="download"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
+                    <div id="panelProgress" class="col-12 p-0 mb-2 progress progress-bar bg-success" style="width: 0%;">
+                    </div>
+                    <div class="footerSpace"></div>
                 </div>
+
                 <div id="sidebarCont" class="row fixed-bottom m-2 pe-none d-none">
                     <div class="col-7 p-0">
-                        <div id="sideBarPanel"></div>
                         <div class="btn-group btn-group-lg pe-auto"></div>
                     </div>
                     <div class="col-5 p-0">
                         <div class="ms-auto btn-group btn-group-lg d-flex pe-auto">
-                            <button class="btn btn-light border-secondary p-1" id="sidebarMinimize"
+                            <button id="sidebarMinimize" class="btn btn-light border-secondary p-1"
                                 onclick="javascript: winCont.setSidebar('mini')">
                                 <i class="fa-solid fa-window-minimize"></i>
                             </button>
-                            <button class="btn btn-light border-secondary p-1" id="sidebarChange"
+                            <button id="sidebarChange" class="btn btn-light border-secondary p-1"
                                 onclick="javascript: winCont.setSidebar('change')">
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            <button class="btn btn-light border-secondary p-1"
-                                onclick="javascript:cMapMaker.viewDetail()">
+                            <button id="sidebarClose" class="btn btn-light border-secondary p-1"
+                                onclick="javascript:cMapMaker.viewDetail();cMapMaker.changeMode('list')">
+                                <i class="fa-regular fa-rectangle-xmark"></i>
+                            </button>
+                            <button id="closeDetail" class="btn btn-light border-secondary p-1"
+                                onclick="javascript:cMapMaker.changeMode('list')">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         </div>

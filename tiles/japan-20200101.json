@@ -5267,7 +5267,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
@@ -5348,7 +5348,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
@@ -5430,7 +5430,7 @@
             "layout": {
                 "icon-size": 1.2,
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
@@ -5511,7 +5511,7 @@
             "minzoom": 16,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
@@ -5592,7 +5592,7 @@
             "minzoom": 15,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
@@ -5657,7 +5657,7 @@
             "minzoom": 15,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 14,
@@ -5723,7 +5723,7 @@
             "layout": {
                 "icon-size": 1,
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
@@ -5787,7 +5787,7 @@
             "layout": {
                 "icon-size": 1,
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 12,
@@ -5904,7 +5904,7 @@
             "layout": {
                 "icon-size": 0.9,
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 16,
@@ -6405,7 +6405,7 @@
             "minzoom": 14,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -6940,7 +6940,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -6990,7 +6990,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7040,7 +7040,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7095,7 +7095,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7150,7 +7150,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7205,7 +7205,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7260,7 +7260,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7315,7 +7315,7 @@
             "source-layer": "place",
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": {
@@ -7371,7 +7371,7 @@
             "maxzoom": 1,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 13,
@@ -7406,7 +7406,7 @@
             "maxzoom": 1,
             "layout": {
                 "text-font": [
-                    "Roboto Condensed Italic",
+
                     "Noto Sans Italic"
                 ],
                 "text-size": 13,

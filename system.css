@@ -10,16 +10,15 @@ header {
     height: 60px;
     margin: 0px !important;
     padding: 0px !important;
-    color: #ffffff !important;
     background-size: inherit;
 }
 
 body {
     font-family: "Tahoma";
     height: 100%;
-    background-color: #ffffff;
     padding: 0px;
     margin: 0px;
+    background-color: #fff7cb !important;
     overflow: hidden;
 }
 
@@ -41,9 +40,6 @@ a {
     color: rgb(0 117 58);
 }
 
-#mapid {
-    height: 100%;
-}
 
 .two-pane {
     display: flex;
@@ -58,17 +54,14 @@ a {
     overflow: auto;
     box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    background-image: var(--bg-url, none);
 }
 
 .footerSpace {
     height: 100px !important;
 }
 
-#btmHeader {
-    background-color: #FFFFFF;
-}
-
-#btmWindow {
+#detailArea {
     overflow-y: auto;
 }
 
@@ -81,6 +74,16 @@ a {
     width: 98%;
     margin-right: 4px;
     background: linear-gradient(to right, #4286f4, #373B44);
+}
+
+#detailHeader {
+    background-color: var(--bs-accordion-active-bg);
+    color: var(--bs-accordion-active-color);
+    border-bottom: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+}
+
+#detailHeader .detailTitle {
+    color: var(--bs-accordion-active-color);
 }
 
 /* list */
@@ -203,21 +206,6 @@ input[type="search"] {
     width: calc(180px - 4em);
 }
 
-/* for Grid.js */
-th.gridjs-th {
-    padding: 2px 4px !important;
-    margin: 0px 8px !important;
-}
-
-td.gridjs-td {
-    padding: 2px 4px !important;
-    cursor: pointer !important;
-}
-
-tr:hover td {
-    background-color: #d9efff !important;
-}
-
 tr.selected td {
     background-color: #d9efff !important;
 }
@@ -240,6 +228,7 @@ tr.selected td {
     display: flex;
     align-items: center;
     text-wrap-mode: nowrap;
+    height: 30px;
 }
 
 .cursor-pointer {
@@ -276,9 +265,15 @@ tr.selected td {
     width: 100vw;
 }
 
-#tableid {
-    font-size: 14px;
-    background-color: #ffffff;
+#mapid {
+    position: relative;
+    overflow: hidden;
+}
+
+.list-icon{
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
 }
 
 @keyframes swing {
@@ -409,4 +404,13 @@ tr.selected td {
     color: #000;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 6px;
+}
+
+#snow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
 }
