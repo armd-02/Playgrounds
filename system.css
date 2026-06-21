@@ -105,11 +105,14 @@ li::before {
 }
 
 div.showcase {
-    overflow-x: scroll;
-    width: 100vw;
+    overflow-x: auto;
+    width: fit-content;
+    max-width: calc(100vw - 72px);
     display: flex;
     user-select: none;
-    padding-right: 72px !important;
+
+    /* padding-right はイベント領域を広げるので避ける */
+    padding-right: 0 !important;
 }
 
 div.showcase::-webkit-scrollbar {
