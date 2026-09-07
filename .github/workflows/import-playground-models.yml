@@ -18,7 +18,7 @@ jobs:
         with:
           ref: feature/playground-3d-models
 
-      - name: Download CC0 playground archive
+      - name: Download CC0 slide and swing
         shell: bash
         run: |
           set -euo pipefail
@@ -52,12 +52,93 @@ jobs:
           - Author: leonkin
           - License: CC0 1.0 / Public Domain Dedication
           - Original archive: `Playground.zip`
-          - Description: low-poly playground; the source archive provides each object exported as glTF.
+          - Included here: slide and swings, exported as glTF by the author
 
           These files are imported unchanged from the OpenGameArt archive, except that the Blender source file is intentionally omitted because this repository only needs web-runtime assets.
           EOF
 
+      - name: Download CC Attribution jungle gym and composite play structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$GITHUB_WORKSPACE/assets/models/playground/poly-pizza"
+          mkdir -p "$root/jungle-gym" "$root/composite-play-structure"
+
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym.glb' \
+            -o "$root/jungle-gym/jungle-gym.glb"
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym_JungleGym_BaseColor.png' \
+            -o "$root/jungle-gym/jungle-gym-base-color.png"
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Play%20Structure.glb' \
+            -o "$root/composite-play-structure/composite-play-structure.glb"
+
+          cat > "$root/jungle-gym/SOURCE.md" <<'EOF'
+          # Jungle gym
+
+          - Canonical source: https://poly.pizza/m/0-7U_RTHzKT
+          - Author: Poly by Google
+          - License: Creative Commons Attribution (see canonical source page)
+          - Format: GLB
+          - Low-poly source: approximately 5.4k triangles according to Poly Pizza
+          - Retrieval mirror used for this import: https://github.com/JamesRiveran/GreenCity
+          EOF
+
+          cat > "$root/composite-play-structure/SOURCE.md" <<'EOF'
+          # Composite play structure
+
+          - Canonical source: https://poly.pizza/m/ee0cso-KZnC
+          - Author: Emmett “TawpShelf” Baber
+          - License: Creative Commons Attribution (see canonical source page)
+          - Format: GLB
+          - Low-poly source: approximately 7k triangles according to Poly Pizza
+          - Retrieval mirror used for this import: https://github.com/JamesRiveran/GreenCity
+          EOF
+
+      - name: Download CC Attribution sandpit
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          dest="$GITHUB_WORKSPACE/assets/models/playground/poly-pizza/sandpit"
+          rm -rf "$dest"
+          mkdir -p "$dest"
+
+          curl --fail --location --retry 3 \
+            --user-agent 'Playgrounds/3D-model-import' \
+            'https://poly.pizza/api/v1/download/07KqBahqHXK' \
+            -o "$work/sandbox-download"
+
+          if unzip -t "$work/sandbox-download" >/dev/null 2>&1; then
+            unzip -q "$work/sandbox-download" -d "$work/sandbox"
+            while IFS= read -r -d '' file; do
+              rel="${file#"$work/sandbox/"}"
+              mkdir -p "$dest/$(dirname "$rel")"
+              cp "$file" "$dest/$rel"
+            done < <(find "$work/sandbox" -type f \( \
+              -iname '*.gltf' -o -iname '*.glb' -o -iname '*.bin' -o \
+              -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+            \) -print0)
+          elif head -c 4 "$work/sandbox-download" | grep -q '^glTF'; then
+            cp "$work/sandbox-download" "$dest/sandpit.glb"
+          else
+            echo 'Unexpected Poly Pizza download format:' >&2
+            file "$work/sandbox-download" >&2
+            exit 1
+          fi
+
           test -n "$(find "$dest" -type f \( -iname '*.gltf' -o -iname '*.glb' \) -print -quit)"
+          find "$dest" -type f | sed "s#^$GITHUB_WORKSPACE/##" | sort > "$dest/FILES.txt"
+          cat > "$dest/SOURCE.md" <<'EOF'
+          # Sandpit / sandbox
+
+          - Canonical source: https://poly.pizza/m/07KqBahqHXK
+          - Author: sirkitree
+          - License: Creative Commons Attribution (see canonical source page)
+          - Format at source: OBJ / glTF
+          - Low-poly source: 284 triangles according to Poly Pizza
+          EOF
 
       - name: Commit imported assets
         shell: bash
@@ -65,10 +146,10 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/models/playground/leonkin-playground
+          git add assets/models/playground
           if git diff --cached --quiet; then
             echo 'No asset changes to commit.'
             exit 0
           fi
-          git commit -m 'assets: import CC0 low-poly playground models'
+          git commit -m 'assets: import low-poly playground models'
           git push origin HEAD:feature/playground-3d-models
