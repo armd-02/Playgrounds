@@ -1,0 +1,74 @@
+name: Import playground 3D models
+
+on:
+  push:
+    branches:
+      - feature/playground-3d-models
+    paths:
+      - .github/workflows/import-playground-models.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/playground-3d-models
+
+      - name: Download CC0 playground archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          curl --fail --location --retry 3 \
+            --user-agent 'Playgrounds/3D-model-import' \
+            'https://opengameart.org/sites/default/files/Playground.zip' \
+            -o "$work/Playground.zip"
+          mkdir -p "$work/unpacked"
+          unzip -q "$work/Playground.zip" -d "$work/unpacked"
+
+          dest="$GITHUB_WORKSPACE/assets/models/playground/leonkin-playground"
+          rm -rf "$dest"
+          mkdir -p "$dest"
+
+          cd "$work/unpacked"
+          while IFS= read -r -d '' file; do
+            rel="${file#./}"
+            mkdir -p "$dest/$(dirname "$rel")"
+            cp "$file" "$dest/$rel"
+          done < <(find . -type f \( \
+            -iname '*.gltf' -o -iname '*.glb' -o -iname '*.bin' -o \
+            -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+          \) -print0)
+
+          find "$dest" -type f | sed "s#^$GITHUB_WORKSPACE/##" | sort > "$dest/FILES.txt"
+          cat > "$dest/SOURCE.md" <<'EOF'
+          # leonkin Playground 3D assets
+
+          - Source: https://opengameart.org/content/playground
+          - Author: leonkin
+          - License: CC0 1.0 / Public Domain Dedication
+          - Original archive: `Playground.zip`
+          - Description: low-poly playground; the source archive provides each object exported as glTF.
+
+          These files are imported unchanged from the OpenGameArt archive, except that the Blender source file is intentionally omitted because this repository only needs web-runtime assets.
+          EOF
+
+          test -n "$(find "$dest" -type f \( -iname '*.gltf' -o -iname '*.glb' \) -print -quit)"
+
+      - name: Commit imported assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/models/playground/leonkin-playground
+          if git diff --cached --quiet; then
+            echo 'No asset changes to commit.'
+            exit 0
+          fi
+          git commit -m 'assets: import CC0 low-poly playground models'
+          git push origin HEAD:feature/playground-3d-models
