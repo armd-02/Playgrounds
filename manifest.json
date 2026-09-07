@@ -23,6 +23,7 @@
                 "./lib/geolib.js",
                 "./lib/gsheetlib.js",
                 "./lib/poilib.js",
+                "./lib/playground3d.js",
                 "./lib/listtable.js",
                 "./lib/overpasslib.js",
                 "./lib/wikimedialib.js",

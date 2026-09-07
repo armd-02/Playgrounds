@@ -1,0 +1,21 @@
+# Playground 3D models
+
+These low-poly models are used as 3D symbols for OpenStreetMap `playground=*` features.
+The model is a semantic symbol; it does not claim to reproduce the exact real-world equipment unless the OSM data provides that detail.
+
+| OSM tag | Model | License / attribution |
+| --- | --- | --- |
+| `playground=slide` | `leonkin-playground/GLTF/slide.glb` | Playground by leonkin — CC0 |
+| `playground=swing` | `leonkin-playground/GLTF/swing.glb` | Playground by leonkin — CC0 |
+| `playground=sandpit` | `poly-pizza/sandpit/sandpit.glb` | Sandbox by sirkitree [CC-BY] via Poly Pizza |
+| `playground=climbingframe` | `poly-pizza/jungle-gym/jungle-gym.glb` | Jungle gym by Poly by Google [CC-BY] via Poly Pizza |
+| `playground=structure` | `poly-pizza/composite-play-structure/composite-play-structure.glb` | Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza |
+
+## Sources
+
+- Slide / swing: https://opengameart.org/content/playground
+- Sandpit: https://poly.pizza/m/07KqBahqHXK
+- Jungle gym: https://poly.pizza/m/0-7U_RTHzKT
+- Composite play structure: https://poly.pizza/m/ee0cso-KZnC
+
+For per-model details, see each `SOURCE.md` file.
