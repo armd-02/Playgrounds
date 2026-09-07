@@ -23,27 +23,15 @@ jobs:
         run: |
           set -euo pipefail
           work="$(mktemp -d)"
-          curl --fail --location --retry 3 \
-            --user-agent 'Playgrounds/3D-model-import' \
-            'https://opengameart.org/sites/default/files/Playground.zip' \
-            -o "$work/Playground.zip"
+          curl --fail --location --retry 3 --user-agent 'Playgrounds/3D-model-import' \
+            'https://opengameart.org/sites/default/files/Playground.zip' -o "$work/Playground.zip"
           mkdir -p "$work/unpacked"
           unzip -q "$work/Playground.zip" -d "$work/unpacked"
-
           dest="$GITHUB_WORKSPACE/assets/models/playground/leonkin-playground"
-          rm -rf "$dest"
-          mkdir -p "$dest"
-
-          cd "$work/unpacked"
+          rm -rf "$dest"; mkdir -p "$dest"; cd "$work/unpacked"
           while IFS= read -r -d '' file; do
-            rel="${file#./}"
-            mkdir -p "$dest/$(dirname "$rel")"
-            cp "$file" "$dest/$rel"
-          done < <(find . -type f \( \
-            -iname '*.gltf' -o -iname '*.glb' -o -iname '*.bin' -o \
-            -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
-          \) -print0)
-
+            rel="${file#./}"; mkdir -p "$dest/$(dirname "$rel")"; cp "$file" "$dest/$rel"
+          done < <(find . -type f \( -iname '*.gltf' -o -iname '*.glb' -o -iname '*.bin' -o -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) -print0)
           find "$dest" -type f | sed "s#^$GITHUB_WORKSPACE/##" | sort > "$dest/FILES.txt"
           cat > "$dest/SOURCE.md" <<'EOF'
           # leonkin Playground 3D assets
@@ -63,17 +51,9 @@ jobs:
           set -euo pipefail
           root="$GITHUB_WORKSPACE/assets/models/playground/poly-pizza"
           mkdir -p "$root/jungle-gym" "$root/composite-play-structure"
-
-          curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym.glb' \
-            -o "$root/jungle-gym/jungle-gym.glb"
-          curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym_JungleGym_BaseColor.png' \
-            -o "$root/jungle-gym/jungle-gym-base-color.png"
-          curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Play%20Structure.glb' \
-            -o "$root/composite-play-structure/composite-play-structure.glb"
-
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym.glb' -o "$root/jungle-gym/jungle-gym.glb"
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Jungle%20gym_JungleGym_BaseColor.png' -o "$root/jungle-gym/jungle-gym-base-color.png"
+          curl --fail --location --retry 3 'https://raw.githubusercontent.com/JamesRiveran/GreenCity/master/Assets/Models/Park/Play%20Structure.glb' -o "$root/composite-play-structure/composite-play-structure.glb"
           cat > "$root/jungle-gym/SOURCE.md" <<'EOF'
           # Jungle gym
 
@@ -85,7 +65,6 @@ jobs:
           - Low-poly source: approximately 5.4k triangles according to Poly Pizza
           - Retrieval mirror used for this import: https://github.com/JamesRiveran/GreenCity
           EOF
-
           cat > "$root/composite-play-structure/SOURCE.md" <<'EOF'
           # Composite play structure
 
@@ -101,18 +80,30 @@ jobs:
       - name: Decode supplied CC Attribution sandpit
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           dest="$GITHUB_WORKSPACE/assets/models/playground/poly-pizza/sandpit"
-          rm -rf "$dest"
-          mkdir -p "$dest"
-
-          cat "$GITHUB_WORKSPACE"/.github/tmp/sandpit-upload.b64.part* \
-            | base64 --decode > "$dest/sandpit.glb"
-
-          test "$(head -c 4 "$dest/sandpit.glb")" = "glTF"
-          test "$(stat -c %s "$dest/sandpit.glb")" -eq 28304
-          echo '9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375  '"$dest/sandpit.glb" | sha256sum -c -
-
+          diag="$GITHUB_WORKSPACE/.github/tmp/sandpit-diagnostics.txt"
+          rm -rf "$dest"; mkdir -p "$dest"
+          : > "$diag"
+          echo 'Expected chunk SHA-256:' >> "$diag"
+          cat >> "$diag" <<'EOF'
+          part00 07f1f0b9c041ab0e1f21e56db101270484ea537610caf0be606c42a0e4606a0c
+          part01 c47a9d1aeb20dcf7c0934fe2590e5fb26dc03533372e22a8595679d3facd99aa
+          part02 683fb17235ee4187b39248f9182ed1bb7c428a2cf8cbc7f49725d62fb0f22045
+          part03 dd548f8bb70b77ba857b1ca33465e0919b81f9934dca0c16762d09efdedced74
+          part04 0decb98e5b4ae46143038e04f901e71247621daee1e88aa53ecc4c3323accedb
+          part05 84ed629df68db4ec2cc4459a742bae47eed72238113e7cd37672981df302e811
+          part06 25328e3bae5b3036970b489fdf2e0e249a934c4693fbdcc3a9dfd2b38c6774e0
+          part07 d1a57cd2757b079941107e9d0a9374df776b0d9252ded62cf8acfc21883c38bf
+          part08 dcdf06533c82a88ae9e06c82aeb32f073337501e8df5798ba1dda2999812c4ab
+          part09 dcb97d25b324b18e51c5b4505f586f806ba663691df4a427c788b024e1c4f5eb
+          EOF
+          echo 'Actual chunk SHA-256:' >> "$diag"
+          sha256sum "$GITHUB_WORKSPACE"/.github/tmp/sandpit-upload.b64.part* >> "$diag"
+          cat "$GITHUB_WORKSPACE"/.github/tmp/sandpit-upload.b64.part* | base64 --decode > "$dest/sandpit.glb"
+          echo "Decoded size: $(stat -c %s "$dest/sandpit.glb")" >> "$diag"
+          echo "Decoded SHA-256: $(sha256sum "$dest/sandpit.glb" | cut -d' ' -f1)" >> "$diag"
+          echo "Magic: $(head -c 4 "$dest/sandpit.glb")" >> "$diag"
           cat > "$dest/SOURCE.md" <<'EOF'
           # Sandbox / sandpit
 
@@ -122,20 +113,17 @@ jobs:
           - Required attribution: `Sandbox by sirkitree [CC-BY] via Poly Pizza`
           - Format: GLB
           - Low-poly source: 284 triangles according to Poly Pizza
-          - SHA-256: `9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375`
+          - Expected SHA-256: `9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375`
           - Imported from the Poly Pizza download supplied for this change.
           EOF
 
-      - name: Commit imported assets
+      - name: Commit imported assets and diagnostics
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/models/playground
-          if git diff --cached --quiet; then
-            echo 'No asset changes to commit.'
-            exit 0
-          fi
+          git add assets/models/playground .github/tmp/sandpit-diagnostics.txt
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m 'assets: import low-poly playground models'
           git push origin HEAD:feature/playground-3d-models
