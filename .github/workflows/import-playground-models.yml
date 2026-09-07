@@ -24,7 +24,7 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import json, re, struct, urllib.parse
+          import hashlib, json, re, struct, urllib.parse
 
           def read_text(path):
               return Path(path).read_bytes().decode('utf-8')
@@ -35,10 +35,11 @@ jobs:
           # manifest.json: load the 3D helper with the existing local libraries.
           p = 'manifest.json'
           s = read_text(p)
+          nl = '\r\n' if '\r\n' in s else '\n'
           if './lib/playground3d.js' not in s:
               needle = '                "./lib/poilib.js",'
               assert needle in s, 'manifest insertion point not found'
-              s = s.replace(needle, needle + '\r\n                "./lib/playground3d.js",', 1)
+              s = s.replace(needle, needle + nl + '                "./lib/playground3d.js",', 1)
               write_text(p, s)
 
           # cmapmaker.js: construct, initialize and synchronize the 3D overlay.
@@ -53,19 +54,20 @@ jobs:
               needle = '                    console.log("initialize: gSheet, static, MapLibre OK.");' + nl
               assert needle in s, 'playground3d init insertion point not found'
               addition = (
-                  '                    playground3d.init(mapLibre.map, Conf.playground3d || {})' + nl
+                  '                    playground3d.init(mapLibre.map, Conf.playground3d || {})' + nl +
                   '                        .catch((e) => console.warn("Playground3D: init failed", e));' + nl
               )
               s = s.replace(needle, needle + addition, 1)
           if 'playground3d.sync()' not in s:
-              pat = re.compile(r'(\s*this\.viewPoi\(targets\)[^\r\n]*)(\r?\n)')
+              pat = re.compile(r'([ \t]*this\.viewPoi\(targets\)[^\r\n]*)(\r?\n)')
               m = pat.search(s)
               assert m, 'playground3d sync insertion point not found'
-              indent = re.match(r'\s*', m.group(1)).group(0)
-              s = s[:m.end()] + indent + 'playground3d.sync()' + m.group(2) + s[m.end():]
+              indent = re.match(r'[ \t]*', m.group(1)).group(0)
+              insert_at = m.end()
+              s = s[:insert_at] + indent + 'playground3d.sync()' + m.group(2) + s[insert_at:]
           write_text(p, s)
 
-          # User config: opt-in switch and zoom threshold. Enabled for this map by default.
+          # User config: switch and zoom threshold.
           p = 'data/config-user.jsonc'
           s = read_text(p)
           nl = '\r\n' if '\r\n' in s else '\n'
@@ -73,9 +75,9 @@ jobs:
               needle = '    "poiView": {'
               assert needle in s, 'playground3d config insertion point not found'
               block = (
-                  '    "playground3d": {' + nl
-                  '        "use": true, // 対応する playground=* を3Dモデルで表示' + nl
-                  '        "minZoom": 17 // 3D遊具の表示開始ズーム' + nl
+                  '    "playground3d": {' + nl +
+                  '        "use": true, // 対応する playground=* を3Dモデルで表示' + nl +
+                  '        "minZoom": 17 // 3D遊具の表示開始ズーム' + nl +
                   '    },' + nl
               )
               s = s.replace(needle, block + needle, 1)
@@ -102,21 +104,20 @@ jobs:
               '<a href="https://poly.pizza/m/07KqBahqHXK" target="_blank" rel="noopener">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>'
           )
           replacement = (
-              '    "licence_message": {' + nl
-              '        "ja": ' + json.dumps(ja, ensure_ascii=False) + ',' + nl
-              '        "en": ' + json.dumps(en, ensure_ascii=False) + nl
+              '    "licence_message": {' + nl +
+              '        "ja": ' + json.dumps(ja, ensure_ascii=False) + ',' + nl +
+              '        "en": ' + json.dumps(en, ensure_ascii=False) + nl +
               '    },'
           )
           pat = re.compile(r'    "licence_message": \{.*?\r?\n    \},', re.S)
           assert pat.search(s), 'licence_message block not found'
-          s = pat.sub(replacement, s, count=1)
+          s = pat.sub(lambda _: replacement, s, count=1)
           write_text(p, s)
 
-          # Fix picking: THREE.Raycaster.setFromCamera does not support a generic Camera.
-          # The MapLibre custom layer stores the full local->clip transform in projectionMatrix,
-          # so unproject NDC points through its inverse and build the ray explicitly.
+          # Fix picking: generic THREE.Camera is not accepted by Raycaster.setFromCamera.
           p = 'lib/playground3d.js'
           s = read_text(p)
+          nl = '\r\n' if '\r\n' in s else '\n'
           old = '''    #pick(point) {
               if (!this.ready || !this.camera || !this.modelGroup || this.modelGroup.children.length === 0) {
                   return null;
@@ -130,7 +131,7 @@ jobs:
               const hits = this.raycaster.intersectObjects(this.modelGroup.children, true);
               return hits.length > 0 ? hits[0].object : null;
           }
-          '''.replace('\n', '\r\n' if '\r\n' in s else '\n')
+          '''.replace('\n', nl)
           new = '''    #pick(point) {
               if (!this.ready || !this.camera || !this.modelGroup || this.modelGroup.children.length === 0) {
                   return null;
@@ -146,39 +147,36 @@ jobs:
               const hits = this.raycaster.intersectObjects(this.modelGroup.children, true);
               return hits.length > 0 ? hits[0].object : null;
           }
-          '''.replace('\n', '\r\n' if '\r\n' in s else '\n')
+          '''.replace('\n', nl)
           assert old in s, 'Playground3D pick block not found'
           s = s.replace(old, new, 1)
           write_text(p, s)
 
-          # Model/OSM mapping and license record kept next to the assets.
           readme = '''# Playground 3D models
 
-          These low-poly models are used as 3D symbols for OpenStreetMap `playground=*` features.
-          The model is a semantic symbol; it does not claim to reproduce the exact real-world equipment unless the OSM data provides that detail.
+These low-poly models are used as 3D symbols for OpenStreetMap `playground=*` features.
+The model is a semantic symbol; it does not claim to reproduce the exact real-world equipment unless the OSM data provides that detail.
 
-          | OSM tag | Model | License / attribution |
-          | --- | --- | --- |
-          | `playground=slide` | `leonkin-playground/GLTF/slide.glb` | Playground by leonkin — CC0 |
-          | `playground=swing` | `leonkin-playground/GLTF/swing.glb` | Playground by leonkin — CC0 |
-          | `playground=sandpit` | `poly-pizza/sandpit/sandpit.glb` | Sandbox by sirkitree [CC-BY] via Poly Pizza |
-          | `playground=climbingframe` | `poly-pizza/jungle-gym/jungle-gym.glb` | Jungle gym by Poly by Google [CC-BY] via Poly Pizza |
-          | `playground=structure` | `poly-pizza/composite-play-structure/composite-play-structure.glb` | Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza |
+| OSM tag | Model | License / attribution |
+| --- | --- | --- |
+| `playground=slide` | `leonkin-playground/GLTF/slide.glb` | Playground by leonkin — CC0 |
+| `playground=swing` | `leonkin-playground/GLTF/swing.glb` | Playground by leonkin — CC0 |
+| `playground=sandpit` | `poly-pizza/sandpit/sandpit.glb` | Sandbox by sirkitree [CC-BY] via Poly Pizza |
+| `playground=climbingframe` | `poly-pizza/jungle-gym/jungle-gym.glb` | Jungle gym by Poly by Google [CC-BY] via Poly Pizza |
+| `playground=structure` | `poly-pizza/composite-play-structure/composite-play-structure.glb` | Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza |
 
-          ## Sources
+## Sources
 
-          - Slide / swing: https://opengameart.org/content/playground
-          - Sandpit: https://poly.pizza/m/07KqBahqHXK
-          - Jungle gym: https://poly.pizza/m/0-7U_RTHzKT
-          - Composite play structure: https://poly.pizza/m/ee0cso-KZnC
+- Slide / swing: https://opengameart.org/content/playground
+- Sandpit: https://poly.pizza/m/07KqBahqHXK
+- Jungle gym: https://poly.pizza/m/0-7U_RTHzKT
+- Composite play structure: https://poly.pizza/m/ee0cso-KZnC
 
-          For per-model details, see each `SOURCE.md` file.
-          '''
-          # Remove workflow indentation from heredoc text.
-          readme = '\n'.join(line[10:] if line.startswith('          ') else line for line in readme.splitlines()) + '\n'
+For per-model details, see each `SOURCE.md` file.
+'''
           write_text('assets/models/playground/README.md', readme)
 
-          # Validate GLB headers and resolve any external texture URI used by the mirrored GLBs.
+          # Validate GLB headers and external asset references.
           glbs = [
               Path('assets/models/playground/leonkin-playground/GLTF/slide.glb'),
               Path('assets/models/playground/leonkin-playground/GLTF/swing.glb'),
@@ -218,8 +216,6 @@ jobs:
               assert path.exists(), f'missing model: {path}'
               inspect_glb(path)
 
-          # Exact verification of the user-supplied sandpit download.
-          import hashlib
           sandpit = Path('assets/models/playground/poly-pizza/sandpit/sandpit.glb').read_bytes()
           assert len(sandpit) == 28304
           assert hashlib.sha256(sandpit).hexdigest() == '9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375'
