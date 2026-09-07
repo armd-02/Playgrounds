@@ -79,7 +79,8 @@ jobs:
 
           - Canonical source: https://poly.pizza/m/0-7U_RTHzKT
           - Author: Poly by Google
-          - License: Creative Commons Attribution (see canonical source page)
+          - License: Creative Commons Attribution (CC-BY)
+          - Required attribution: `Jungle gym by Poly by Google [CC-BY] via Poly Pizza`
           - Format: GLB
           - Low-poly source: approximately 5.4k triangles according to Poly Pizza
           - Retrieval mirror used for this import: https://github.com/JamesRiveran/GreenCity
@@ -90,54 +91,39 @@ jobs:
 
           - Canonical source: https://poly.pizza/m/ee0cso-KZnC
           - Author: Emmett “TawpShelf” Baber
-          - License: Creative Commons Attribution (see canonical source page)
+          - License: Creative Commons Attribution (CC-BY)
+          - Required attribution: `Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza`
           - Format: GLB
           - Low-poly source: approximately 7k triangles according to Poly Pizza
           - Retrieval mirror used for this import: https://github.com/JamesRiveran/GreenCity
           EOF
 
-      - name: Download CC Attribution sandpit
+      - name: Decode supplied CC Attribution sandpit
         shell: bash
         run: |
           set -euo pipefail
-          work="$(mktemp -d)"
           dest="$GITHUB_WORKSPACE/assets/models/playground/poly-pizza/sandpit"
           rm -rf "$dest"
           mkdir -p "$dest"
 
-          curl --fail --location --retry 3 \
-            --user-agent 'Playgrounds/3D-model-import' \
-            'https://poly.pizza/api/v1/download/07KqBahqHXK' \
-            -o "$work/sandbox-download"
+          cat "$GITHUB_WORKSPACE"/.github/tmp/sandpit-upload.b64.part* \
+            | base64 --decode > "$dest/sandpit.glb"
 
-          if unzip -t "$work/sandbox-download" >/dev/null 2>&1; then
-            unzip -q "$work/sandbox-download" -d "$work/sandbox"
-            while IFS= read -r -d '' file; do
-              rel="${file#"$work/sandbox/"}"
-              mkdir -p "$dest/$(dirname "$rel")"
-              cp "$file" "$dest/$rel"
-            done < <(find "$work/sandbox" -type f \( \
-              -iname '*.gltf' -o -iname '*.glb' -o -iname '*.bin' -o \
-              -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
-            \) -print0)
-          elif head -c 4 "$work/sandbox-download" | grep -q '^glTF'; then
-            cp "$work/sandbox-download" "$dest/sandpit.glb"
-          else
-            echo 'Unexpected Poly Pizza download format:' >&2
-            file "$work/sandbox-download" >&2
-            exit 1
-          fi
+          test "$(head -c 4 "$dest/sandpit.glb")" = "glTF"
+          test "$(stat -c %s "$dest/sandpit.glb")" -eq 28304
+          echo '9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375  '"$dest/sandpit.glb" | sha256sum -c -
 
-          test -n "$(find "$dest" -type f \( -iname '*.gltf' -o -iname '*.glb' \) -print -quit)"
-          find "$dest" -type f | sed "s#^$GITHUB_WORKSPACE/##" | sort > "$dest/FILES.txt"
           cat > "$dest/SOURCE.md" <<'EOF'
-          # Sandpit / sandbox
+          # Sandbox / sandpit
 
           - Canonical source: https://poly.pizza/m/07KqBahqHXK
           - Author: sirkitree
-          - License: Creative Commons Attribution (see canonical source page)
-          - Format at source: OBJ / glTF
+          - License: Creative Commons Attribution (CC-BY)
+          - Required attribution: `Sandbox by sirkitree [CC-BY] via Poly Pizza`
+          - Format: GLB
           - Low-poly source: 284 triangles according to Poly Pizza
+          - SHA-256: `9d67bfcb7680e439ad344707a4f9ae10b419a50cdca7115774017d5e3e70e375`
+          - Imported from the Poly Pizza download supplied for this change.
           EOF
 
       - name: Commit imported assets
