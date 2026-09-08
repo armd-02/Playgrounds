@@ -57,9 +57,7 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import json
 
-          # Switch amenity=bench to the plaggy glTF model.
           p = Path('lib/playground3d.js')
           s = p.read_text(encoding='utf-8')
           old = 'url: "./assets/models/poi/bench/bench.glb"'
@@ -67,22 +65,20 @@ jobs:
           assert old in s, 'old bench model URL not found'
           p.write_text(s.replace(old, new, 1), encoding='utf-8')
 
-          # Record source and the conservative attribution carried by the downloaded glTF.
-          Path('assets/models/poi/bench/SOURCE.md').write_text('''# Bench by plaggy
-
-- Canonical source: https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7
-- Author: plaggy
-- Geometry: 260 triangles / 168 vertices on Sketchfab
-- Included format: glTF 2.0 (`scene.gltf` + `scene.bin` + optimized textures)
-- Download mirror used for this import: https://github.com/DanielHansen-IMD/xrgallery
-- License used for redistribution in this repository: Creative Commons Attribution 4.0 International (CC BY 4.0)
-- Required attribution: `CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab`
-
-The current Sketchfab description also labels the work CC0/Public Domain, but the distributed glTF and its bundled license metadata identify it as CC-BY-4.0. This repository therefore keeps the more conservative CC-BY-4.0 attribution.
-
-The source 4096px PBR textures are resized to a maximum of 512px for web-map performance; geometry is unchanged.
-The model is used as a generic 3D symbol for OpenStreetMap `amenity=bench` features.
-''', encoding='utf-8')
+          source = (
+              '# Bench by plaggy\n\n'
+              '- Canonical source: https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7\n'
+              '- Author: plaggy\n'
+              '- Geometry: 260 triangles / 168 vertices on Sketchfab\n'
+              '- Included format: glTF 2.0 (`scene.gltf` + `scene.bin` + optimized textures)\n'
+              '- Download mirror used for this import: https://github.com/DanielHansen-IMD/xrgallery\n'
+              '- License used for redistribution in this repository: Creative Commons Attribution 4.0 International (CC BY 4.0)\n'
+              '- Required attribution: `CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab`\n\n'
+              'The current Sketchfab description also labels the work CC0/Public Domain, but the distributed glTF and its bundled license metadata identify it as CC-BY-4.0. This repository therefore keeps the more conservative CC-BY-4.0 attribution.\n\n'
+              'The source 4096px PBR textures are resized to a maximum of 512px for web-map performance; geometry is unchanged.\n'
+              'The model is used as a generic 3D symbol for OpenStreetMap `amenity=bench` features.\n'
+          )
+          Path('assets/models/poi/bench/SOURCE.md').write_text(source, encoding='utf-8')
 
           p = Path('assets/models/poi/README.md')
           s = p.read_text(encoding='utf-8')
@@ -91,7 +87,6 @@ The model is used as a generic 3D symbol for OpenStreetMap `amenity=bench` featu
           assert old in s, 'old bench README row not found'
           p.write_text(s.replace(old, new, 1), encoding='utf-8')
 
-          # Replace the visible Kenney credit in both JA and EN license strings.
           p = Path('data/glot-custom.jsonc')
           s = p.read_bytes().decode('utf-8')
           old = '<a href="https://kenney.nl/assets/nature-kit" target="_blank" rel="noopener">Bench by Kenney (CC0)</a>'
@@ -123,7 +118,7 @@ The model is used as a generic 3D symbol for OpenStreetMap `amenity=bench` featu
           indices = obj['meshes'][0]['primitives'][0]['indices']
           triangles = obj['accessors'][indices]['count'] // 3
           assert triangles == 260, triangles
-          print('Bench by plaggy:', triangles, 'triangles')
+          print('Bench by plaggy triangles:', triangles)
           print('texture bytes:', sum((base / x['uri']).stat().st_size for x in obj['images']))
           PY
           node --check lib/playground3d.js
