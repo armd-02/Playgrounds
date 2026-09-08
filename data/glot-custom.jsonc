@@ -24,8 +24,8 @@
         "en": "about playground equipment map"
     },
     "licence_message": {
-        "ja": "このサイトで使われているデータは、OpenStreetMapとプロジェクトのデータを組み合わせています。</a>",
-        "en": "We are all collecting information about parks with playground equipment and making maps.<br>The data used is a combination of OpenStreetMap and playground equipment for everyone project.</a>"
+        "ja": "このサイトで使われているデータは、OpenStreetMapとプロジェクトのデータを組み合わせています。<br><br>3D遊具モデル: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/07KqBahqHXK\" target=\"_blank\" rel=\"noopener\">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>",
+        "en": "The data used by this site combines OpenStreetMap data with project data.<br><br>3D playground models: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/07KqBahqHXK\" target=\"_blank\" rel=\"noopener\">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>"
     },
     "develop_site": {
         "ja": "遊具のある公園マップのソースコード",

@@ -50,6 +50,10 @@
         "textSize": 12,
         "textViewZoom": 14 // アイコンに文字を表示するズームレベル
     },
+    "playground3d": {
+        "use": true, // 対応する playground=* を3Dモデルで表示
+        "minZoom": 17 // 3D遊具の表示開始ズーム
+    },
     "poiView": {
         "poiActLoad": false, // 起動時にActivityを読み込むか
         "poiFilter": "", // poiView時の表示範囲 all:画面外も表示 / "":画面内だけを表示

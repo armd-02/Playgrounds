@@ -14,6 +14,7 @@ const mapLibre = new Maplibre();
 const geoCont = new GeoCont();
 const listTable = new ListTable();
 const poiCont = new PoiCont();
+const playground3d = new Playground3D();
 const gSheet = new GoogleSpreadSheet();
 const wikimedia = new WikimediaLib();
 var PoiStatusIndex = { VISITED: 0, FAVORITE: 1, MEMO: 2 };
@@ -109,6 +110,8 @@ class CMapMaker {
                 ]).then((results) => {
                     // MapLibre add control
                     console.log("initialize: gSheet, static, MapLibre OK.");
+                    playground3d.init(mapLibre.map, Conf.playground3d || {})
+                        .catch((e) => console.warn("Playground3D: init failed", e));
                     mapLibre.addControl("top-left", "baselist", basehtml, "mapLibre-control m-0 p-0"); // Make: base list
                     setBGImage(Conf.listTable.backgroundImage)
                     if (Conf.etc.localSave !== "") filter_menu.classList.remove('d-none')
@@ -419,6 +422,7 @@ class CMapMaker {
                         this.makeImages(Conf.thumbnail.use)
                         this.viewArea()	        // 入手したgeoJsonを追加
                         this.viewPoi(targets)	// in targets
+                        playground3d.sync()
                         resolve({ "update": true })
                         break
                     default:
