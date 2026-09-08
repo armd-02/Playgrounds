@@ -1,0 +1,220 @@
+name: Update swing, horizontal bar and springy models
+
+on:
+  push:
+    branches:
+      - feature/playground-3d-models
+    paths:
+      - .github/workflows/update-swing-bars-springy.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/playground-3d-models
+
+      - name: Import Swing set by Poly by Google
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/models/playground/poly-pizza/swing-set
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/zhangyingwei/puppy-garden-3d/5a8b637b98fb6bbf5b0663d88e6f06938fe1f533/public/assets/models/props/swing.glb' \
+            -o assets/models/playground/poly-pizza/swing-set/swing.glb
+          test "$(stat -c%s assets/models/playground/poly-pizza/swing-set/swing.glb)" -eq 12436
+
+      - name: Update 3D integration and credits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('lib/playground3d.js')
+          s = p.read_text(encoding='utf-8')
+
+          old = 'url: "./assets/models/playground/leonkin-playground/GLTF/swing.glb"'
+          new = 'url: "./assets/models/playground/poly-pizza/swing-set/swing.glb"'
+          assert old in s
+          s = s.replace(old, new, 1)
+
+          old = '''            structure: "structure"\n        };'''
+          new = '''            structure: "structure",\n            horizontal_bar: "horizontal_bar",\n            springy: "springy"\n        };'''
+          assert old in s
+          s = s.replace(old, new, 1)
+
+          old = '''            .then(() => {\n                this.ready = true;'''
+          new = '''            .then(() => {\n                this.#createProceduralTemplates();\n                this.ready = true;'''
+          assert old in s
+          s = s.replace(old, new, 1)
+
+          marker = '    #ensureLayer() {'
+          assert marker in s
+          methods = r'''    #createProceduralTemplates() {
+        this.templates.set("horizontal_bar", this.#makeHorizontalBar());
+        this.templates.set("springy", this.#makeSpringy());
+    }
+
+    #makeHorizontalBar() {
+        const T = this.THREE;
+        const group = new T.Group();
+        const metal = new T.MeshStandardMaterial({
+            color: 0x66757f,
+            roughness: 0.65,
+            metalness: 0.35
+        });
+        const postGeometry = new T.CylinderGeometry(0.06, 0.06, 1.9, 8);
+        const barGeometry = new T.CylinderGeometry(0.045, 0.045, 1.4, 8);
+        barGeometry.rotateZ(Math.PI / 2);
+
+        [-2.1, -0.7, 0.7, 2.1].forEach(x => {
+            const post = new T.Mesh(postGeometry, metal);
+            post.position.set(x, 0.95, 0);
+            group.add(post);
+        });
+
+        [
+            { x: -1.4, y: 1.25 },
+            { x: 0.0, y: 1.50 },
+            { x: 1.4, y: 1.75 }
+        ].forEach(spec => {
+            const bar = new T.Mesh(barGeometry, metal);
+            bar.position.set(spec.x, spec.y, 0);
+            group.add(bar);
+        });
+
+        group.scale.setScalar(this.visualScale);
+        group.userData.modelKey = "horizontal_bar";
+        return group;
+    }
+
+    #makeSpringy() {
+        const T = this.THREE;
+        const group = new T.Group();
+        const metal = new T.MeshStandardMaterial({
+            color: 0x59636b,
+            roughness: 0.6,
+            metalness: 0.4
+        });
+        const bodyMaterial = new T.MeshStandardMaterial({
+            color: 0xe79a3b,
+            roughness: 0.75
+        });
+
+        const base = new T.Mesh(new T.CylinderGeometry(0.28, 0.32, 0.12, 10), metal);
+        base.position.y = 0.06;
+        group.add(base);
+
+        const points = [];
+        const turns = 4;
+        const segments = 40;
+        for (let i = 0; i <= segments; i += 1) {
+            const f = i / segments;
+            const a = f * Math.PI * 2 * turns;
+            points.push(new T.Vector3(
+                Math.cos(a) * 0.17,
+                0.16 + f * 0.58,
+                Math.sin(a) * 0.17
+            ));
+        }
+        const springCurve = new T.CatmullRomCurve3(points);
+        const spring = new T.Mesh(
+            new T.TubeGeometry(springCurve, 48, 0.045, 6, false),
+            metal
+        );
+        group.add(spring);
+
+        const support = new T.Mesh(new T.CylinderGeometry(0.08, 0.08, 0.24, 8), metal);
+        support.position.y = 0.84;
+        group.add(support);
+
+        const body = new T.Mesh(new T.BoxGeometry(1.05, 0.28, 0.38), bodyMaterial);
+        body.position.y = 1.03;
+        group.add(body);
+
+        const seat = new T.Mesh(new T.BoxGeometry(0.62, 0.10, 0.46), bodyMaterial);
+        seat.position.set(-0.12, 1.21, 0);
+        group.add(seat);
+
+        const handleGeometry = new T.CylinderGeometry(0.035, 0.035, 0.72, 8);
+        handleGeometry.rotateX(Math.PI / 2);
+        const handle = new T.Mesh(handleGeometry, metal);
+        handle.position.set(0.34, 1.30, 0);
+        group.add(handle);
+
+        const footGeometry = new T.CylinderGeometry(0.03, 0.03, 0.62, 8);
+        footGeometry.rotateX(Math.PI / 2);
+        const foot = new T.Mesh(footGeometry, metal);
+        foot.position.set(-0.24, 0.94, 0);
+        group.add(foot);
+
+        group.scale.setScalar(this.visualScale);
+        group.userData.modelKey = "springy";
+        return group;
+    }
+
+'''
+          s = s.replace(marker, methods + marker, 1)
+          p.write_text(s, encoding='utf-8')
+
+          Path('assets/models/playground/poly-pizza/swing-set/SOURCE.md').write_text('''# Swing set by Poly by Google\n\n- Canonical source: https://poly.pizza/m/e-IJdcqZH4p\n- Author: Poly by Google\n- License: Creative Commons Attribution 3.0 (CC BY 3.0)\n- Included format: GLB\n- Included file: `swing.glb`\n- Retrieval mirror used for this import: https://github.com/zhangyingwei/puppy-garden-3d\n- Required attribution: `Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza`\n\nThe model is used as a generic 3D symbol for OpenStreetMap `playground=swing` features.\n''', encoding='utf-8')
+
+          p = Path('assets/models/playground/README.md')
+          r = p.read_text(encoding='utf-8')
+          r = r.replace(
+              '| `playground=swing` | `leonkin-playground/GLTF/swing.glb` | Playground by leonkin — CC0 |',
+              '| `playground=swing` | `poly-pizza/swing-set/swing.glb` | Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza |'
+          )
+          needle = '| `playground=structure` | `poly-pizza/composite-play-structure/composite-play-structure.glb` | Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza |'
+          assert needle in r
+          r = r.replace(needle, needle + '\n| `playground=horizontal_bar` | Procedural Three.js geometry | Generated by Playgrounds source — MIT |\n| `playground=springy` | Procedural Three.js geometry | Generated by Playgrounds source — MIT |', 1)
+          r = r.replace('- Slide / swing: https://opengameart.org/content/playground', '- Slide: https://opengameart.org/content/playground\n- Swing: https://poly.pizza/m/e-IJdcqZH4p')
+          p.write_text(r, encoding='utf-8')
+
+          p = Path('data/glot-custom.jsonc')
+          g = p.read_text(encoding='utf-8')
+          needle = 'Playground by leonkin (CC0)</a>'
+          addition = 'Playground by leonkin (CC0)</a> / <a href=\\"https://poly.pizza/m/e-IJdcqZH4p\\" target=\\"_blank\\" rel=\\"noopener\\">Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza</a>'
+          assert g.count(needle) == 2
+          g = g.replace(needle, addition)
+          p.write_text(g, encoding='utf-8')
+          PY
+
+      - name: Validate models and JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          f = Path('assets/models/playground/poly-pizza/swing-set/swing.glb')
+          data = f.read_bytes()
+          assert data[:4] == b'glTF'
+          version, length = struct.unpack_from('<II', data, 4)
+          assert version == 2
+          assert length == len(data) == 12436
+          js = Path('lib/playground3d.js').read_text(encoding='utf-8')
+          assert 'horizontal_bar: "horizontal_bar"' in js
+          assert 'springy: "springy"' in js
+          assert '#makeHorizontalBar()' in js
+          assert '#makeSpringy()' in js
+          print('swing.glb:', len(data), 'bytes, glTF', version)
+          PY
+          node --check lib/playground3d.js
+
+      - name: Commit PR update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A assets/models/playground lib/playground3d.js data/glot-custom.jsonc
+          git rm .github/workflows/update-swing-bars-springy.yml
+          git commit -m 'feat: update swing and add horizontal bar and springy 3D symbols'
+          git push origin HEAD:feature/playground-3d-models
