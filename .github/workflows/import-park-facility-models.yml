@@ -50,8 +50,7 @@ jobs:
           old = '''    assert not external, f"{path}: unexpected external assets {external}"
               print(f"{path}: {len(data)} bytes, self-contained GLB")
           '''
-          new = '''    for uri in external:
-              assert (Path(path).parent / uri).exists(), f"{path}: missing external asset {uri}"
+          new = '''    assert all((Path(path).parent / uri).exists() for uri in external), f"{path}: missing external asset from {external}"
               print(f"{path}: {len(data)} bytes, external={external}")
           '''
           assert old in s, 'GLB validation patch point not found'
