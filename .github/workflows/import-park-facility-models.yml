@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p assets/models/poi/bench assets/models/poi/drinking-water assets/models/poi/vending-machine
+          mkdir -p assets/models/poi/bench assets/models/poi/drinking-water assets/models/poi/vending-machine/Textures
           curl --fail --location --retry 3 \
             'https://raw.githubusercontent.com/Aymanbalaa/grand-theft-poutine/main/game/assets/models/props/bench.glb' \
             -o assets/models/poi/bench/bench.glb
@@ -35,11 +35,28 @@ jobs:
           curl --fail --location --retry 3 \
             'https://raw.githubusercontent.com/RetroDECK/RetroQUEST/main/assets/kenney_mini-arcade/Models/GLB%20format/vending-machine.glb' \
             -o assets/models/poi/vending-machine/vending-machine.glb
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/RetroDECK/RetroQUEST/main/assets/kenney_mini-arcade/Models/GLB%20format/Textures/colormap.png' \
+            -o assets/models/poi/vending-machine/Textures/colormap.png
 
       - name: Integrate and validate
         shell: bash
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/tmp/import_park_facility.py')
+          s = p.read_text(encoding='utf-8')
+          old = '''    assert not external, f"{path}: unexpected external assets {external}"
+              print(f"{path}: {len(data)} bytes, self-contained GLB")
+          '''
+          new = '''    for uri in external:
+              assert (Path(path).parent / uri).exists(), f"{path}: missing external asset {uri}"
+              print(f"{path}: {len(data)} bytes, external={external}")
+          '''
+          assert old in s, 'GLB validation patch point not found'
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
           python3 .github/tmp/import_park_facility.py
           node --check lib/playground3d.js
           grep -q 'amenity === "bench"' lib/playground3d.js
