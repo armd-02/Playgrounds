@@ -5,7 +5,7 @@ They indicate the mapped feature type and do not claim to reproduce the exact re
 
 | OSM tag | Model | License / attribution |
 | --- | --- | --- |
-| `amenity=bench` | `bench/bench.glb` | Bench by Kenney — CC0 |
+| `amenity=bench` | `bench/scene.gltf` | CC0 - Bench by plaggy — CC BY 4.0 (conservative attribution; see SOURCE.md) |
 | `amenity=drinking_water` | `drinking-water/scene.gltf` | Low poly Drinking Fountain by omri_ha_muglob — CC BY 4.0 |
 | `amenity=vending_machine` | `vending-machine/vending-machine.glb` | Vending Machine by Kenney — CC0 |
 
