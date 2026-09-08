@@ -1,0 +1,300 @@
+name: Import park facility 3D models
+
+on:
+  push:
+    branches:
+      - feature/playground-3d-models
+    paths:
+      - .github/workflows/import-park-facility-models.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-facilities:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/playground-3d-models
+
+      - name: Download openly licensed models
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p assets/models/poi/bench
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/Aymanbalaa/grand-theft-poutine/main/game/assets/models/props/bench.glb' \
+            -o assets/models/poi/bench/bench.glb
+
+          mkdir -p assets/models/poi/drinking-water
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/farpini/cambui05/main/Assets/Models/Hall/scene.gltf' \
+            -o assets/models/poi/drinking-water/scene.gltf
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/farpini/cambui05/main/Assets/Models/Hall/scene.bin' \
+            -o assets/models/poi/drinking-water/scene.bin
+
+          mkdir -p assets/models/poi/vending-machine
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/RetroDECK/RetroQUEST/main/assets/kenney_mini-arcade/Models/GLB%20format/vending-machine.glb' \
+            -o assets/models/poi/vending-machine/vending-machine.glb
+
+      - name: Add source and license records
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > assets/models/poi/bench/SOURCE.md <<'EOF'
+          # Bench
+
+          - Canonical source: https://kenney.nl/assets/nature-kit
+          - Author: Kenney
+          - License: CC0 1.0 / Public Domain Dedication
+          - Format: GLB
+          - Included file: `bench.glb`
+          - Retrieval mirror used for this import: https://github.com/Aymanbalaa/grand-theft-poutine
+
+          The model is used as a generic 3D symbol for OpenStreetMap `amenity=bench` features.
+          EOF
+
+          cat > assets/models/poi/drinking-water/SOURCE.md <<'EOF'
+          # Low poly Drinking Fountain
+
+          - Canonical source: https://sketchfab.com/3d-models/low-poly-drinking-fountain-383b49d7f1db4f6bbf22ac97ea72cb6d
+          - Author: omri_ha_muglob
+          - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+          - Required attribution: `Low poly Drinking Fountain by omri_ha_muglob [CC BY 4.0] via Sketchfab`
+          - Format: glTF 2.0 (`scene.gltf` + `scene.bin`)
+          - Source geometry: approximately 2.9k triangles according to Sketchfab
+          - Retrieval mirror used for this import: https://github.com/farpini/cambui05
+
+          The model is used as a generic 3D symbol for OpenStreetMap `amenity=drinking_water` features.
+          EOF
+
+          cat > assets/models/poi/vending-machine/SOURCE.md <<'EOF'
+          # Vending machine
+
+          - Canonical source: https://kenney.nl/assets/mini-arcade
+          - Author: Kenney
+          - License: CC0 1.0 / Public Domain Dedication
+          - Format: GLB
+          - Included file: `vending-machine.glb`
+          - Retrieval mirror used for this import: https://github.com/RetroDECK/RetroQUEST
+
+          The model is used as a generic 3D symbol for OpenStreetMap `amenity=vending_machine` features.
+          EOF
+
+          cat > assets/models/poi/README.md <<'EOF'
+          # Park facility 3D models
+
+          These models are used as compact 3D symbols for selected OpenStreetMap park facilities.
+          They indicate the mapped feature type and do not claim to reproduce the exact real-world object.
+
+          | OSM tag | Model | License / attribution |
+          | --- | --- | --- |
+          | `amenity=bench` | `bench/bench.glb` | Bench by Kenney — CC0 |
+          | `amenity=drinking_water` | `drinking-water/scene.gltf` | Low poly Drinking Fountain by omri_ha_muglob — CC BY 4.0 |
+          | `amenity=vending_machine` | `vending-machine/vending-machine.glb` | Vending Machine by Kenney — CC0 |
+
+          See each `SOURCE.md` for canonical source URLs and detailed attribution.
+          EOF
+
+      - name: Integrate facility tags into the Three.js overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          p = Path('lib/playground3d.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(
+              '// Three.js overlay for selected OSM playground=* features.',
+              '// Three.js overlay for selected OSM playground and park-facility features.'
+          )
+          s = s.replace(
+              '// can experiment with 3D playground equipment while Navara is still in beta.',
+              '// can experiment with 3D playground equipment and park facilities while Navara is still in beta.'
+          )
+
+          if './assets/models/poi/bench/bench.glb' not in s:
+              old = '''            structure: {
+                  url: "./assets/models/playground/poly-pizza/composite-play-structure/composite-play-structure.glb",
+                  size: 8.0
+              }
+          '''
+              new = '''            structure: {
+                  url: "./assets/models/playground/poly-pizza/composite-play-structure/composite-play-structure.glb",
+                  size: 8.0
+              },
+              bench: {
+                  url: "./assets/models/poi/bench/bench.glb",
+                  size: 2.0
+              },
+              drinking_water: {
+                  url: "./assets/models/poi/drinking-water/scene.gltf",
+                  size: 1.2
+              },
+              vending_machine: {
+                  url: "./assets/models/poi/vending-machine/vending-machine.glb",
+                  size: 1.9
+              }
+          '''
+              assert old in s, 'modelDefs insertion point not found'
+              s = s.replace(old, new, 1)
+
+          old = '            const modelKey = this.modelAliases[String(tags.playground || "").toLowerCase()];'
+          if old in s:
+              s = s.replace(old, '            const modelKey = this.#modelKey(tags);', 1)
+
+          if '#modelKey(tags)' not in s:
+              needle = '''    #tags(feature) {
+          '''
+              helper = '''    #modelKey(tags) {
+                  const playground = this.modelAliases[String(tags.playground || "").toLowerCase()];
+                  if (playground) return playground;
+
+                  const amenity = String(tags.amenity || "").toLowerCase();
+                  if (amenity === "bench" || amenity === "drinking_water" || amenity === "vending_machine") {
+                      return amenity;
+                  }
+                  return null;
+              }
+
+          '''
+              assert needle in s, 'model key helper insertion point not found'
+              s = s.replace(needle, helper + needle, 1)
+
+          old_userdata = '''            const osmId = tags.id ?? feature.id;
+              object.userData.osmId = osmId;
+              object.userData.playground = tags.playground;
+              object.traverse(child => {
+                  child.userData.osmId = osmId;
+                  child.userData.playground = tags.playground;
+              });
+          '''
+          new_userdata = '''            const osmId = tags.id ?? feature.id;
+              object.userData.osmId = osmId;
+              object.userData.modelKey = modelKey;
+              object.traverse(child => {
+                  child.userData.osmId = osmId;
+                  child.userData.modelKey = modelKey;
+              });
+          '''
+          if old_userdata in s:
+              s = s.replace(old_userdata, new_userdata, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+          # Update the visible license panel with the CC BY credit and the two CC0 sources.
+          p = Path('data/glot-custom.jsonc')
+          s = p.read_text(encoding='utf-8')
+          nl = '\r\n' if '\r\n' in s else '\n'
+          ja = (
+              'このサイトで使われているデータは、OpenStreetMapとプロジェクトのデータを組み合わせています。'
+              '<br><br>3Dモデル: '
+              '<a href="https://opengameart.org/content/playground" target="_blank" rel="noopener">Playground by leonkin (CC0)</a> / '
+              '<a href="https://poly.pizza/m/0-7U_RTHzKT" target="_blank" rel="noopener">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://poly.pizza/m/ee0cso-KZnC" target="_blank" rel="noopener">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://poly.pizza/m/07KqBahqHXK" target="_blank" rel="noopener">Sandbox by sirkitree [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://kenney.nl/assets/nature-kit" target="_blank" rel="noopener">Bench by Kenney (CC0)</a> / '
+              '<a href="https://sketchfab.com/3d-models/low-poly-drinking-fountain-383b49d7f1db4f6bbf22ac97ea72cb6d" target="_blank" rel="noopener">Low poly Drinking Fountain by omri_ha_muglob [CC BY 4.0] via Sketchfab</a> / '
+              '<a href="https://kenney.nl/assets/mini-arcade" target="_blank" rel="noopener">Vending Machine by Kenney (CC0)</a>'
+          )
+          en = (
+              'The data used by this site combines OpenStreetMap data with project data.'
+              '<br><br>3D models: '
+              '<a href="https://opengameart.org/content/playground" target="_blank" rel="noopener">Playground by leonkin (CC0)</a> / '
+              '<a href="https://poly.pizza/m/0-7U_RTHzKT" target="_blank" rel="noopener">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://poly.pizza/m/ee0cso-KZnC" target="_blank" rel="noopener">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://poly.pizza/m/07KqBahqHXK" target="_blank" rel="noopener">Sandbox by sirkitree [CC-BY] via Poly Pizza</a> / '
+              '<a href="https://kenney.nl/assets/nature-kit" target="_blank" rel="noopener">Bench by Kenney (CC0)</a> / '
+              '<a href="https://sketchfab.com/3d-models/low-poly-drinking-fountain-383b49d7f1db4f6bbf22ac97ea72cb6d" target="_blank" rel="noopener">Low poly Drinking Fountain by omri_ha_muglob [CC BY 4.0] via Sketchfab</a> / '
+              '<a href="https://kenney.nl/assets/mini-arcade" target="_blank" rel="noopener">Vending Machine by Kenney (CC0)</a>'
+          )
+          replacement = (
+              '    "licence_message": {' + nl +
+              '        "ja": ' + json.dumps(ja, ensure_ascii=False) + ',' + nl +
+              '        "en": ' + json.dumps(en, ensure_ascii=False) + nl +
+              '    },'
+          )
+          pattern = re.compile(r'    "licence_message": \{.*?\r?\n    \},', re.S)
+          assert pattern.search(s), 'licence_message block not found'
+          s = pattern.sub(lambda _: replacement, s, count=1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate models and JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import struct
+
+          def inspect_glb(path):
+              data = Path(path).read_bytes()
+              assert len(data) >= 20, f'{path}: too short'
+              magic, version, total = struct.unpack_from('<4sII', data, 0)
+              assert magic == b'glTF', f'{path}: bad magic'
+              assert version == 2, f'{path}: expected glTF 2.0'
+              assert total == len(data), f'{path}: header length mismatch'
+              json_len, json_type = struct.unpack_from('<II', data, 12)
+              assert json_type == 0x4E4F534A, f'{path}: first chunk is not JSON'
+              obj = json.loads(data[20:20 + json_len].decode('utf-8').rstrip(' \t\r\n\x00'))
+              external = []
+              for section in ('buffers', 'images'):
+                  for item in obj.get(section, []):
+                      uri = item.get('uri')
+                      if uri and not uri.startswith('data:'):
+                          external.append(uri)
+              assert not external, f'{path}: unexpected external assets {external}'
+              print(f'{path}: {len(data)} bytes, self-contained GLB')
+
+          inspect_glb('assets/models/poi/bench/bench.glb')
+          inspect_glb('assets/models/poi/vending-machine/vending-machine.glb')
+
+          gltf_path = Path('assets/models/poi/drinking-water/scene.gltf')
+          obj = json.loads(gltf_path.read_text(encoding='utf-8'))
+          assert obj['asset']['version'] == '2.0'
+          assert obj['asset']['extras']['license'].startswith('CC-BY-4.0')
+          assert obj['buffers'][0]['uri'] == 'scene.bin'
+          bin_path = gltf_path.parent / 'scene.bin'
+          assert bin_path.stat().st_size == obj['buffers'][0]['byteLength']
+          for image in obj.get('images', []):
+              uri = image.get('uri')
+              assert not uri or uri.startswith('data:'), f'unexpected external image: {uri}'
+
+          triangles = 0
+          for mesh in obj.get('meshes', []):
+              for primitive in mesh.get('primitives', []):
+                  if primitive.get('mode', 4) == 4 and 'indices' in primitive:
+                      triangles += obj['accessors'][primitive['indices']]['count'] // 3
+          print(f'{gltf_path}: {triangles} indexed triangles, binary={bin_path.stat().st_size} bytes')
+
+          assert Path('assets/models/poi/bench/bench.glb').stat().st_size == 10756
+          assert Path('assets/models/poi/vending-machine/vending-machine.glb').stat().st_size == 16228
+          assert gltf_path.stat().st_size == 16464
+          assert bin_path.stat().st_size == 174192
+          PY
+
+          node --check lib/playground3d.js
+          grep -q 'amenity === "bench"' lib/playground3d.js
+          grep -q 'amenity === "drinking_water"' lib/playground3d.js
+          grep -q 'amenity === "vending_machine"' lib/playground3d.js
+
+      - name: Commit facility models and integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add lib/playground3d.js data/glot-custom.jsonc assets/models/poi
+          git rm .github/workflows/import-park-facility-models.yml
+          git commit -m 'feat: add 3D models for park facilities'
+          git push origin HEAD:feature/playground-3d-models
