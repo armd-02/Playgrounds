@@ -89,10 +89,11 @@ jobs:
 
           p = Path('data/glot-custom.jsonc')
           s = p.read_bytes().decode('utf-8')
-          old = '<a href="https://kenney.nl/assets/nature-kit" target="_blank" rel="noopener">Bench by Kenney (CC0)</a>'
-          new = '<a href="https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7" target="_blank" rel="noopener">CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab</a>'
-          assert s.count(old) == 2, f'expected 2 Kenney bench credits, found {s.count(old)}'
-          p.write_bytes(s.replace(old, new).encode('utf-8'))
+          assert s.count('https://kenney.nl/assets/nature-kit') == 2
+          assert s.count('Bench by Kenney (CC0)') == 2
+          s = s.replace('https://kenney.nl/assets/nature-kit', 'https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7')
+          s = s.replace('Bench by Kenney (CC0)', 'CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab')
+          p.write_bytes(s.encode('utf-8'))
           PY
 
       - name: Validate plaggy model and JavaScript
