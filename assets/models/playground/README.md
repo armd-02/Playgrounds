@@ -7,7 +7,7 @@ The model is a semantic symbol; it does not claim to reproduce the exact real-wo
 | --- | --- | --- |
 | `playground=slide` | `leonkin-playground/GLTF/slide.glb` | Playground by leonkin — CC0 |
 | `playground=swing` | `poly-pizza/swing-set/swing.glb` | Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza |
-| `playground=sandpit` | `poly-pizza/sandpit/sandpit.glb` | Sandbox by sirkitree [CC-BY] via Poly Pizza |
+| `playground=sandpit` | `sketchfab/sandbox-hene/scene.gltf` | Sandbox by Hene [CC BY 4.0] via Sketchfab |
 | `playground=climbingframe` | `poly-pizza/jungle-gym/jungle-gym.glb` | Jungle gym by Poly by Google [CC-BY] via Poly Pizza |
 | `playground=structure` | `poly-pizza/composite-play-structure/composite-play-structure.glb` | Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza |
 | `playground=seesaw` | `poly-pizza/seesaw/seesaw.glb` | Seesaw by Poly by Google [CC-BY 3.0] via Poly Pizza |
@@ -22,7 +22,7 @@ The model is a semantic symbol; it does not claim to reproduce the exact real-wo
 - Slide: https://opengameart.org/content/playground
 - Swing: https://poly.pizza/m/e-IJdcqZH4p
 - Seesaw: https://poly.pizza/m/fBaX63DY389
-- Sandpit: https://poly.pizza/m/07KqBahqHXK
+- Sandpit: https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341
 - Jungle gym: https://poly.pizza/m/0-7U_RTHzKT
 - Composite play structure: https://poly.pizza/m/ee0cso-KZnC
 
