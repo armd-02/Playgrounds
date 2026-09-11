@@ -1,0 +1,164 @@
+name: Replace sandpit with Sandbox by Hene
+
+on:
+  push:
+    branches:
+      - feature/playground-3d-models
+    paths:
+      - .github/workflows/replace-sandpit-hene.yml
+
+permissions:
+  contents: write
+
+jobs:
+  replace-sandpit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/playground-3d-models
+
+      - name: Import Sandbox by Hene
+        shell: bash
+        run: |
+          set -euo pipefail
+          OLD='assets/models/playground/poly-pizza/sandpit'
+          NEW='assets/models/playground/sketchfab/sandbox-hene'
+          rm -rf "$OLD" "$NEW"
+          mkdir -p "$NEW/textures"
+
+          BASE='https://raw.githubusercontent.com/Davizinhn/Mall-of-Panpan-Source-Code/e1273b036fa712a76b8a08ee1184f74cc0b310cb/Assets/Materials/park/sand'
+          curl --fail --location --retry 3 "$BASE/scene.gltf" -o "$NEW/scene.gltf"
+          curl --fail --location --retry 3 "$BASE/scene.bin" -o "$NEW/scene.bin"
+
+          for f in \
+            Puut_baseColor.jpeg \
+            Puut_metallicRoughness.png \
+            Puut_normal.png \
+            Hiekka_baseColor.jpeg \
+            Hiekka_metallicRoughness.png \
+            Hiekka_normal.png
+          do
+            curl --fail --location --retry 3 "$BASE/$f" -o "$NEW/textures/$f"
+          done
+
+      - name: Optimize textures for web map use
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v magick >/dev/null 2>&1; then
+            IMG='magick'
+          elif command -v convert >/dev/null 2>&1; then
+            IMG='convert'
+          else
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+            IMG='convert'
+          fi
+
+          for f in assets/models/playground/sketchfab/sandbox-hene/textures/*; do
+            ext="${f##*.}"
+            tmp="${f%.*}.tmp.${ext}"
+            $IMG "$f" -resize '512x512>' -strip "$tmp"
+            mv "$tmp" "$f"
+          done
+
+      - name: Update integration, source and credits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          # JS model path
+          p = Path('lib/playground3d.js')
+          s = p.read_text(encoding='utf-8')
+          old = 'url: "./assets/models/playground/poly-pizza/sandpit/sandpit.glb"'
+          new = 'url: "./assets/models/playground/sketchfab/sandbox-hene/scene.gltf"'
+          assert old in s, 'old sandpit model URL not found'
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+
+          # Source metadata
+          source = '''# Sandbox by Hene\n\n- Canonical source: https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341\n- Author: Hene (https://sketchfab.com/Hene)\n- License: Creative Commons Attribution 4.0 International (CC BY 4.0)\n- Geometry: 148 triangles / 237 indexed vertices across two primitives\n- Included format: glTF 2.0 (`scene.gltf` + `scene.bin` + optimized textures)\n- Retrieval mirror used for this import: https://github.com/Davizinhn/Mall-of-Panpan-Source-Code\n- Required attribution: `Sandbox by Hene [CC BY 4.0] via Sketchfab`\n\nThe six source textures are resized to a maximum of 512px for web-map performance; geometry is unchanged.\nThe model is used as a generic 3D symbol for OpenStreetMap `playground=sandpit` / `playground=sandbox` features.\n'''
+          Path('assets/models/playground/sketchfab/sandbox-hene/SOURCE.md').write_text(source, encoding='utf-8')
+
+          # Model README
+          p = Path('assets/models/playground/README.md')
+          r = p.read_text(encoding='utf-8')
+          old_row = '| `playground=sandpit` | `poly-pizza/sandpit/sandpit.glb` | Sandbox by sirkitree [CC-BY] via Poly Pizza |'
+          new_row = '| `playground=sandpit` | `sketchfab/sandbox-hene/scene.gltf` | Sandbox by Hene [CC BY 4.0] via Sketchfab |'
+          assert old_row in r, 'old README sandpit row not found'
+          r = r.replace(old_row, new_row, 1)
+          old_src = '- Sandpit: https://poly.pizza/m/07KqBahqHXK'
+          new_src = '- Sandpit: https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341'
+          assert old_src in r, 'old README sandpit source not found'
+          r = r.replace(old_src, new_src, 1)
+          p.write_text(r, encoding='utf-8')
+
+          # Site license dialog (Japanese + English)
+          p = Path('data/glot-custom.jsonc')
+          g = p.read_text(encoding='utf-8')
+          old_credit = '<a href=\\"https://poly.pizza/m/07KqBahqHXK\\" target=\\"_blank\\" rel=\\"noopener\\">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>'
+          new_credit = '<a href=\\"https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341\\" target=\\"_blank\\" rel=\\"noopener\\">Sandbox by Hene [CC BY 4.0] via Sketchfab</a>'
+          assert g.count(old_credit) == 2, f'expected 2 old sandpit credits, found {g.count(old_credit)}'
+          p.write_text(g.replace(old_credit, new_credit), encoding='utf-8')
+          PY
+
+      - name: Validate Hene sandbox and JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          base = Path('assets/models/playground/sketchfab/sandbox-hene')
+          obj = json.loads((base / 'scene.gltf').read_text(encoding='utf-8'))
+          assert obj['asset']['version'] == '2.0'
+          extras = obj['asset']['extras']
+          assert extras['title'] == 'Sandbox'
+          assert extras['author'].startswith('Hene')
+          assert extras['license'].startswith('CC-BY-4.0')
+          assert 'cd3a3d18fcf040a8815adc5210163341' in extras['source']
+          assert obj['buffers'][0]['uri'] == 'scene.bin'
+          assert (base / 'scene.bin').stat().st_size == obj['buffers'][0]['byteLength'] == 13152
+
+          triangles = 0
+          for mesh in obj['meshes']:
+              for prim in mesh['primitives']:
+                  count = obj['accessors'][prim['indices']]['count']
+                  triangles += count // 3
+          assert triangles == 148, triangles
+
+          for image in obj['images']:
+              f = base / image['uri']
+              assert f.exists(), f'missing texture: {image["uri"]}'
+              assert f.stat().st_size < 1_000_000, f'texture too large: {f} {f.stat().st_size}'
+
+          print('Sandbox by Hene triangles:', triangles)
+          print('scene.bin:', (base / 'scene.bin').stat().st_size, 'bytes')
+          print('texture bytes:', sum((base / x['uri']).stat().st_size for x in obj['images']))
+          PY
+
+          for f in assets/models/playground/sketchfab/sandbox-hene/textures/*; do
+            dims=$(identify -format '%wx%h' "$f")
+            echo "$f $dims"
+            w=${dims%x*}; h=${dims#*x}
+            test "$w" -le 512
+            test "$h" -le 512
+          done
+
+          node --check lib/playground3d.js
+          grep -q './assets/models/playground/sketchfab/sandbox-hene/scene.gltf' lib/playground3d.js
+          test ! -e assets/models/playground/poly-pizza/sandpit/sandpit.glb
+
+      - name: Commit PR update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A assets/models/playground lib/playground3d.js data/glot-custom.jsonc
+          git rm .github/workflows/replace-sandpit-hene.yml
+          git commit -m 'feat: replace sandpit model with Sandbox by Hene'
+          git push origin HEAD:feature/playground-3d-models
