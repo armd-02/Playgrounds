@@ -1,6 +1,9 @@
 {
   "version": 8,
   "name": "OpenStreetMap(with poi)",
+  "projection": {
+    "type": "globe"
+  },
   "sources": {
     "openmaptiles": {
       "url": "https://tile.openstreetmap.jp/data/planet.json",
@@ -401,6 +404,35 @@
           "stadium",
           "pitch",
           "track"
+        ]
+      ]
+    },
+    {
+      "id": "landuse_parking",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landuse",
+      "minzoom": 14,
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "fill-color": "rgba(224, 226, 228, 1)",
+        "fill-opacity": 0.85,
+        "fill-outline-color": "rgba(176, 180, 184, 1)"
+      },
+      "metadata": {},
+      "filter": [
+        "all",
+        [
+          "==",
+          "$type",
+          "Polygon"
+        ],
+        [
+          "==",
+          "class",
+          "parking"
         ]
       ]
     },

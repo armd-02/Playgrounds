@@ -24,8 +24,8 @@
         "en": "about playground equipment map"
     },
     "licence_message": {
-        "ja": "このサイトで使われているデータは、OpenStreetMapとプロジェクトのデータを組み合わせています。<br><br>3D遊具モデル: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/07KqBahqHXK\" target=\"_blank\" rel=\"noopener\">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>",
-        "en": "The data used by this site combines OpenStreetMap data with project data.<br><br>3D playground models: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/07KqBahqHXK\" target=\"_blank\" rel=\"noopener\">Sandbox by sirkitree [CC-BY] via Poly Pizza</a>"
+        "ja": "このサイトで使われているデータは、OpenStreetMapとプロジェクトのデータを組み合わせています。<br><br>3Dモデル: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/e-IJdcqZH4p\" target=\"_blank\" rel=\"noopener\">Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/fBaX63DY389\" target=\"_blank\" rel=\"noopener\">Seesaw by Poly by Google [CC-BY 3.0] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341\" target=\"_blank\" rel=\"noopener\">Sandbox by Hene [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7\" target=\"_blank\" rel=\"noopener\">CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/low-poly-drinking-fountain-383b49d7f1db4f6bbf22ac97ea72cb6d\" target=\"_blank\" rel=\"noopener\">Low poly Drinking Fountain by omri_ha_muglob [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/jpn-vending-machine-e9a1050ada83417592fc3233cb6a4c0a\" target=\"_blank\" rel=\"noopener\">JPN vending machine by adenotoxin [CC BY 4.0] via Sketchfab</a>",
+        "en": "We are all collecting information about parks with playground equipment and making maps.<br>The data used is a combination of OpenStreetMap and playground equipment for everyone project.<br><br>3D models: <a href=\"https://opengameart.org/content/playground\" target=\"_blank\" rel=\"noopener\">Playground by leonkin (CC0)</a> / <a href=\"https://poly.pizza/m/e-IJdcqZH4p\" target=\"_blank\" rel=\"noopener\">Swing set by Poly by Google [CC-BY 3.0] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/fBaX63DY389\" target=\"_blank\" rel=\"noopener\">Seesaw by Poly by Google [CC-BY 3.0] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/0-7U_RTHzKT\" target=\"_blank\" rel=\"noopener\">Jungle gym by Poly by Google [CC-BY] via Poly Pizza</a> / <a href=\"https://poly.pizza/m/ee0cso-KZnC\" target=\"_blank\" rel=\"noopener\">Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza</a> / <a href=\"https://sketchfab.com/3d-models/sandbox-cd3a3d18fcf040a8815adc5210163341\" target=\"_blank\" rel=\"noopener\">Sandbox by Hene [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/cc0-bench-096d4f915819409f9739326118bd5aa7\" target=\"_blank\" rel=\"noopener\">CC0 - Bench by plaggy [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/low-poly-drinking-fountain-383b49d7f1db4f6bbf22ac97ea72cb6d\" target=\"_blank\" rel=\"noopener\">Low poly Drinking Fountain by omri_ha_muglob [CC BY 4.0] via Sketchfab</a> / <a href=\"https://sketchfab.com/3d-models/jpn-vending-machine-e9a1050ada83417592fc3233cb6a4c0a\" target=\"_blank\" rel=\"noopener\">JPN vending machine by adenotoxin [CC BY 4.0] via Sketchfab</a>"
     },
     "develop_site": {
         "ja": "遊具のある公園マップのソースコード",
@@ -34,6 +34,33 @@
     "more_message": {
         "ja": "",
         "en": ""
+    },
+    "mapFeatureSelect": {
+        "ja": "開く地物を選択",
+        "en": "Choose a map feature"
+    },
+    "listActionSearch": {
+        "en": ""
+    },
+    "listActionSearchAria": {
+        "ja": "公園を探す",
+        "en": "Find parks"
+    },
+    "listActionRating": {
+        "ja": "評価で絞る",
+        "en": "Filter by rating"
+    },
+    "listActionRatingAria": {
+        "ja": "評価で公園を探す",
+        "en": "Filter parks by rating"
+    },
+    "reviewContribute": {
+        "ja": "口コミ・情報提供に参加",
+        "en": "Contribute reviews and information"
+    },
+    "reviewAdd": {
+        "ja": "口コミ・情報を追加",
+        "en": "Add a review or information"
     },
 
     // listtable.js
@@ -59,8 +86,8 @@
         "en": "Activities"
     },
     "actdate": {
-        "ja": "確認日",
-        "en": "Disaster Date"
+        "ja": "現地確認",
+        "en": "Site Visit"
     },
     "act_title": {
         "ja": "ひとこと",

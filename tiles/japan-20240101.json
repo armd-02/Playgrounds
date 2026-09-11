@@ -1,6 +1,9 @@
 {
     "version": 8,
     "name": "Japan 2024/01/01",
+    "projection": {
+        "type": "globe"
+    },
     "sources": {
         "openmaptiles": {
             "url": "pmtiles://https://armd-01.sakura.ne.jp/tiles/japan-20240101.pmtiles",

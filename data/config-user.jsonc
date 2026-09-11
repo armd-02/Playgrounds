@@ -14,8 +14,9 @@
         // [133.57441, 34.810416],[134.47147, 35.37144]
         //],
         "initZoom": 11,
-        "maxZoom": 20,
+        "maxZoom": 21,
         "detailZoom": 17, // モーダルダイアログ表示時のズームサイズ
+        "zoomMessageThreshold": 17,
         "textFont": [
             "Noto Sans Bold"
         ], // 使用可能なフォント（spriteに依存）
@@ -24,6 +25,134 @@
             "fill-color": "#CC6666",
             "fill-opacity": 0.3
         }
+    },
+    "news": {
+        "use": false, // 地図の対象年・表示地域に対応するニュースを表示する
+        "sourceBaseUrl": "",
+        "prefectureFile": "",
+        "regionalMinZoom": 9.5, // このズーム以上は全国ニュースから都道府県ニュースへ切り替える
+        "nationalLimitPerMonth": 5, // 全国ニュースを1か月あたり何件表示するか
+        "displayDuration": 10000 // ニュース1件を表示する時間（ミリ秒）
+    },
+    "intro": {
+        "use": true, // 起動時の案内を1日1回表示する
+        "storageKey": "playgrounds-intro-last-shown"
+    },
+    "areaFeatureLinker": {
+        "use": true, // 敷地と、その内側にある地物・Activityを1敷地1レコードへまとめる
+        "areaTargets": ["Playgrounds_Park"], // 親となる敷地のOverpass target
+        "featureTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // 敷地へ紐づける地物のtarget（空配列なら全target）
+        "mapMode": "allVisibleFeatures", // 通常時は敷地外を含む表示対象POIも地図に表示
+        "parentMarkerBelowZoomTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // カテゴリ選択時、各targetのpoiZoom未満では親敷地マーカーを表示。空配列・未指定なら無効
+        "maxParentDepth": 8, // 入れ子の敷地を親方向へたどる上限
+        "includeUnlinkedActivities": true, // 敷地へ紐づかないActivityも単独レコードとして残す
+        "recentDays": 365, // 「最近確認済み」とする日数
+        "activityFields": {
+            "score": "score",
+            "attributes": "good_points",
+            "body": "body",
+            "detailUrl": "detail_url"
+        },
+        "activityDateFields": ["actdate", "updatetime"],
+        "photoFieldPattern": "^picture_url\\d+$",
+        "scoreCodePattern": "act_score_(\\d+)$",
+        "scoreCodeOffset": 1
+    },
+    "areaSearch": {
+        "apiUrl": "activity-search.php", // basic設定の低ズーム検索。google.AppScriptを基準に解決
+        "use": true, // AreaFeatureLinkerが作ったレコードを検索・調査リストに利用する
+        "sparseInformationCount": 2, // 「情報が少ない」とする登録項目数の上限
+        "ratingActionId": "area-rating",
+        "attributeLabels": {
+            "act_good_points_1": "見守りやすい",
+            "act_good_points_2": "遊具が多い",
+            "act_good_points_3": "広い",
+            "act_good_points_4": "静か",
+            "act_good_points_5": "日陰がある",
+            "act_good_points_6": "ベンチがある",
+            "act_good_points_7": "小さい子向き",
+            "act_good_points_8": "小学生向き",
+            "act_good_points_9": "写真よりきれい",
+            "act_good_points_10": "駅・バス停が近い"
+        },
+        "presets": {
+            "small": { "label": "小さい子と遊ぶ", "attributes": ["act_good_points_7", "act_good_points_1"], "matchMode": "or" },
+            "play": { "label": "たくさん遊ぶ", "attributes": ["act_good_points_2", "act_good_points_3", "act_good_points_8"], "matchMode": "or" },
+            "relax": { "label": "ゆっくり過ごす", "attributes": ["act_good_points_4", "act_good_points_5", "act_good_points_6"], "matchMode": "or" },
+            "hot": { "label": "暑い日に休む", "attributes": ["act_good_points_5", "act_good_points_6"], "matchMode": "and" },
+            "access": { "label": "行きやすさ重視", "attributes": ["act_good_points_10"], "matchMode": "and" },
+            "rated": { "label": "高評価の公園", "scoreMin": 4, "attributes": [], "matchMode": "and" }
+        },
+        "labels": {
+            "count": "{count}件",
+            "status": { "missing": "未調査", "stale": "情報が古い", "recent": "最近確認済み" },
+            "research": { "missing": "詳細情報なし", "stale": "1年以上未確認", "photo": "写真なし", "sparse": "情報が少ない" },
+            "criteria": {
+                "researchMode": "調査モード",
+                "scoreMinimum": "平均評価 ★{score}以上",
+                "matchAny": "いずれか",
+                "matchAll": "すべて",
+                "recent": "1年以内に確認",
+                "photo": "写真あり",
+                "detail": "詳細情報あり",
+                "allAreas": "すべての公園"
+            },
+            "listTitles": {
+                "missing": "詳細情報無しリスト",
+                "stale": "1年以上未確認リスト",
+                "photo": "写真無しリスト",
+                "sparse": "情報が少ない公園リスト",
+                "research": "調査対象リスト",
+                "search": "公園検索結果リスト"
+            },
+            "heading": { "search": "公園を探す", "rating": "評価で公園を探す", "research": "口コミ・情報提供に参加" },
+            "description": {
+                "search": "いま地図に表示している範囲が対象です",
+                "rating": "投稿された星の平均評価で、いま表示している範囲を絞り込みます",
+                "research": "口コミや写真を追加できそうな公園を探します"
+            },
+            "rating": { "default": "評価で探す", "minimum": "★{score}以上", "activeTitle": "平均評価 {label}で絞り込み中" },
+            "report": {
+                "area": "公園",
+                "detail": "詳細情報あり",
+                "recent": "1年以内に確認",
+                "photo": "写真あり",
+                "score": "★{score}",
+                "unrated": "未評価"
+            },
+            "facts": { "score": "平均評価 ★{score}", "recent": "1年以内に確認", "photo": "写真あり" },
+            "matchReason": {
+                "title": "この公園が該当した理由",
+                "registered": "登録情報:",
+                "empty": "まだ詳しい登録情報がありません。"
+            }
+        },
+        "sourceBaseUrl": "" // 外部の検索用データを使う場合の基点URL（現在は未使用）
+    },
+    "listActions": {
+        "use": true, // リスト上部の汎用アクションボタンを表示する
+        "items": [
+            {
+                "id": "area-search",
+                "use": true,
+                "glotLabel": "",
+                "icon": "fa-solid fa-sliders",
+                "buttonClass": "btn-success",
+                "glotAriaLabel": "listActionSearchAria",
+                "handler": "areaSearchController.open",
+                "args": ["search"]
+            },
+            {
+                "id": "area-rating",
+                "use": false,
+                "glotLabel": "listActionRating",
+                "icon": "fas fa-star",
+                "buttonClass": "btn-light border-secondary",
+                "glotAriaLabel": "listActionRatingAria",
+                "handler": "areaSearchController.open",
+                "args": ["rating"]
+            }
+        ]
     },
     "minimap": { // 地球儀表示時の初期設定
         "use": false, // 地球儀利用時はtrue
@@ -44,33 +173,256 @@
         "visited": 0.4,
         "normal": 0.8,
         "flag": 0.5,
+        "zoomSteps": { // ズームレベルに応じたマーカー倍率
+            "marker": {
+                "baseScale": 0.5, // 最初のsteps.zoom未満
+                "steps": [
+                    { "zoom": 12, "scale": 0.1 },
+                    { "zoom": 13, "scale": 0.2 },
+                    { "zoom": 14, "scale": 0.3 },
+                    { "zoom": 15, "scale": 0.4 },
+                    { "zoom": 16, "scale": 0.6 },
+                    { "zoom": 17, "scale": 0.65 }
+                ]
+            },
+            "shadow": {
+                "baseScale": 0.5, // 最初のsteps.zoom未満
+                "steps": [
+                    { "zoom": 12, "scale": 0.1 },
+                    { "zoom": 13, "scale": 0.2 },
+                    { "zoom": 14, "scale": 0.3 },
+                    { "zoom": 15, "scale": 0.45 },
+                    { "zoom": 16, "scale": 0.7 },
+                    { "zoom": 17, "scale": 1.0 }
+                ]
+            }
+        },
         "textFont": [
             "Noto Sans Regular"
         ], // 使用可能なフォント（spriteに依存）
         "textSize": 12,
-        "textViewZoom": 14 // アイコンに文字を表示するズームレベル
+        "textViewZoom": 14, // アイコンに文字を表示するズームレベル
+        "markerColors": {
+            "hover": {
+                "enabled": false,
+                "stroke": "#e9a05b"
+            },
+            "attention": {
+                "fill": "#ffffff",
+                "stroke": "#ffc786"
+            },
+            "green": {
+                "fill": "#ffffff",
+                "stroke": "#51b3a1"
+            },
+            "middle": {
+                "fill": "#ffffff",
+                "stroke": "#4d77ac"
+            },
+            "normal": {
+                "fill": "#ffffff",
+                "stroke": "#bfbfe1"
+            },
+            "visited": {
+                "fill": "#ffffff",
+                "stroke": "#9c9c9c"
+            }
+        }
     },
     "playground3d": {
-        "use": true, // 対応する playground=* を3Dモデルで表示
-        "minZoom": 17 // 3D遊具の表示開始ズーム
+        "use": true, // false: 従来のアイコン表示。表示ズームはアイコンと共通
+        "visualScale": 1.0, // 地図記号として見やすくする全モデル共通倍率
+        "hitArea": {
+            "use": true, // モデル全体を覆う透明なタップ領域を使用
+            "padding": 0.35, // モデル外形から広げる距離(m)
+            "minSize": 2.0 // 各辺の最小サイズ(m)
+        },
+        // モデルIDごとにURLと最長辺のサイズ(m)を指定。use:falseで個別に無効化
+        "models": {
+            "slide": {
+                "url": "./assets/models/playground/leonkin-playground/GLTF/slide.glb",
+                "size": 4
+            },
+            "dome": {
+                "url": "./assets/models/playground/handmade/playground_dome.glb",
+                "size": 4
+            },
+            "swing": {
+                "url": "./assets/models/playground/poly-pizza/swing-set/swing.glb",
+                "size": 4
+            },
+            "sandpit": {
+                "url": "./assets/models/playground/sketchfab/sandbox-hene/scene.gltf",
+                "size": 3
+            },
+            "climbingframe": {
+                "url": "./assets/models/playground/poly-pizza/jungle-gym/jungle-gym.glb",
+                "size": 5
+            },
+            "structure": {
+                "url": "./assets/models/playground/poly-pizza/composite-play-structure/composite-play-structure.glb",
+                "size": 8
+            },
+            "seesaw": {
+                "url": "./assets/models/playground/poly-pizza/seesaw/seesaw.glb",
+                "size": 4
+            },
+            "basket_swing": {
+                "type": "basket_swing",
+                "size": 1
+            },
+            "horizontal_bar": {
+                "type": "horizontal_bar",
+                "size": 1
+            },
+            "ride_on": {
+                "type": "springy",
+                "size": 1
+            },
+            "springy": {
+                "type": "springy",
+                "size": 1
+            },
+            "bench": {
+                "url": "./assets/models/poi/bench/scene.gltf",
+                "size": 2
+            },
+            "drinking_water": {
+                "url": "./assets/models/poi/drinking-water/scene.gltf",
+                "size": 1.2,
+                "scaleBelowZoom": 19,
+                "maxZoomScale": 4
+            },
+            "vending_machine": {
+                "url": "./assets/models/poi/vending-machine/scene.gltf",
+                "size": 1.9,
+                "scaleBelowZoom": 19,
+                "maxZoomScale": 4
+            }
+        },
+        // 上から最初に一致したルールを使用。タグ間はAND、値の配列はOR（大文字小文字を区別しない）
+        // use:falseでルールを無効化。未一致・モデル読込失敗時は従来アイコン
+        "rules": [
+            {
+                "tags": {
+                    "playground": "slide"
+                },
+                "model": "slide"
+            },
+            {
+                "tags": {
+                    "playground": "dome"
+                },
+                "model": "dome"
+            },
+            {
+                "tags": {
+                    "playground": "swing"
+                },
+                "model": "swing"
+            },
+            {
+                "tags": {
+                    "playground": [
+                        "sandpit",
+                        "sandbox"
+                    ]
+                },
+                "model": "sandpit"
+            },
+            {
+                "tags": {
+                    "playground": [
+                        "climbingframe",
+                        "climbing_frame",
+                        "jungle_gym"
+                    ]
+                },
+                "model": "climbingframe"
+            },
+            {
+                "tags": {
+                    "playground": "structure"
+                },
+                "model": "structure"
+            },
+            {
+                "tags": {
+                    "playground": "seesaw"
+                },
+                "model": "seesaw"
+            },
+            {
+                "tags": {
+                    "playground": [
+                        "basketswing",
+                        "basket_swing"
+                    ]
+                },
+                "model": "basket_swing"
+            },
+            {
+                "tags": {
+                    "playground": "horizontal_bar"
+                },
+                "model": "horizontal_bar"
+            },
+            {
+                "tags": {
+                    "playground": "ride_on"
+                },
+                "model": "springy"
+            },
+            {
+                "tags": {
+                    "playground": "springy"
+                },
+                "model": "springy"
+            },
+            {
+                "tags": {
+                    "amenity": "bench"
+                },
+                "model": "bench"
+            },
+            {
+                "tags": {
+                    "amenity": "drinking_water"
+                },
+                "model": "drinking_water"
+            },
+            {
+                "tags": {
+                    "amenity": "vending_machine"
+                },
+                "model": "vending_machine"
+            }
+        ]
     },
     "poiView": {
         "poiActLoad": false, // 起動時にActivityを読み込むか
         "poiFilter": "", // poiView時の表示範囲 all:画面外も表示 / "":画面内だけを表示
         "poiZoom": {
             // アイコンの前後位置は後ろの方が手前になる
-            "Playgrounds_Park": 12.5,
+            "Playgrounds_Park": 12,
             "Playgrounds_Play": 14.5,
             "Playgrounds_Etc": 17,
             "activity": 15
         },
+        "mobilePoiZoom": {},
         "editZoom": {
             // 編集時に追加するpoiZoom
             "Playgrounds_Park": 16,
             "Playgrounds_Play": 16
         }
     },
+    "poiData": {
+        "maxFeatures": 12000,
+        "pruneThreshold": 15000,
+        "applyToStatic": false
+    },
     "selectItem": { // 選択リストの内容を手動記載 / 空の時は "" とする
+        "showAutoOption": true,
         "default": "",
         "menu": "",
         "action": "ChangePoi" // ChangeMap:背景地図切り替え / ChangePoi:メニューに会ったOverpass名のPOIを表示 / "":google Spreadseedのcategory
@@ -79,29 +431,6 @@
         "everyView": true, // すべてのビューでサイドバーを表示するか
         "initView": "view" // 空は非表示 / view:表示 / change:表示と拡大の切り替え / mini:縦の時はタイトルのみ表示。横の時は非表示 / list:リスト表示
     },
-    "listTable": {
-        "backgroundImage": "./image/bgimage.png",
-        "category": "tags", // カテゴリ選択 / activity:アクティビティリスト / tags:タグ / menu: タグベースの手動カテゴリ
-        "target": "", // targets:指定したtargetだけ表示 / activity:google sheetsのデータのみ表示 // 空:両方表示
-        "allActs": false, // true: 全てのactivityを常に表示 / false: 画面内のActivityのみ表示
-        "playback": {
-            "view": false,
-            "zoomLevel": 15,
-            "timer": 4000
-        },
-        "download": true,
-        "csvColumn": [ // ダウンロードするCSVの項目
-            "id",
-            "categoryJa",
-            "name",
-            "parentName",
-            "tag",
-            "categoryData",
-            "iconFile",
-            "lng",
-            "lat"
-        ]
-    },
     "thumbnail": {
         "use": true,
         "limits": 16, // 画像の制限数
@@ -109,12 +438,65 @@
         "modalThumbWidth": "800"
     },
     "google": {
-        "AppScript": "https://script.google.com/macros/s/AKfycbyt12vxIYsI8JfWBdAZ_9tnnuve3KozYpl9pWcXZZn7a3fJqDKtY6ARcpj1EmUtSFrH/exec",
+        "AppScript": "https://armd-01.sakura.ne.jp/community-mapmaker-backend/api/activities.php?app=playgrounds",
+        "authMode": "basic", // basic: HTTP Basic認証のJSON API / legacy: 従来のGAS salt認証
         "targetName": "activity"
     },
     "static": {
         "use": false,
         "osmjsons": []
+    },
+    "indoor": {
+        "use": false,
+        "defaultLevel": "0",
+        "floorHeightMeters": 3.66,
+        "buildingLevelHeightMeters": 3.66,
+        "floorOffsetMeters": 0.2,
+        "backgroundTransportationOpacity": 0.08,
+        "buildingSource": {
+            "type": "vectorTile",
+            "styleSource": "openmaptiles",
+            "dedicatedSource": "indoor-building-tiles",
+            "sourceUrl": "",
+            "sourceLayer": "building",
+            "heightProperty": "render_height",
+            "minHeightProperty": "render_min_height",
+            "deduplicate": true
+        },
+        "fallbackLevels": {
+            "highway=corridor": "0"
+        },
+        "underground": {
+            "useWithoutBuilding": false,
+            "activationRadiusMeters": 60
+        },
+        "largeBuildingActivation": {
+            "use": false,
+            "minZoom": 15,
+            "referenceZoom": 18,
+            "viewportCoverageRatio": 1.0,
+            "groupNearbyBuildings": false
+        },
+        "buildingGroup": {
+            "smallBuildingAreaSquareMeters": 1500,
+            "groupRadiusMeters": 50,
+            "activationRadiusMeters": 50,
+            "requireIndoorPoi": true
+        },
+        "levels": {
+            "discoverFromData": false,
+            "labels": {
+                "roof": "屋上"
+            },
+            "order": [
+                "0"
+            ]
+        },
+        "control": {
+            "view": false,
+            "urlParameter": "level",
+            "label": "フロア"
+        }
     },
     "wikipedia": {
         "marker": "wikipedia.svg",
@@ -133,6 +515,11 @@
     "menu": {
         "main": [
             // トップメニュー一覧
+            {
+                "glot-model": "reviewContribute",
+                "linkto": "javascript:areaSearchController.open('research')",
+                "divider": true
+            },
             {
                 "glot-model": "about",
                 "linkto": "javascript:cMapMaker.about()",
@@ -181,7 +568,7 @@
         // 詳細表示のハンバーガーメニュー
         "modal": [
             {
-                "glot-model": "act_add",
+                "glot-model": "reviewAdd",
                 "linkto": "javascript:modalActs.edit({form:'Playgrounds'})",
                 "divider": false
             },
@@ -202,7 +589,7 @@
                 "btn_class": "btn btn-light btn-lg border-secondary w-50 m-2 p-1",
                 "code": "modalActs.edit({form:'Playgrounds'})",
                 "icon_class": "fas fa-clone",
-                "btn_glot_name": "act_add"
+                "btn_glot_name": "reviewAdd"
             }
         ],
         "editActivity": [
@@ -211,6 +598,15 @@
                 "code": "javascript:modalActs.save()",
                 "icon_class": "fa-solid fa-cloud-arrow-up",
                 "btn_glot_name": "act_save"
+            }
+        ],
+        "deleteActivity": [
+            {
+                "btn_class": "btn btn-outline-danger btn-lg w-50 m-2 p-1",
+                "code": "javascript:modalActs.remove()",
+                "icon_class": "fa-solid fa-trash-can",
+                "btn_glot_name": "act_delete",
+                "editMode": true
             }
         ],
         "visited": [

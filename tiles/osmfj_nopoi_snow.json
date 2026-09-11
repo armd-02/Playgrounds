@@ -1,6 +1,9 @@
 {
     "version": 8,
     "name": "OpenStreetMap(with out poi)",
+    "projection": {
+        "type": "globe"
+    },
     "sources": {
         "openmaptiles": {
             "url": "pmtiles://https://armd-01.sakura.ne.jp/tiles/japan-20251013.pmtiles",

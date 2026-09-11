@@ -13,8 +13,10 @@
             </div>
         </div>
         <a href="javascript:cMapMaker.about()" class="col">
-            <span class="title" glot-model="site_title"></span><br />
-            <span class="subtitle" glot-model="site_subtitle"></span>
+            <span class="title" glot-model="site_title"
+                style="font-size: clamp(1rem, 1.5vw, 1.2rem) !important;white-space: nowrap;"></span><br />
+            <span class="subtitle" glot-model="site_subtitle"
+                style="font-size: clamp(0.8rem, 1vw, 1.0rem) !important;"></span>
         </a>
         <div class="dropdown">
             <button class="btn btn-light border-secondary float-right menu d-none" data-bs-toggle="dropdown"
@@ -54,15 +56,12 @@
     </div>
     <!--セレクト&ボタン-->
     <div class="col-4 d-flex align-items-center ps-0 pe-0">
-        <div class="h-100 d-flex align-items-center text-nowrap"><span glot-model="cat_select"></span></div>
+        <div class="h-100 d-flex align-items-center text-nowrap p-1"><span glot-model="cat_select"></span></div>
         <select class="form-select me-1" id="list_category"></select>
-        <!-- button class="btn btn-light border-secondary float-left ms-2"
-            onclick="cMapMaker.searchKeyword(window.prompt('検索キーワード'));"><i class="fas fa-search"
-                id="list_keyword_search"></i></button -->
     </div>
 
     <!-- 検索 -->
-    <div class="col-8 d-flex align-items-center ps-0 pe-0">
+    <div class="col-7 d-flex align-items-center ps-0 pe-0">
         <div class="search-box">
             <input type="text" class="form-control" id="list_keyword" />
             <button class="search-btn" onclick="cMapMaker.searchKeyword(list_keyword.value);">
@@ -72,4 +71,5 @@
         <!--- button class="btn btn-light border-secondary float-left ms-1 me-1" onclick="cMapMaker.changeMode();"><i
                 class="fas fa-list" id="list_collapse_icon"></i></button --->
     </div>
+    <div id="listActionButtons" class="col-1 d-flex px-1 list-actions" hidden></div>
 </div>

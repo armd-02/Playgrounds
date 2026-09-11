@@ -1,6 +1,9 @@
 {
     "version": 8,
     "name": "OpenStreetMap(with out poi)",
+    "projection": {
+        "type": "globe"
+    },
     "sources": {
         "openmaptiles": {
             "url": "https://tile.openstreetmap.jp/data/planet.json",

@@ -1,6 +1,9 @@
 {
     "version": 8,
     "name": "Japan 2025/10/13(EXPO2025 Last Day)",
+    "projection": {
+        "type": "globe"
+    },
     "sources": {
         "openmaptiles": {
             "url": "pmtiles://https://armd-01.sakura.ne.jp/tiles/japan-20251013.pmtiles",

@@ -14,7 +14,11 @@
             "https://overpass-api.de/api/interpreter",
             "https://overpass.private.coffee/api/interpreter"
         ],
-        "NoChacheServer": "https://overpass-api.de/api/interpreter"
+        "NoChacheServer": "https://overpass-api.de/api/interpreter",
+        "listActions": {
+            "use": false, // リスト上部の汎用アクションボタンを表示する
+            "items": [] // 派生サイト側の config-user.jsonc で項目を定義する
+        }
     },
     "tile": {
         "OSMFJ_POI": {

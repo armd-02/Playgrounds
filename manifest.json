@@ -25,8 +25,10 @@
                 "./lib/poilib.js",
                 "./lib/playground3d.js",
                 "./lib/listtable.js",
+                "./lib/listactionlib.js",
+                "./lib/areafeaturelinker.js",
+                "./lib/areasearchcontroller.js",
                 "./lib/overpasslib.js",
-                "./lib/wikimedialib.js",
                 "./lib/poistatuslib.js"
             ]
         },
@@ -34,12 +36,26 @@
             "name": "app-local-ordered",
             "parallel": false,
             "scripts": [
-                "./detail/activities.js",
-                "./detail/osmbasic.js",
+                "./lib/newslib.js",
+                "./lib/indoorlib.js",
                 "./cmapmaker.js"
             ]
         }
     ],
-    "gId": "G-T912TLST3W",
-    "gaCookieDomain": "armd-02.github.io"
+    "lazyScriptGroups": {
+        "wikimedia": {
+            "parallel": false,
+            "scripts": [
+                "./lib/wikimedialib.js"
+            ]
+        },
+        "detail": {
+            "parallel": true,
+            "scripts": [
+                "./detail/activities.js",
+                "./detail/osmbasic.js"
+            ]
+        }
+    },
+    "gId": "G-T912TLST3W"
 }

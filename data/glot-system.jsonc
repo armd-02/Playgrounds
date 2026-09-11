@@ -11,6 +11,30 @@
         "ja": "保存",
         "en": "Save"
     },
+    "act_saved": {
+        "ja": "保存しました",
+        "en": "Saved"
+    },
+    "act_delete": {
+        "ja": "削除",
+        "en": "Delete"
+    },
+    "act_delete_confirm_title": {
+        "ja": "投稿削除の確認",
+        "en": "Confirm deletion"
+    },
+    "act_delete_confirm_message": {
+        "ja": "この投稿を削除します。元に戻すことはできません。よろしいですか？",
+        "en": "Delete this post? This action cannot be undone."
+    },
+    "act_delete_error": {
+        "ja": "削除に失敗しました。ユーザー名、パスワード、権限を確認してください",
+        "en": "Deletion failed. Check your user ID, password, and permissions."
+    },
+    "act_delete_auth_required": {
+        "ja": "削除するにはユーザー名とパスワードを入力してください",
+        "en": "Enter your user ID and password to delete this post."
+    },
     "act_upload": {
         "ja": "アップロード",
         "en": "Upload"
@@ -64,7 +88,7 @@
         "en": "Zoom Level: "
     },
     "update": {
-        "ja": "更新日: ",
+        "ja": "情報更新： ",
         "en": "Update: "
     },
     "getdate": {
@@ -119,13 +143,8 @@
         "ja": "限定的",
         "en": "limited"
     },
-    "loading_title": {
-        "ja": "マップデータのロード中",
-        "en": "Loading map data"
-    },
     "loading_message": {
-        "ja": "ロード中です。しばらくお待ちください。",
-        "en": "Loading... Please wait a moment."
+        "en": "Loading... "
     },
     "location": {
         "ja": "現在地を表示",
@@ -256,12 +275,12 @@
         "en": "The file was loaded"
     },
     "Mo": {
-        "ja": "Mo",
-        "en": "月"
+        "ja": "月",
+        "en": "Mo"
     },
     "Tu": {
-        "ja": "Tu",
-        "en": "火"
+        "ja": "火",
+        "en": "Tu"
     },
     "We": {
         "ja": "水",
@@ -285,7 +304,7 @@
     },
     "PH": {
         "ja": "祝日",
-        "PH": "PH"
+        "en": "PH"
     },
     "off": {
         "ja": "休業",
@@ -297,7 +316,7 @@
     },
     "closed": {
         "ja": "休み",
-        "en": "Holyday"
+        "en": "Closed"
     },
     "parse_error": {
         "ja": "解析に失敗",
@@ -322,5 +341,9 @@
     "UseOVCacheNo": {
         "ja": "キャッシュオフ(最新情報を取得します)",
         "en": "Cache off (get the latest information)"
+    },
+    "rooftop": {
+        "ja": "屋上",
+        "en": "Rooftop"
     }
 }
