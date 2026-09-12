@@ -5,10 +5,7 @@ OpenStreetMap（OSM）の公園・遊具・設備データを使って、**遊�
 公園の場所だけでなく、すべり台、ブランコ、砂場などの遊具や、ベンチ・給水設備・自動販売機なども表示します。公園ごとの口コミ・評価・写真を追加し、「小さい子と遊ぶ」「たくさん遊ぶ」「ゆっくり過ごす」などの条件から公園を探すこともできます。
 
 ## Webサイト
-
-**https://playgrounds.openacrossbase.net/**
-
-GitHub Pages: https://armd-02.github.io/Playgrounds/
+* https://playgrounds.openacrossbase.net/
 
 ## 主な機能
 
