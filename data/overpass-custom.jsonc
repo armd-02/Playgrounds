@@ -52,6 +52,28 @@
                 "stroke-width": 1,
                 "fill-opacity": 0.25
             }
+        },
+        "Green": {
+            "overpass": [
+                "nwr[\"natural\"=\"tree\"]",
+                "nwr[\"natural\"=\"tree_row\"]",
+                "nwr[\"barrier\"=\"hedge\"]"
+            ],
+            "tags": [
+                "natural",
+                "barrier"
+            ],
+            "expression": {
+                "poiView": false, // true時はアイコン表示
+                "viewArea": true,
+                "stroke": "#50A050",
+                "stroke-width": 3,
+                "fill-opacity": 0.5
+            },
+            "titles": [
+                "name",
+                "operator"
+            ]
         }
     }
 }
