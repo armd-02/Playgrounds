@@ -77,8 +77,11 @@
                             </div>
 
                             <span class="detailTitle d-flex align-items-center" id="btmWindow_title"></span>
+                            <span id="detailWindowControls"
+                                class="sidebar-window-controls btn-group ms-auto" role="group"
+                                aria-label="詳細表示サイズ"></span>
                             <button id="detailHeaderClose" type="button"
-                                class="btn btn-light border-secondary p-0 ms-auto flex-shrink-0"
+                                class="btn btn-light border-secondary p-0 ms-1 flex-shrink-0"
                                 onclick="cMapMaker.changeMode('list')" aria-label="詳細を閉じる" title="詳細を閉じる">
                                 <span aria-hidden="true" class="fs-1">&times;</span>
                             </button>
@@ -97,7 +100,8 @@
                     <div class="accordion-item">
                         <h2 class="d-flex align-items-center m-0 p-2" id="listHeader">
                             <span class="detailTitle ms-1" id="listTitle"></span>
-                            <span class="sidebar-window-controls btn-group ms-auto" role="group" aria-label="リスト表示サイズ">
+                            <span id="listWindowControls" class="sidebar-window-controls btn-group ms-auto"
+                                role="group" aria-label="リスト表示サイズ">
                                 <button id="sidebarMinimize" class="btn btn-light border-secondary p-0"
                                     type="button" onclick="winCont.setSidebar('mini')"
                                     aria-label="リストを最小化" title="最小化">

@@ -108,8 +108,8 @@
         "en": "add Activity"
     },
     "morezoom": {
-        "ja": "もっとズームしてください",
-        "en": "Please zoom more."
+        "ja": "ズームで詳細表示",
+        "en": "Zoom in for details"
     },
     "button_ok": {
         "ja": "決定",
@@ -175,8 +175,8 @@
         "en": "(Source/Article: Wikipedia)"
     },
     "defaultSelect": {
-        "ja": "🌏おまかせ",
-        "en": "(default)"
+        "ja": "全て表示",
+        "en": "Show all"
     },
     "undefined": {
         "ja": "(名称不明)",

@@ -13,11 +13,11 @@
             ],
             "expression": {
                 "poiView": true, // true時はアイコン表示
-                "viewArea": true,
+                "viewArea": false,
                 "belowFeatures": true, // 公園の面と境界線を道路・建物・遊具より奥に表示
-                "stroke": "#409040",
+                "stroke": "#60B060",
                 "stroke-width": 4,
-                "fill-opacity": 0.25
+                "fill-opacity": 0
             }
         },
         "Playgrounds_Play": {

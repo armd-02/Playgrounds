@@ -427,6 +427,7 @@ h4 img {
 #globalStatus {
     position: absolute;
     z-index: 100;
+    width: max-content;
     max-width: calc(100% - 24px);
     margin: 0 !important;
     pointer-events: none;

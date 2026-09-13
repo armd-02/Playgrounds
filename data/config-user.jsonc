@@ -14,7 +14,7 @@
         // [133.57441, 34.810416],[134.47147, 35.37144]
         //],
         "initZoom": 11,
-        "maxZoom": 21,
+        "maxZoom": 22,
         "detailZoom": 17, // モーダルダイアログ表示時のズームサイズ
         "zoomMessageThreshold": 17,
         "textFont": [
@@ -59,7 +59,7 @@
         "scoreCodeOffset": 1
     },
     "areaSearch": {
-        "apiUrl": "activity-search.php", // basic設定の低ズーム検索。google.AppScriptを基準に解決
+        "apiUrl": "activity-search.php", // basic設定の低ズーム検索。activity.urlを基準に解決
         "use": true, // AreaFeatureLinkerが作ったレコードを検索・調査リストに利用する
         "sparseInformationCount": 2, // 「情報が少ない」とする登録項目数の上限
         "ratingActionId": "area-rating",
@@ -437,10 +437,19 @@
         "slideThumbWidth": "320",
         "modalThumbWidth": "800"
     },
-    "google": {
-        "AppScript": "https://armd-01.sakura.ne.jp/community-mapmaker-backend/api/activities.php?app=playgrounds",
+    "activity": {
+        "url": "https://armd-01.sakura.ne.jp/community-mapmaker-backend/api/activities.php?app=playgrounds",
         "authMode": "basic", // basic: HTTP Basic認証のJSON API / legacy: 従来のGAS salt認証
-        "targetName": "activity"
+        "targetName": "activity",
+        "local": {
+            "use": true,
+            "hosts": ["127.0.0.1", "localhost", "::1"],
+            "url": "http://127.0.0.1:18080/api/activities.php?app=playgrounds",
+            "schemaUrl": "http://127.0.0.1:18080/api/activity-schema.php",
+            "app": "playgrounds",
+            "formName": "Playgrounds",
+            "excludeFields": ["updatetime", "updateuser", "category"]
+        }
     },
     "static": {
         "use": false,

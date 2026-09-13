@@ -230,7 +230,7 @@ class Activities {
     save() {
         let act = Conf.activities;
         let fname = Object.keys(Conf.activities)[0];
-        const authMode = String(Conf.google.authMode || "legacy").toLowerCase();
+        const authMode = String(Conf.activity.authMode || "legacy").toLowerCase();
         winCont.setProgress(0);
         let userid = document.getElementById("act_userid").value;
         let passwd = document.getElementById("act_passwd").value;
@@ -253,7 +253,7 @@ class Activities {
             });
             const passwordPromise = authMode === "basic"
                 ? Promise.resolve(passwd)
-                : gSheet.get_salt(Conf.google.AppScript, userid).then((e) => {
+                : gSheet.get_salt(Conf.activity.url, userid).then((e) => {
                     if (!e || typeof e.salt !== "string") throw new Error("Salt response is invalid.");
                     return basic.makeSHA256(passwd + e.salt);
                 });
@@ -261,7 +261,7 @@ class Activities {
                 .then((requestPassword) => {
                     winCont.setProgress(70);
                     return gSheet.set(
-                        Conf.google.AppScript,
+                        Conf.activity.url,
                         senddata,
                         fname,
                         userid,
@@ -275,7 +275,7 @@ class Activities {
                         console.log("save: ok");
                         winCont.showMessage(glot.get("act_saved"));
                         cMapMaker.clearDatail();
-                        gSheet.get(Conf.google.AppScript).then((jsonp) => {
+                        gSheet.get(Conf.activity.url).then((jsonp) => {
                             poiCont.setActdata(jsonp);
                             poiCont.setActlnglat();
                             cMapMaker.updateView()
@@ -322,15 +322,15 @@ class Activities {
         this.busy = true;
         winCont.setProgress(30);
         try {
-            const authMode = String(Conf.google.authMode || "legacy").toLowerCase();
+            const authMode = String(Conf.activity.authMode || "legacy").toLowerCase();
             const requestPassword = authMode === "basic"
                 ? passwd
-                : await gSheet.get_salt(Conf.google.AppScript, userid).then((response) => {
+                : await gSheet.get_salt(Conf.activity.url, userid).then((response) => {
                     if (!response || typeof response.salt !== "string") throw new Error("invalid_salt");
                     return basic.makeSHA256(passwd + response.salt);
                 });
             const response = await gSheet.remove(
-                Conf.google.AppScript,
+                Conf.activity.url,
                 activityId,
                 userid,
                 requestPassword,
@@ -342,7 +342,7 @@ class Activities {
 
             winCont.setProgress(100);
             await cMapMaker.clearDatail();
-            const rows = await gSheet.get(Conf.google.AppScript);
+            const rows = await gSheet.get(Conf.activity.url);
             poiCont.setActdata(rows);
             poiCont.setActlnglat();
             await cMapMaker.updateView();

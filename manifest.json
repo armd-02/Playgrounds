@@ -22,6 +22,7 @@
                 "./lib/maplib.js",
                 "./lib/geolib.js",
                 "./lib/gsheetlib.js",
+                "./lib/activityschemalib.js",
                 "./lib/poilib.js",
                 "./lib/playground3d.js",
                 "./lib/listtable.js",

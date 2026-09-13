@@ -1031,7 +1031,8 @@ body.modal-open #btmHeader::-webkit-scrollbar-track {
 
 @media (max-width: 575.98px) {
     .list-actions .btn {
-        padding-inline: 4px;
+        min-width: 44px;
+        padding-inline: 2px;
     }
 
     .list-actions .btn i {

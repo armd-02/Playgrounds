@@ -114,12 +114,12 @@ python3 -m http.server 8000
 
 ## Activity投稿先と認証方式
 
-`data/config-user.jsonc` の `google.AppScript` にActivityの読込・投稿先URL、`google.authMode` に書き込み時の認証方式を設定します。
+`data/config-user.jsonc` の `activity.url` にActivityの読込・投稿先URL、`activity.authMode` に書き込み時の認証方式を設定します。`activity.local` にはローカル起動時のActivity APIとSchema APIをまとめて設定できます。
 
 - `basic`: Community Map Makerバックエンドへ、HTTP Basic認証付きのJSON `POST`（追加）または `PUT`（編集）で送信
 - `legacy`: 従来のGASへ、saltとSHA-256ハッシュを使う互換方式で送信
 
-GASへ戻す場合は、`AppScript` をGASのWebアプリURLへ変更し、`authMode` を `legacy` にします。
+GASへ戻す場合は、`activity.url` をGASのWebアプリURLへ変更し、`activity.authMode` を `legacy` にします。
 
 Basic認証は入力したパスワードをAuthorizationヘッダーで送るため、公開環境ではHTTPSを使用してください。
 
@@ -138,11 +138,11 @@ Firefoxのローカルネットワークアクセス保護により、フロン�
 - 行きやすさ重視
 - 高評価の公園
 
-`google.authMode: "basic"` のとき、公園POIの表示ズーム未満ではバックエンドの検索APIを利用します。現在はズーム12未満がAPI、12以上が従来の表示範囲内POI検索です。境界は `areaFeatureLinker.areaTargets` の `poiView.poiZoom`（端末別設定を含む）に従います。
+`activity.authMode: "basic"` のとき、公園POIの表示ズーム未満ではバックエンドの検索APIを利用します。現在はズーム12未満がAPI、12以上が従来の表示範囲内POI検索です。境界は `areaFeatureLinker.areaTargets` の `poiView.poiZoom`（端末別設定を含む）に従います。GAS（`legacy`）では従来の検索を使います。
 
-検索先は `areaSearch.apiUrl`（既定 `activity-search.php`）を `google.AppScript` からの相対URLとして解決し、同じ `app` を渡します。
+検索先は `areaSearch.apiUrl`（既定 `activity-search.php`）を `activity.url` からの相対URLとして解決し、同じ `app` を渡します。
 
-低ズームではActivity登録済みOSM IDを検索します。バックエンドAPIには公園全件や親子関係がないため、未登録公園を含む完全な公園検索は、OSMデータが読み込まれた表示範囲内で行います。
+低ズームでは全地域のActivity登録済みOSM IDを検索します。バックエンドAPIには座標・公園全件・親子関係がないため、表示範囲検索や未登録公園の網羅は行いません。一覧の未ロード対象はOSM IDを表示し、選択時にOSM情報を取得して移動・詳細表示します。検索条件はズーム変更後も引き継ぎます。
 
 ## リスト上部のアクションボタン設定
 

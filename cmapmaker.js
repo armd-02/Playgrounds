@@ -219,8 +219,31 @@ class CMapMaker extends IndoorControl {
             test.src = versionedImgUrl;
         }
 
+        const configureLocalActivityBackend = function () {
+            const settings = Conf.activity?.local;
+            if (!settings?.use || !(settings.hosts || []).includes(location.hostname)) return null;
+            if (settings.url) {
+                Conf.activity.url = new URL(settings.url, location.href).href;
+                console.info(`Activity API: local backend (${Conf.activity.url})`);
+            }
+            return settings;
+        }
+
+        const loadLocalActivitySchema = async function (settings) {
+            if (!settings) return;
+            const url = new URL(settings.schemaUrl, location.href);
+            if (settings.app) url.searchParams.set("app", settings.app);
+            const response = await fetch(url, { headers: { Accept: "application/json" }, cache: "no-store" });
+            if (!response.ok) throw new Error(`Activity Schema load failed: HTTP ${response.status}`);
+            const schema = await response.json();
+            const adapted = ActivitySchemaAdapter.apply(Conf.activities, schema, settings);
+            Conf.activities = adapted.activities;
+            glot.data = Object.assign(glot.data, adapted.labels);
+            console.info(`Activity Schema: local API (${url.href})`);
+        }
+
         Promise.all(fetchUrls)
-            .then((texts) => {
+            .then(async (texts) => {
                 let basehtml = texts[0]; // Get Menu HTML
                 for (let i = 1; i <= 7; i++) {
                     Conf = Object.assign(Conf, JSON5.parse(texts[i]));
@@ -230,6 +253,12 @@ class CMapMaker extends IndoorControl {
                 Conf.category_subkeys = Object.keys(Conf.category_sub); // Make Conf.category_subkeys
                 glot.data = Object.assign(glot.data, JSON5.parse(texts[9])); // import glot data
                 glot.data = Object.assign(glot.data, JSON5.parse(texts[10])); // import glot data
+                const localActivitySettings = configureLocalActivityBackend();
+                try {
+                    await loadLocalActivitySchema(localActivitySettings);
+                } catch (error) {
+                    console.warn("Activity Schema: local API unavailable; using bundled configuration.", error);
+                }
                 let UrlParams = setUrlParams();
                 if (Conf.selectItem.action === "ChangeMap"
                     && UrlParams.category
@@ -310,7 +339,7 @@ class CMapMaker extends IndoorControl {
                         cMapMaker.initDailyIntro();
                     });
                     // 外部のActivityデータも地図が操作可能になってから取得する。
-                    const activityDataPromise = applicationReady.then(() => gSheet.get(Conf.google.AppScript));
+                    const activityDataPromise = applicationReady.then(() => gSheet.get(Conf.activity.url));
                     let initialLoadStarted = false;
                     const init_close = function () {
                         if (initialLoadStarted) return;
@@ -392,7 +421,7 @@ class CMapMaker extends IndoorControl {
                     }
                     activityDataPromise.then(async (activities) => {
                         await initialViewReady;
-                        if (!Conf.google.AppScript || activities.length === 0) return;
+                        if (!Conf.activity.url || activities.length === 0) return;
                         poiCont.setActdata(activities);
 
                         if (Conf.poiView.poiActLoad && !Conf.static.use) {
@@ -587,15 +616,15 @@ class CMapMaker extends IndoorControl {
             //targets = targets.filter(target => target !== "activity");  // activiyがあれば削除 // 2025/08/20 一旦false
             targets = targets.filter(s => s !== "");
             if (nowselect === "-") {
-                poiCont.setPoi(markerList, false) //nowselect == Conf.google.targetName) // 2025/08/20 一旦false
+                poiCont.setPoi(markerList, false) //nowselect == Conf.activity.targetName) // 2025/08/20 一旦false
             } else {
                 for (let target of targets) {
                     console.log("viewPoi: " + target)
-                    let poiView = Conf.google.targetName == target ? true : Conf.osm[target].expression.poiView	// activity以外はexp.poiViewを利用
+                    let poiView = Conf.activity.targetName == target ? true : Conf.osm[target].expression.poiView	// activity以外はexp.poiViewを利用
                     let flag = nowzoom >= this.getPoiZoom(target)
                         || (Conf.etc.editMode && nowzoom >= Conf.poiView.editZoom[target])
                     if ((target == nowselect) && flag && poiView) {	// 選択している種別の場合
-                        poiCont.setPoi(markerList, false) // target == Conf.google.targetName) // 2025/08/20 一旦false
+                        poiCont.setPoi(markerList, false) // target == Conf.activity.targetName) // 2025/08/20 一旦false
                         break
                     }
                 }
@@ -654,7 +683,6 @@ class CMapMaker extends IndoorControl {
     updateOsmPoi(targets) {
         const progressUnitBytes = 1024 * 1024;
         let displayedProgressTenths = 0;
-        let progressMessage;
         return new Promise((resolve) => {
             console.log("cMapMaker: updateOsmPoi: Start");
             winCont.spinner(true);
@@ -662,11 +690,11 @@ class CMapMaker extends IndoorControl {
             let PoiLoadZoom = 99;
             for (let key of Object.keys(Conf.poiView.poiZoom)) {
                 const value = this.getPoiZoom(key);
-                if (key !== Conf.google.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
+                if (key !== Conf.activity.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
             };
             if (Conf.etc.editMode) {
                 for (let [key, value] of Object.entries(Conf.poiView.editZoom)) {
-                    if (key !== Conf.google.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
+                    if (key !== Conf.activity.targetName) PoiLoadZoom = value < PoiLoadZoom ? value : PoiLoadZoom;
                 }
             }
             if ((mapLibre.getZoom(true) < PoiLoadZoom)) {
@@ -677,12 +705,10 @@ class CMapMaker extends IndoorControl {
                 overPassCont.getGeojson(keys, status_write).then(ovanswer => {
                     winCont.spinner(false);
                     console.log("[success]cMapMaker: updateOsmPoi End.");
-                    globalMessage.innerHTML = "";
                     resolve({ "update": true, "geojson": ovanswer });
                 }).catch(() => {
                     winCont.spinner(false);
                     console.log("[error]cMapMaker: updateOsmPoi end.");
-                    globalMessage.innerHTML = "";
                     resolve({ "update": false });
                 });
             }
@@ -692,11 +718,7 @@ class CMapMaker extends IndoorControl {
             const progressTenths = Math.floor(progress * 10 / progressUnitBytes);
             if (progressTenths < 1 || progressTenths === displayedProgressTenths) return;
             displayedProgressTenths = progressTenths;
-            if (!progressMessage?.isConnected) {
-                progressMessage = document.createElement("div");
-                globalMessage.replaceChildren(progressMessage);
-            }
-            progressMessage.textContent = `${glot.get("loading_message")} ${(progressTenths / 10).toFixed(1)} MB`;
+            winCont.setLoadingStatus(`${glot.get("loading_message")} ${(progressTenths / 10).toFixed(1)} MB`);
         }
     }
 
@@ -907,6 +929,7 @@ class CMapMaker extends IndoorControl {
         }
         mmap.classList.add("d-none")
         detailMenu.classList.add("d-none")
+        winCont.setDetailHeaderMode(false)
 
         if (this.status !== "initialize") {
             const selectedCategory = listTable.getSelCategory().join(",");
@@ -1094,7 +1117,7 @@ class CMapMaker extends IndoorControl {
             cMapMaker.changeMode("list")    // ズームレベルがpoi表示の閾値以下の時はリストを開く
             cMapMaker.clearDatail()         // 詳細画面を閉じる
         }
-        globalMessage.innerHTML = message
+        winCont.setMapStatus(message)
     }
 }
 const cMapMaker = new CMapMaker();
