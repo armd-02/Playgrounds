@@ -173,6 +173,15 @@ Community Map Maker共通のニュース表示は `data/config-user.jsonc` の `
 
 起動案内は `intro.use` で表示・非表示を切り替えます。その日の最初の起動時に1回だけ表示し、表示履歴の保存先は `intro.storageKey`、表示内容は `index.html` の `cMapIntro` で変更できます。
 
+```jsonc
+"intro": {
+    "use": true,
+    "storageKey": "playgrounds-intro-last-shown"
+}
+```
+
+背景地図の種類や年による表示制限はありません。案内を使用しないサイトでは、項目を残したまま `use` を `false` にします。
+
 ## 公園と遊具・設備の紐づけ
 
 `AreaFeatureLinker` は、親となる敷地と、その内側にある地物・Activityを1敷地1レコードへまとめる汎用クラスです。
