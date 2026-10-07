@@ -22,6 +22,7 @@ const poi = { geojson: {
     properties: { tags: { id: 'node/1', name: 'Test' } }
 }, targets: ['park'], lnglat: [135, 34] };
 let favorite = false;
+let hasModel = false;
 const context = vm.createContext({
     console, structuredClone,
     Conf: {
@@ -39,7 +40,7 @@ const context = vm.createContext({
     mapLibre: { map, getZoom: () => 18, get_LL: () => ({}) },
     geoCont: { checkInner: () => true },
     cMapMaker: { isPoiVisibleInLevelMode: () => true, getPoiZoom: () => 12 },
-    feature3d: { sync() {}, hasModel: () => false, placeBelowMarkerLayers() {} },
+    feature3d: { sync() {}, hasModel: () => hasModel, placeBelowMarkerLayers() {} },
     glot: { lang: 'ja' }
 });
 vm.runInContext(fs.readFileSync('lib/poilib.js', 'utf8') + '\nthis.PoiCont = PoiCont;', context);
@@ -63,4 +64,18 @@ favorite = false;
 controller.setPoi([['node/1']], false);
 assert.equal(sources.get('marker-favorite').data.features.length, 0);
 assert.equal([...layers.keys()].filter(id => id.startsWith('marker-favorite')).length, 1);
-console.log('PASS: one lazy favorite layer shows only favorite POIs and clears on uncheck');
+hasModel = true;
+favorite = true;
+controller.setPoi([['node/1']], false);
+assert.equal(sources.get('marker-normal').data.features.length, 0, '3D objects still replace the ordinary marker');
+assert.equal(sources.get('marker-favorite').data.features.length, 1, '3D objects retain their favorite badge');
+assert.equal(sources.get('marker-favorite').data.features[0].id, 'node/1');
+favorite = false;
+controller.setPoi([['node/1']], false);
+assert.equal(sources.get('marker-favorite').data.features.length, 0, 'unchecking a 3D favorite clears its badge');
+hasModel = false;
+favorite = true;
+controller.setPoi([['node/1']], false);
+assert.equal(sources.get('marker-normal').data.features.length, 1, 'icon fallback is restored');
+assert.equal(sources.get('marker-favorite').data.features.length, 1, 'fallback does not duplicate the badge');
+console.log('PASS: favorite badges on icons and 3D objects, uncheck, and model fallback');

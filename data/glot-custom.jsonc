@@ -85,7 +85,6 @@
     "discovery_fact_water": {"ja": "給水設備あり", "en": "Drinking water"},
     "discovery_any": {"ja": "目的を指定しない", "en": "Any purpose"},
     "discovery_reviews": {"ja": "口コミ評価", "en": "Review rating"},
-    "discovery_resume": {"ja": "前回の続き", "en": "Continue previous search"},
     "areaSearch_api_countAfterSearch": {"ja": "検索後に件数を表示します", "en": "Count shown after searching"},
     "changeFeed_button": {"ja": "更新", "en": "Updates"},
     "changeFeed_unreadCount": {"ja": "未確認の更新 {count}件", "en": "{count} unseen updates"},
@@ -382,5 +381,19 @@
     "directions_open": {"ja": "経路を検索", "en": "Get directions"},
     "directions_google_maps": {"ja": "Googleマップで経路を開く（外部サイト）", "en": "Get directions in Google Maps (external site)"},
     "personal_memo_label": {"ja": "自分用メモ（非公開）", "en": "Personal note (private)"},
-    "personal_memo_help": {"ja": "このブラウザに保存され、口コミとしては公開されません。", "en": "Saved in this browser. Not published as a review."}
+    "personal_memo_help": {"ja": "このブラウザに保存され、口コミとしては公開されません。", "en": "Saved in this browser. Not published as a review."},
+    "contribute_intro": {"ja": "参加したい内容に合わせてアカウントを登録してください。地図を見るだけなら登録は不要です。", "en": "Choose an account for the kind of contribution you want to make. No account is needed to browse the map."},
+    "contribute_reviewHeading": {"ja": "口コミ・写真を投稿する", "en": "Post reviews and photos"},
+    "contribute_reviewHelp": {"ja": "コミュニティマップメーカーのユーザー登録が必要です。", "en": "You need a Community Map Maker account."},
+    "contribute_registerStep": {"ja": "登録画面で参加プロジェクト「playgrounds」（遊具のある公園マップ）を選び、ユーザーID・メールアドレス・パスワードを登録します。下のリンクから開くと、このプロジェクトが初期選択されます。", "en": "On the registration form, select the playgrounds project (parks and playgrounds map) and enter a user ID, email address and password. The link below preselects this project."},
+    "contribute_verifyStep": {"ja": "届いた確認メールのリンクを開き、メールアドレスの確認を完了します。", "en": "Open the link in the verification email and complete email verification."},
+    "contribute_postStep": {"ja": "この地図に戻り、公園や遊具の詳細から投稿画面を開いて、登録したユーザーIDとパスワードで投稿します。", "en": "Return to this map, open the submission form from a park or playground's details, and post using your registered user ID and password."},
+    "contribute_registerLink": {"ja": "ユーザー登録 ↗", "en": "Register (Japanese form) ↗"},
+    "contribute_existingAccount": {"ja": "このプロジェクトに参加済みの方は、登録済みのユーザーIDを使えます。別のプロジェクトだけに参加している方は、管理者にこのプロジェクトへの追加を依頼してください。", "en": "If you already belong to this project, use your existing user ID. If you only belong to another project, ask the administrator to add you to this one."},
+    "contribute_osmHeading": {"ja": "公園・遊具の地図情報を編集する", "en": "Edit map information for parks and playgrounds"},
+    "contribute_osmHelp": {"ja": "場所・名前・設備などの地図情報を追加・修正するには、OpenStreetMap（OSM）アカウントが必要です。コミュニティマップメーカーとは別の登録です。口コミ・写真だけの投稿にはOSMアカウントは不要です。登録後は、詳細画面のメニューからOSMのページを開き、ログインして編集できます。", "en": "To add or correct locations, names or facilities on the map, you need an OpenStreetMap (OSM) account. This is a separate registration from Community Map Maker. An OSM account is not required if you only want to post reviews or photos. After registering, open the OSM page from a place's details menu, then log in and edit."},
+    "contribute_osmLink": {"ja": "OSMアカウントを登録 ↗", "en": "Create an OSM account ↗"},
+    "contribute_osmExisting": {"ja": "OSMアカウントをお持ちの方は、そのアカウントを使えます。", "en": "If you already have an OSM account, you can use it."},
+    "contribute_findPlaces": {"ja": "投稿する公園を探す", "en": "Find parks to contribute to"},
+    "contribute_firstTime": {"ja": "初めての方へ：登録・参加方法", "en": "New here? How to register and contribute"}
 }

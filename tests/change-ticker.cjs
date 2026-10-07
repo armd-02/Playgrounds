@@ -7,6 +7,7 @@ class Ticker {
     init(container, config) { calls.push(['init', container, config]); }
     setItems(items, options) { calls.push(['setItems', items, options]); }
     hide() { calls.push(['hide']); }
+    unreadEvents() { return []; }
 }
 class Changes {
     results = [];

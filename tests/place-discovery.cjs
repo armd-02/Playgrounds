@@ -7,15 +7,15 @@ class Element {
     prepend(item){this.children.unshift(item);} replaceChildren(...items){this.children=items;}
     setAttribute(key,value){this[key]=value;} addEventListener(type,handler){(this.listeners??={})[type]=handler;}
 }
-const host=new Element('section'),resumeHost=new Element('div'),strip=new Element('div'),storage=new Map();
+const host=new Element('section'),strip=new Element('div');
 const records=[{areaId:'way/1',name:'A',lng:135,lat:34,attributes:['shade'],linkedFeatures:[],activities:[]},
  {areaId:'way/2',name:'B',lng:135.002,lat:34,attributes:[],activities:[{picture_url1:'File:Example.jpg'}],linkedFeatures:[{feature:{properties:{amenity:'bench'}}}]}];
-let network=0,jumps=0,center={lng:135,lat:34},loadedImages=[];
+let network=0,center={lng:135,lat:34},loadedImages=[];
 const context={Date,console,Conf:{etc:{localSave:'sample'},discovery:{use:true,presetIds:['relax'],featureFacts:[{key:'amenity',value:'bench',labelKey:'seating'}]}},
- localStorage:{getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)},
- document:{querySelector:()=>null,getElementById:id=>id==='placeDiscovery'?host:id==='placeResume'?resumeHost:strip,createElement:tag=>new Element(tag),querySelectorAll:()=>loadedImages},
+ localStorage:{getItem(){throw new Error('Unexpected storage read');},setItem(){throw new Error('Unexpected storage write');}},
+ document:{querySelector:()=>null,getElementById:id=>id==='placeDiscovery'?host:strip,createElement:tag=>new Element(tag),querySelectorAll:()=>loadedImages},
  glot:{lang:'en',get:key=>key},cMapMaker:{status:'normal'},
- mapLibre:{getZoom:()=>15,getUserLocation:()=>null,map:{getCenter:()=>center,jumpTo:options=>{jumps++;center={lng:options.center[0],lat:options.center[1]};}}},
+ mapLibre:{getZoom:()=>15,getUserLocation:()=>null,map:{getCenter:()=>center}},
  poiStatusCont:{getRecord:()=>({})},areaFeatureLinker:{records,resolveAreaId:id=>id,getAreaRecord:id=>records.find(record=>record.areaId===id)},
  areaSearchController:{attributes:['shade'],presetDefinitions:{relax:{}},visibleRecords:()=>records,attributeLabel:code=>code,presetLabel:code=>code},
  fetch:()=>{network++;throw new Error('Unexpected API');}}
@@ -24,19 +24,11 @@ const controller=new context.Controller();
 context.areaSearchController.applyLocalPreset=name=>{context.areaSearchController.activeCriteria={preset:name};controller.render();};
 context.areaSearchController.clear=()=>{context.areaSearchController.activeCriteria=null;controller.render();};
 controller.render();assert.equal(host.children.length,2);assert.equal(host.children[1].tagName,'select');
-assert.equal(host.children[1].children.length,2);assert.equal(resumeHost.hidden,true); // No duplicate candidate list or action buttons.
+assert.equal(host.children[1].children.length,2); // No duplicate candidate list or action buttons.
 controller.choose('relax');assert.equal(host.children[1].value,'relax');assert.equal(network,0);
 assert.deepEqual(Array.from(controller.facts(records[1])),['seating']);assert.equal(controller.photo(records[1]),'');
 loadedImages=[{complete:true,naturalWidth:100,dataset:{lazySrc:'File:Example.jpg'},src:'blob:loaded',getAttribute:key=>({osmid:'way/2',src:'blob:loaded',src_thumb:'https://example.test/photo.jpg'})[key]}];
 assert.equal(controller.photo(records[1]),'blob:loaded');loadedImages=[];
-const returning=new context.Controller();context.areaSearchController.activeCriteria=null;
-context.areaSearchController.applyLocalPreset=name=>{context.areaSearchController.activeCriteria={preset:name};returning.render();};
-context.areaSearchController.clear=()=>{context.areaSearchController.activeCriteria=null;returning.render();};
-returning.render();assert.equal(resumeHost.hidden,false);assert.equal(JSON.parse(storage.get(controller.storageKey)).purpose,'relax');
-center={lng:136,lat:35};returning.resume();assert.equal(jumps,1);assert.equal(host.children[1].value,'relax');assert.equal(resumeHost.hidden,true);
-returning.resume();assert.equal(jumps,1);assert.equal(network,0);
-context.localStorage.getItem=()=>{throw new Error('Denied');};context.localStorage.setItem=()=>{throw new Error('Denied');};
-assert.doesNotThrow(()=>new context.Controller().render());
 context.Conf.areaSearch={previewCounts:false};context.Conf.activity={authMode:'basic'};context.Conf.poiView={poiZoom:{}};
 context.mapLibre.getZoom=()=>11;context.clearTimeout=()=>{};
 context.setTimeout=()=>{throw new Error('Unexpected API timer');};
@@ -71,5 +63,5 @@ search.localOnly=false;search.readForm=()=>({});
  search.searchBbox=()=>null;await search.searchFromForm();assert.equal(explicitRequests,1);
  search.searchBbox=()=>"135,34,136,35";context.mapLibre.getZoom=()=>16;
  await search.searchFromForm();assert.equal(explicitRequests,2);assert.equal(search.usesSearchApi(),true);
- console.log('PASS: one purpose selector, local list filtering, explicit API search, continuation, cached photos and disabled storage');
+ console.log('PASS: one purpose selector, local list filtering, explicit API search, cached photos and no continuation storage');
 })().catch(error=>{console.error(error);process.exitCode=1;});

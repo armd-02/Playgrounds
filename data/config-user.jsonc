@@ -42,7 +42,7 @@
         "reviews": { "use": true },
         "minLookbackMonths": 1, // 毎回最低1か月分を確認
         "maxLookbackMonths": 6, // 前回が古くても半年で打ち切る
-        "ticker": { "use": true, "displayDuration": 10000, "maxItems": 30,
+        "ticker": { "use": true, "autoOpen": true, "displayDuration": 10000, "maxItems": 30,
             "mobileLabelKey": "changeFeed_reviewsTitle", "mobileLabel": "公園／遊具の口コミや情報更新", "sourceLabel": "OpenStreetMap" },
         "labelKeys": { "regionalCreated": "changeFeed_regionalCreatedLabel", "regionalUpdated": "changeFeed_regionalUpdatedLabel", "favoriteUpdated": "changeFeed_favoriteUpdatedLabel" },
         "labels": { "regionalCreated": "地図への新規登録", "regionalUpdated": "更新", "favoriteUpdated": "お気に入りの更新" },

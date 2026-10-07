@@ -150,6 +150,33 @@ class CMapMaker extends IndoorControl {
         changeTicker.setItems(items, { ariaLabel: (setting.mobileLabelKey ? glot.get(setting.mobileLabelKey) : setting.mobileLabel) || glot.get("changeFeed_updatesTitle") });
     }
 
+    async autoShowChangeModal(regionCode) {
+        const setting = Conf.changes?.ticker;
+        if (Conf.changes?.use !== true || setting?.use !== true || setting.autoOpen === false
+            || !regionCode || this.changeAutoOpening || changeTicker.isOpen || changeTicker.opening) return false;
+        this.changeAutoOpening = true;
+        try {
+            const map = mapLibre.map;
+            if (map?.isMoving?.()) await new Promise(resolve => map.once("moveend", resolve));
+            const region = await changesController.region();
+            if (region.code !== regionCode || changeTicker.isOpen || changeTicker.opening
+                || !changeTicker.unreadEvents().length) return false;
+            const today = changesController.localDate();
+            const storageKey = changesController.key(`auto-shown.${regionCode}`);
+            this.changeAutoShownDates ??= new Map();
+            if (this.changeAutoShownDates.get(storageKey) === today
+                || changesController.read(storageKey) === today) return false;
+            // Reserve this attempt so overlapping startup/move events cannot open twice.
+            await changeTicker.toggle();
+            if (!changeTicker.isOpen) return false;
+            this.changeAutoShownDates.set(storageKey, today);
+            changesController.write(storageKey, today);
+            return true;
+        } finally {
+            this.changeAutoOpening = false;
+        }
+    }
+
     async refreshChangeRegion() {
         if (Conf.changes?.use !== true) return;
         this.changeRegionPending = true;
@@ -165,6 +192,7 @@ class CMapMaker extends IndoorControl {
                 await changesController.checkActivityChanges?.(Conf.activity);
                 this.displayedChangeRegion = region.code;
                 this.showChangeTicker();
+                await this.autoShowChangeModal(region.code);
             }
         })().catch(error => console.warn("Change region refresh failed", error))
             .finally(() => { this.changeRegionRefresh = null; });
@@ -198,7 +226,10 @@ class CMapMaker extends IndoorControl {
         const changeResult = await changesController.checkOnStartup();
         await changesController.checkActivityChanges?.(Conf.activity);
         this.displayedChangeRegion = changesController.read?.(changesController.key("last-region"));
-        if (Conf.changes?.ticker?.use === true) this.showChangeTicker();
+        if (Conf.changes?.ticker?.use === true) {
+            this.showChangeTicker();
+            await this.autoShowChangeModal(this.displayedChangeRegion);
+        }
         if (Conf.changes?.ticker?.use === true && changesController.results.length) {
             intro.hidden = true;
             return;
@@ -417,6 +448,7 @@ class CMapMaker extends IndoorControl {
                     mapLibre.addNavigation("bottom-right");
                     mapLibre.addControl("bottom-left", "globalStatus", "", "m-0");
                     globalStatus.innerHTML = '<div class="global-status-message" role="status" aria-live="polite"><div id="globalSpinner" class="spinner-border text-primary d-none" aria-hidden="true"></div><span id="globalMessage" class="globalMessage"></span></div>';
+                    globalStatus.appendChild(document.getElementById("mapDisplayStatus"));
                     mapLibre.setGlobalStatusControlPosition(globalStatus);
                     newsTicker.init(Conf.news, mapLibre, Conf.tile);
                     cMapMaker.initIndoorControl(UrlParams.level);

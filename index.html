@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link rel="preconnect" href="https://tile.openstreetmap.jp" crossorigin />
     <link rel="stylesheet" href="system.css?ver=20260928-02" />
-    <script type="module" src="./loader.module.js?ver=20261007-10"></script>
+    <script type="module" src="./loader.module.js?ver=20261008-02"></script>
 </head>
 
 <body>
@@ -121,7 +121,6 @@
 
                         <div id="listAccordion" class="accordion-collapse collapse show" aria-labelledby="listHeader">
                             <div class="accordion-body p-0">
-                                <div id="placeResume" class="place-resume" hidden></div>
                                 <div class="place-list-toolbar">
                                     <section id="placeDiscovery" class="place-discovery" hidden></section>
                                     <div class="place-list-mode">
@@ -246,7 +245,26 @@
             </section>
 
             <section id="poiFilterResearchContent" hidden>
-                <h2 data-area-label="areaSearchUi_researchHeading"></h2>
+                <p data-area-label="contribute_intro"></p>
+                <section class="mb-4" aria-labelledby="contributeReviewHeading">
+                    <h2 id="contributeReviewHeading" data-area-label="contribute_reviewHeading"></h2>
+                    <p data-area-label="contribute_reviewHelp"></p>
+                    <ol>
+                        <li data-area-label="contribute_registerStep"></li>
+                        <li data-area-label="contribute_verifyStep"></li>
+                        <li data-area-label="contribute_postStep"></li>
+                    </ol>
+                    <a class="btn btn-outline-primary" href="https://armd-01.sakura.ne.jp/community-mapmaker-backend/register.html?app_key=playgrounds" target="_blank" rel="noopener noreferrer" data-area-label="contribute_registerLink"></a>
+                    <p class="small text-muted mt-2" data-area-label="contribute_existingAccount"></p>
+                </section>
+                <section class="mb-4" aria-labelledby="contributeOsmHeading">
+                    <h2 id="contributeOsmHeading" data-area-label="contribute_osmHeading"></h2>
+                    <p data-area-label="contribute_osmHelp"></p>
+                    <a class="btn btn-outline-primary" href="https://www.openstreetmap.org/user/new" target="_blank" rel="noopener noreferrer" data-area-label="contribute_osmLink"></a>
+                    <p class="small text-muted mt-2" data-area-label="contribute_osmExisting"></p>
+                </section>
+                <details>
+                <summary class="mb-2" data-area-label="contribute_findPlaces"></summary>
                 <p data-area-label="areaSearchUi_researchDescription"></p>
                 <div class="area-research-grid">
                     <button type="button" onclick="poiFilterController.applyResearch('missing')"><i class="far fa-file-lines"></i><strong data-area-label="areaSearchUi_missing"></strong><small data-area-label="areaSearchUi_missingHelp"></small></button>
@@ -254,6 +272,7 @@
                     <button type="button" onclick="poiFilterController.applyResearch('photo')"><i class="far fa-image"></i><strong data-area-label="areaSearchUi_noPhoto"></strong><small data-area-label="areaSearchUi_noPhotoHelp"></small></button>
                     <button type="button" onclick="poiFilterController.applyResearch('sparse')"><i class="fas fa-list-check"></i><strong data-area-label="areaSearchUi_sparse"></strong><small data-area-label="areaSearchUi_sparseHelp"></small></button>
                 </div>
+                </details>
             </section>
             </div>
             <footer id="poiFilterActions" class="modal-footer">

@@ -35,6 +35,24 @@
     vertical-align: bottom;
 }
 
+.participation-link {
+    border: 0;
+    background: transparent;
+    color: #126d49;
+    padding: 3px 0;
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.participation-link:hover {
+    color: #08452d;
+}
+
 .cMap-intro {
     position: absolute;
     top: var(--cmap-intro-top, 110px);
@@ -1039,9 +1057,15 @@ img.slide {
 }
 
 .map-display-status {
-    flex: 0 0 100%;
     min-width: 0;
-    margin-top: 4px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    pointer-events: auto;
+}
+
+#globalStatus:has(.globalMessage:not(:empty), #globalSpinner:not(.d-none)) .map-display-status {
+    display: none;
 }
 
 .map-display-row,
@@ -1252,6 +1276,7 @@ img.slide {
     .poi-toolbar-button { height: 44px; min-width: 44px; box-shadow: 0 1px 5px #0003; }
 }
 @media (min-width: 1080px) {
+    #changesButtonDesktop { margin-right: 8px; }
     #changesButtonMobile { display: none; }
 }
 @media (max-width: 1079.98px) {
@@ -1276,12 +1301,9 @@ img.slide {
 .place-discovery, .place-list-mode { display: flex; align-items: center; gap: .35rem; min-width: 0; }
 .place-discovery { flex: 1; }
 .place-list-mode { flex: 0 1 42%; }
-.place-discovery[hidden], .place-resume[hidden] { display: none; }
+.place-discovery[hidden] { display: none; }
 .place-list-toolbar label { flex-shrink: 0; font-size: .8rem; margin: 0; }
 .place-list-toolbar select { min-width: 0; }
-.place-resume { padding: .2rem .5rem; background: #f5faf7; }
-.place-resume-button { border: 0; background: transparent; color: #2b644d; font-size: .8rem; padding: .2rem 0; text-align: left; }
-.place-resume-button:hover { text-decoration: underline; }
 .place-facts { display: flex; flex-wrap: wrap; gap: .25rem; padding: .3rem 0; font-size: .75rem; }
 .place-facts span { background: #eaf3ee; color: #285540; border-radius: .25rem; padding: .1rem .3rem; }
 .place-preview-image { float: left; object-fit: cover; border-radius: .3rem; margin: .25rem .5rem .25rem 0; }

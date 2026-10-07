@@ -31,14 +31,21 @@ ticker.setItems([...events,events[0]]);
 assert.equal(ticker.unreadEvents().length,3);assert.equal(values.size,0);
 const groups=ticker.eventGroups();assert.equal(groups.length,2);assert.equal(groups[0].events.length,2);assert.equal(groups[0].section,'favorite');
 (async()=>{
- await ticker.toggle();assert.equal(ticker.unreadEvents().length,3); // Opening alone is not reading all entries.
+ ticker.markEventsSeen([events[1]]); // The group's newest update was already read, but its hidden child was not.
+ await ticker.toggle();assert.equal(ticker.unreadEvents().length,2); // Opening alone is not reading all entries.
  ticker.createChangeItem({...events[0],thumbnail:'File:NotResolved.jpg'});
  assert.equal(requests,0); // Feed display must not resolve extra Wikimedia metadata.
  const displayed=ticker.content.querySelectorAll('.changes-modal__item');
  assert.equal(displayed.length,2); // Hidden group members are not instantiated yet.
+ assert.ok(displayed[0].children[0].children.some(node=>node.className==='change-feed-unread'));
  observer.callback([{target:displayed[0],isIntersecting:true,intersectionRatio:1},{target:displayed[1],isIntersecting:false,intersectionRatio:0}]);
- assert.equal(ticker.unreadEvents().length,2);
- assert.equal(ticker.unreadEvents([events[0]]).length,1); // Hidden child remains unseen.
+ assert.equal(ticker.unreadEvents().length,1);
+ assert.equal(ticker.unreadEvents([events[0]]).length,0); // Viewing a summary reads the updates it represents.
+ assert.equal(ticker.unreadEvents([events[2]]).length,1); // An offscreen group remains unread.
+ observer.callback([{target:displayed[1],isIntersecting:true,intersectionRatio:0.2}]);
+ assert.equal(ticker.unreadEvents().length,1); // A sliver at the edge is not enough.
+ observer.callback([{target:displayed[1],isIntersecting:true,intersectionRatio:1}]);
+ assert.equal(ticker.unreadEvents().length,0); // Scrolling through the cards clears all unread updates.
  const section=ticker.content.children[1];const details=section.children[1].children[1];
  details.open=true;details.listeners.toggle();
  assert.equal(ticker.content.querySelectorAll('.changes-modal__item').length,3);

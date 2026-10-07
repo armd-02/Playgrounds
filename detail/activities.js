@@ -213,6 +213,7 @@ class Activities {
         html += `<div class="col-9 p-1"><input type="text" id="act_userid" class="form-control form-control-sm"></input></div>`;
         html += `<div class="col-3 p-1">${glot.get("act_passwd")}</div>`;
         html += `<div class="col-9 p-1"><input type="password" id="act_passwd" class="form-control form-control-sm"></input></div>`;
+        html += `<div class="col-9 offset-3 p-1"><button type="button" class="participation-link" onclick="areaSearchController.open('research')" aria-haspopup="dialog" aria-controls="poiFilterModal">${glot.get("contribute_firstTime")}</button></div>`;
         html += `</div></div>`;
         html += `<input type="hidden" id="act_id" value="${params.id === void 0 ? "" : params.id}"></input>`;
         html += `<input type="hidden" id="act_osmid" value="${data.osmid}"></input>`;
