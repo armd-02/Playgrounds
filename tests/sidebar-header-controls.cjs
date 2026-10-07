@@ -52,8 +52,9 @@ assert.equal(sidebarChange.parentElement, listControls);
 assert.match(winlib, /btmPane\.classList\.remove\("sidebar-minimized"\)/);
 assert.match(css, /#bottom-pane\.sidebar-minimized\s*\{[\s\S]*?width:\s*48px\s*!important/);
 assert.match(css, /#bottom-pane\.sidebar-minimized #sidebarMinimize\s*\{[\s\S]*?display:\s*none\s*!important/);
-assert.doesNotMatch(winlib, /mapid\.animate\(/);
-assert.match(winlib, /mapid\.style\.width = `\$\{maxWidth\}px`;[\s\S]*?mapLibre\.stop\(false\)/);
-assert.match(winlib, /mapid\.style\.height = `\$\{maxHeight\}px`;[\s\S]*?mapLibre\.stop\(false\)/);
+assert.match(winlib, /animateSidebarMapSize\('width', currentMapRect\.width, mapWidth\)/);
+assert.match(winlib, /animateSidebarMapSize\('height', currentMapRect\.height, mapHeight\)/);
+assert.doesNotMatch(winlib, /mapid\.style\.width = `\$\{maxWidth\}px`/);
+assert.doesNotMatch(winlib, /mapid\.style\.height = `\$\{maxHeight\}px`/);
 
 console.log("PASS: list header has minimize/maximize controls and detail retains close");

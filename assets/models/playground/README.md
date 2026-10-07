@@ -30,7 +30,7 @@ For per-model details, see each `SOURCE.md` file.
 
 ## 設定
 
-`data/config-user.jsonc` の `playground3d` で設定します。変更後はページを再読み込みしてください。
+`data/config-user.jsonc` の `feature3d` で設定します。変更後はページを再読み込みしてください。
 
 - `use`: `true` で3Dモデルを使用、`false`（または未指定）で従来アイコンを使用。
 - `visualScale`: 全モデルに掛ける表示倍率。既定値は `1.2`。
@@ -39,7 +39,7 @@ For per-model details, see each `SOURCE.md` file.
 - `rules`: `tags` と `model`（モデルID）の対応を配列で定義。上から最初に一致するルールを使用します。複数のタグキーはすべて一致する必要があり、値の配列はいずれかに一致すれば対象です。値は前後の空白と大文字・小文字を無視した完全一致です。ルールの `use: false` で個別に無効化できます。
 
 ```jsonc
-"playground3d": {
+"feature3d": {
     "use": true,
     "models": {
         "slide": {
@@ -57,4 +57,4 @@ For per-model details, see each `SOURCE.md` file.
 
 無効なモデル定義・ルールは無視します。条件に一致しない場合やモデルの読み込みに失敗した場合は従来アイコンを表示します。モデルを追加する場合は、そのモデルのライセンスに合わせてクレジットも更新してください。
 
-設定処理のテスト: `node tests/playground3d-config.cjs`
+設定処理のテスト: `node tests/mapfeature3d-config.cjs`

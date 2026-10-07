@@ -3,11 +3,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const context = vm.createContext({ console });
-const playground3dSource = fs.readFileSync(path.join(__dirname, '../lib/playground3d.js'), 'utf8');
-vm.runInContext(playground3dSource + '\nthis.Playground3D = Playground3D;', context);
-assert.match(playground3dSource, /renderingMode:\s*["']2d["']/);
+const feature3dSource = fs.readFileSync(path.join(__dirname, '../lib/mapfeature3d.js'), 'utf8');
+vm.runInContext(feature3dSource + '\nthis.MapFeature3D = MapFeature3D;', context);
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../lib/playgroundmodels3d.js'), 'utf8') + '\nthis.PlaygroundModelFactories = PlaygroundModelFactories;', context);
+assert.match(feature3dSource, /renderingMode:\s*["']2d["']/);
 const make = options => {
-    const layer = new context.Playground3D();
+    const layer = new context.MapFeature3D({ modelFactories: context.PlaygroundModelFactories });
     layer.configure(options);
     return layer;
 };
@@ -150,10 +151,10 @@ layer.templates.clear();
 layer.sync([poi]);
 assert.equal(layer.hasModel('node/1'), false);
 (async () => {
-    const disabled = new context.Playground3D();
+    const disabled = new context.MapFeature3D({ modelFactories: context.PlaygroundModelFactories });
     assert.equal(await disabled.init({}, { use: false, models, rules }), false);
     assert.equal(disabled.loading, null); // No Three.js/model request.
-    const empty = new context.Playground3D();
+    const empty = new context.MapFeature3D({ modelFactories: context.PlaygroundModelFactories });
     assert.equal(await empty.init({}, { use: true, models: {}, rules: [] }), false);
     assert.equal(empty.loading, null);
     console.log('PASS: configurable tags/models, priority, AND/OR, disabled/invalid entries, replacement and fallback');

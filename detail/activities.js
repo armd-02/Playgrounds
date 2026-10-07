@@ -237,7 +237,19 @@ class Activities {
         if (!modalActs.busy && userid !== "" && passwd !== "") {
             winCont.setProgress(10);
             modalActs.busy = true;
+            const coordinates = poiCont.get_osmid(act_osmid.value)?.lnglat
+                ?? poiCont.get_actid(act_id.value)?.lnglat;
             let senddata = { id: act_id.value, osmid: act_osmid.value };
+            if (Array.isArray(coordinates) && coordinates.length >= 2
+                && coordinates[0] != null && String(coordinates[0]).trim() !== ""
+                && coordinates[1] != null && String(coordinates[1]).trim() !== ""
+                && Number.isFinite(Number(coordinates[0]))
+                && Number.isFinite(Number(coordinates[1]))
+                && Math.abs(Number(coordinates[0])) <= 180
+                && Math.abs(Number(coordinates[1])) <= 90) {
+                senddata.longitude = Number(coordinates[0]);
+                senddata.latitude = Number(coordinates[1]);
+            }
             Object.keys(act[fname].form).forEach((key) => {
                 let field = act[fname].form[key];
                 if (field.gsheet !== "" && field.gsheet !== undefined) {
@@ -275,16 +287,20 @@ class Activities {
                         console.log("save: ok");
                         winCont.showMessage(glot.get("act_saved"));
                         cMapMaker.clearDatail();
-                        gSheet.get(Conf.activity.url).then((jsonp) => {
-                            poiCont.setActdata(jsonp);
-                            poiCont.setActlnglat();
-                            cMapMaker.updateView()
-                                .finally(() => {
-                                    cMapMaker.changeMode("map");
-                                    winCont.setProgress(0);
-                                    modalActs.busy = false;
-                                });
-                        });
+                        cMapMaker.reloadActivitiesForView()
+                            .then(async () => {
+                                await changesController.checkActivityChanges(Conf.activity, { force: true });
+                                cMapMaker.showChangeTicker();
+                            })
+                            .catch((error) => {
+                                console.error("Activity reload failed:", error);
+                                alert(glot.get("act_error"));
+                            })
+                            .finally(() => {
+                                cMapMaker.changeMode("map");
+                                winCont.setProgress(0);
+                                modalActs.busy = false;
+                            });
                     } else {
                         console.log("save: ng");
                         alert(glot.get("act_error"));
@@ -342,10 +358,7 @@ class Activities {
 
             winCont.setProgress(100);
             await cMapMaker.clearDatail();
-            const rows = await gSheet.get(Conf.activity.url);
-            poiCont.setActdata(rows);
-            poiCont.setActlnglat();
-            await cMapMaker.updateView();
+            await cMapMaker.reloadActivitiesForView();
             cMapMaker.changeMode("map");
         } catch (error) {
             console.error("Activity delete failed:", error);

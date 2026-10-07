@@ -19,11 +19,26 @@ OpenStreetMap（OSM）の公園・遊具・設備データを使って、**遊�
   - 行きやすさ重視
   - 高評価の公園 など
 - 公園への口コミ・評価・特徴・写真の投稿
+- 訪問済み・お気に入り・自分用メモをブラウザに保存
+- 地図位置・選択対象の共有URLをコピー
+- 公園・地物の詳細からGoogleマップで経路を検索
 - 「未調査」「1年以上未確認」「写真なし」「情報が少ない」公園の抽出
 - Wikimedia Commonsの写真、Wikipediaなどのオープンデータを活用
 - リストのCSVダウンロード
 - OSMの遊具・公園設備を低ポリゴン3Dモデルで表示
 - PC、タブレット、スマートフォンに対応
+
+## 次の行き先と更新情報
+
+一覧上部の「目的」を選ぶと、読み込み済みの場所を目的に合わせて絞り込みます。「表示」では周辺・お気に入り・最近見たを切り替えます。別の候補欄は設けず、写真・口コミの特徴・登録済み設備を同じ一覧に表示します。評価・未訪問などの細かな条件は絞り込み画面で指定できます。未登録の特徴や設備は推測しません。
+
+「前回の続き」は再アクセス時に小さく表示し、使用後や目的変更後は非表示になります。同じブラウザに保存した地図の中心・ズーム・目的を、ボタンを押したときに復元します。復元した地域の取得は通常の地図移動と同じ処理を使います。保存先は `etc.localSave` を基にしたアプリ固有のローカルストレージです。
+
+新着は同じ場所の更新をまとめ、内訳から個々の口コミや地図情報を開けます。お気に入り・訪問済みを分け、各区分では未確認の更新と近い場所を優先します。画面に表示された項目を既読として記録し、更新日時が変わった項目は再び未確認になります。取得件数に上限があるため、近所の更新をすべて網羅する表示ではありません。
+
+一覧上部の目的変更と更新一覧の表示・展開は追加の検索APIを呼びません。目的選択は低ズームでも取得済みデータのみを利用し、絞り込み画面から明示的に検索したときは既存のAPI検索を利用します。写真は直接URL、または通常のサムネイル表示で解決済みの画像を利用します。低ズームの検索件数プレビューは `areaSearch.previewCounts: false` で抑止し、検索を実行した後に件数を表示します。
+
+汎用の設定は `data/config-user.jsonc` の `discovery` にあります。`use` で有効化、`presetIds` で目的の選択肢、`featureFacts` で設備タグと表示文言キーを指定できます。内部のクラス・IDは `PlaceDiscoveryController`、`placeDiscovery`、`place-discovery-*` を使用し、施設の種類に依存しません。
 
 ## 3D表示
 
@@ -57,7 +72,15 @@ OSMのタグに応じて、一部の遊具・公園設備を地図記号とし�
 - [遊具3Dモデル](assets/models/playground/README.md)
 - [公園設備3Dモデル](assets/models/poi/README.md)
 
-3D表示は `data/config-user.jsonc` の `playground3d` で設定します。モデル読み込みに失敗した場合や対応するモデルがない場合は、従来のアイコン表示へフォールバックします。
+3D表示は `data/config-user.jsonc` の `feature3d` で設定します。モデル読み込みに失敗した場合や対応するモデルがない場合は、従来のアイコン表示へフォールバックします。
+
+## 共有・経路検索・自分用メモ
+
+共有URLは `etc.publicUrl` の公開URLに、現在の地図位置や選択対象を付けて作成します。コピー成功時は案内を表示し、自動コピーできない場合は手動コピー用のURLを表示します。
+
+詳細画面の経路アイコン付き「経路を検索」はGoogleマップの経路確認画面を開きます。紐づく公園・敷地がある場合はその代表位置、ない場合は選んだ地物の位置が目的地です。入口の位置を保証するものではありません。出発地と移動手段はGoogleマップ側で選択します。`directions.use` で表示を切り替えられます。
+
+「自分用メモ（非公開）」は、このブラウザのローカルストレージに保存します。口コミとして公開されず、別の端末・ブラウザとは同期しません。みんなに伝える内容は「口コミ・情報を追加（公開）」から投稿します。
 
 ## データと技術
 
@@ -65,7 +88,7 @@ OSMのタグに応じて、一部の遊具・公園設備を地図記号とし�
 
 - **OpenStreetMap** — 公園、遊具、公園設備などの地理データ
 - **Overpass API** — OSMデータの検索・取得
-- **MapLibre GL JS** — Web地図表示
+- **MapLibre GL JS 5.24.0** — Web地図表示
 - **Wikimedia Commons** — 公園・遊具などの写真
 - **Wikipedia / Wikidata** — 関連する説明・オープンデータ
 - **Community Map Maker** — 本サイトのベースとなる地図アプリケーション
@@ -84,6 +107,7 @@ Overpass APIはキャッシュと複数サーバーへの切り替えに対応�
 ## 利用環境
 
 - Webブラウザ（PC / タブレット / スマートフォン）
+- ブラウザの言語設定に応じて日本語・英語で表示（日本語以外は英語）
 - Cookie未使用
 - 起動案内の表示履歴など、一部のUI状態にはブラウザのローカルストレージを使用
 
@@ -125,9 +149,9 @@ Basic認証は入力したパスワードをAuthorizationヘッダーで送る�
 
 Firefoxのローカルネットワークアクセス保護により、フロントエンドとバックエンドを同じ端末で動かす場合でも、ホスト名とIPアドレスを混在させると通信許可が必要になることがあります。開発環境では `http://battle1:5500` と `http://battle1:18080` のように同じホスト名へ揃えます。
 
-## 公園検索
+## 対象地物の検索（現在は公園）
 
-`data/config-user.jsonc` の `areaSearch` で、公園検索・評価・調査対象抽出を設定します。
+`data/config-user.jsonc` の `areaSearch` で、検索・評価・調査対象抽出を設定します。現在の設定は公園向けです。対象は `areaFeatureLinker.areaTargets`、評価項目は `areaSearch.attributes`、目的プリセットは `areaSearch.presets` で定義します。寺社・店舗などへ適用するときは、対象の Overpass target と Activity の `app`、評価項目・プリセットを設定し、`data/glot-custom.jsonc` の `areaSearch_*` キーに日本語・英語の表示名を追加します。低ズームの検索では `activity.url` の `app` を引き継ぎ、必要なら `areaSearch.app` で指定できます。
 
 現在は次のようなプリセットを定義しています。
 
@@ -138,11 +162,13 @@ Firefoxのローカルネットワークアクセス保護により、フロン�
 - 行きやすさ重視
 - 高評価の公園
 
-`activity.authMode: "basic"` のとき、公園POIの表示ズーム未満ではバックエンドの検索APIを利用します。現在はズーム12未満がAPI、12以上が従来の表示範囲内POI検索です。境界は `areaFeatureLinker.areaTargets` の `poiView.poiZoom`（端末別設定を含む）に従います。GAS（`legacy`）では従来の検索を使います。
+「詳しい条件」では訪問状況・評価・特徴・情報の有無を編集し、「適用」で読み込み済みの場所へまとめて反映します。目的とお気に入り表示はリスト側に集約しています。目的の条件を変更すると「カスタム条件」と表示します。条件編集・件数プレビューは検索APIを呼びません。`activity.authMode: "basic"` の場合のみ、「この地図範囲を検索」で検索APIを明示的に呼び出せます。GAS（`legacy`）では読み込み済みの場所を絞り込みます。
 
 検索先は `areaSearch.apiUrl`（既定 `activity-search.php`）を `activity.url` からの相対URLとして解決し、同じ `app` を渡します。
 
-低ズームでは全地域のActivity登録済みOSM IDを検索します。バックエンドAPIには座標・公園全件・親子関係がないため、表示範囲検索や未登録公園の網羅は行いません。一覧の未ロード対象はOSM IDを表示し、選択時にOSM情報を取得して移動・詳細表示します。検索条件はズーム変更後も引き継ぎます。
+PHP Activity API利用時は、初回表示と地図移動時のActivity一覧を現在の表示範囲の `bbox` で取得します。保存・削除後の再取得も同じ範囲に限定します。座標未登録のActivityはAPI仕様により各範囲の応答へ含まれます。Google Apps Script利用時は従来の取得方法を維持します。
+
+明示的な検索では現在の表示範囲を `bbox` として検索APIへ渡し、その範囲内に座標が保存されたActivityを検索します。日付変更線をまたぐ範囲など、APIの単一 `bbox` で表せない場合は追加検索を表示しません。座標未登録のActivity、Activity未登録の公園、公園と遊具の親子関係はこの検索結果に含まれません。一覧の未ロード対象はOSM IDを表示し、選択時にOSM情報を取得して移動・詳細表示します。検索条件は地図移動・ズーム変更後も引き継ぎますが、検索APIは自動で再呼び出しません。検索範囲が変わった場合は読み込み済みの場所の絞り込みに戻ります。
 
 ## リスト上部のアクションボタン設定
 
@@ -205,12 +231,16 @@ Community Map Maker共通のニュース表示は `data/config-user.jsonc` の `
 
 敷地単位のリスト表示は `data/listtable.jsonc` の `list.views` で設定します。`source` に `areaFeatureLinker` を指定すると、`name`、`linkedFeatures`、`distance` などを列として利用できます。
 
-## 3Dモデル設定
+## 汎用地物3Dライブラリとモデル設定
 
-3D表示は `data/config-user.jsonc` の `playground3d` で設定します。
+3D表示は `data/config-user.jsonc` の `feature3d` で設定します。
+
+本体は `lib/mapfeature3d.js` の `MapFeature3D` です。OSMタグの種類を限定せず、案内板、記念碑、彫像、鳥居、灯籠、車止め、マンホール、消火栓、電柱なども、タグとGLB/glTFモデルの対応を設定して表示できます。新しいモデルファイルは別途用意してください。モデルを指定しただけではデータ取得対象は増えないため、このアプリでは `data/overpass-custom.jsonc` と表示カテゴリ・ズーム条件も対象地物に合わせて設定します。
+
+遊具の組み立てモデルは `lib/playgroundmodels3d.js` の `PlaygroundModelFactories` に分離しています。本体は遊具の種類やこのアプリの詳細画面に依存しません。
 
 ```jsonc
-"playground3d": {
+"feature3d": {
     "use": true,
     "visualScale": 1.0,
     "models": {
@@ -236,12 +266,30 @@ Community Map Maker共通のニュース表示は `data/config-user.jsonc` の `
 - `rules`: OSMタグとモデルIDの対応
 - `hitArea`: 3Dモデルをクリック・タップしやすくする透明な判定領域
 
+任意の地物も、同じ `models` と `rules` を使います。たとえば案内板は `{ "tags": { "tourism": "information", "information": "board" }, "model": "information_board" }` とし、`models.information_board` に用意したモデルの `url` と `size` を設定します。ルール内のタグはAND、値の配列はOR、先に一致したルールを優先します。
+
+他のMapLibreアプリからの利用例:
+
+```javascript
+const models3d = new MapFeature3D({
+    onSelect: id => openFeatureDetails(id),
+    getFeatureLabel: id => featureLabels.get(id) || id,
+    getSelectionTitle: () => "Select a feature"
+});
+await models3d.init(map, feature3dConfig);
+models3d.sync(pointFeatures); // GeoJSON Point Featureの配列
+```
+
+地物には一意の `id` を指定します。Polygonなどは `{ geojson: feature, lnglat: [lng, lat] }` として代表位置を渡せます。表示する地物の選別は呼び出し元が行います。`hasModel(id)` で3D表示の成否を確認し、通常アイコンと切り替えられます。
+
+独自の組み立てモデルはコンストラクタの `modelFactories: { model_type: (THREE, definition) => object3d }` で登録し、モデル定義の `type` から指定できます。生成関数は同期的にThree.jsのObject3Dを返し、形状のサイズは従来どおり `size * visualScale` 倍になります。GLB/glTFの `size` は最長辺の長さ(m)です。遊具モデルを使うアプリは `modelFactories: PlaygroundModelFactories` を渡します。
+
 新しいモデルを追加する場合は、そのモデルのライセンス条件に従い、各 `SOURCE.md` とクレジット表記も更新してください。
 
 設定処理のテスト:
 
 ```bash
-node tests/playground3d-config.cjs
+node tests/mapfeature3d-config.cjs
 ```
 
 ## ライセンス
@@ -273,3 +321,11 @@ node tests/playground3d-config.cjs
 - **2026/09/08** OSMの遊具を低ポリゴン3Dモデルで表示する機能を追加
 - **2026/09/12** 3Dモデルを拡充し、遊具に加えてベンチ・給水設備・自動販売機などの公園設備にも対応。背景地図スタイルも調整
 - **2026/09/13** 設定項目の共通化、低ズーム時の公園検索、リスト操作、読み込み・ズーム案内表示を改善、樹木追加
+
+- **2026/10/07** 起動時の読み込み案内と各画面の英語対応を改善。MapLibre GL JSを5.24.0へ更新し、通常のマウスホイール感度を標準値に調整
+- **2026/10/07** リスト最大化時のPOI表示を修正し、敷地内の遊具・設備やトイレ情報の表示を改善
+- **2026/10/07** 目的別の絞り込み、周辺・お気に入り・最近見たの切り替え、前回の地図位置と目的の復元を追加
+- **2026/10/07** 口コミ・地図情報の更新を場所ごとに集約し、未確認・既読の管理に対応。PHP Activity APIの取得を表示範囲に限定
+- **2026/10/07** 地物の分類を設定ベースへ変更し、3D表示を汎用の `MapFeature3D` に変更。遊具モデルの生成処理を分離
+- **2026/10/07** 共有URLとページの公開URLを統一し、コピー成功時の案内と手動コピーへの切り替えを追加
+- **2026/10/07** 詳細画面に経路アイコン付き「経路を検索」を追加。「自分用メモ（非公開）」と「口コミ・情報を追加（公開）」の違いを日本語・英語で明記

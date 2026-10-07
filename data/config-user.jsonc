@@ -21,6 +21,7 @@
             "Noto Sans Bold"
         ], // 使用可能なフォント（spriteに依存）
         "textSize": 12,
+        "pointMarkerRadius": 48, // クリック時の点ハイライトの半径（画面上のpx）
         "polygonMarker": { // ポリゴン設定
             "fill-color": "#CC6666",
             "fill-opacity": 0.3
@@ -34,14 +35,50 @@
         "nationalLimitPerMonth": 5, // 全国ニュースを1か月あたり何件表示するか
         "displayDuration": 10000 // ニュース1件を表示する時間（ミリ秒）
     },
+    "changes": {
+        "use": true,
+        "apiUrl": "https://armd-01.sakura.ne.jp/osm-japan-changes/api.php",
+        "storageKeyPrefix": "playgrounds-changes",
+        "reviews": { "use": true },
+        "minLookbackMonths": 1, // 毎回最低1か月分を確認
+        "maxLookbackMonths": 6, // 前回が古くても半年で打ち切る
+        "ticker": { "use": true, "displayDuration": 10000, "maxItems": 30,
+            "mobileLabelKey": "changeFeed_reviewsTitle", "mobileLabel": "公園／遊具の口コミや情報更新", "sourceLabel": "OpenStreetMap" },
+        "labelKeys": { "regionalCreated": "changeFeed_regionalCreatedLabel", "regionalUpdated": "changeFeed_regionalUpdatedLabel", "favoriteUpdated": "changeFeed_favoriteUpdatedLabel" },
+        "labels": { "regionalCreated": "地図への新規登録", "regionalUpdated": "更新", "favoriteUpdated": "お気に入りの更新" },
+        "region": {
+            "scope": "prefecture", "source": "mapCenter",
+            "prefectureFile": "https://armd-01.sakura.ne.jp/osm-japan-changes/data/prefectures.min.geojson"
+        },
+        "targets": [
+            { "id": "park", "glotLabel": "changeFeed_park", "label": "公園", "use": true,
+              "notify": { "regionalCreated": true, "regionalUpdated": true, "favoriteUpdated": true },
+              "queries": [
+                  { "tag_key": "leisure", "tag_value": "park" },
+                  { "tag_key": "leisure", "tag_value": "playground" },
+                  { "tag_key": "landuse", "tag_value": "recreation_ground" }
+              ] },
+            { "id": "playground", "glotLabel": "changeFeed_playground", "label": "遊具", "use": true,
+              "notify": { "regionalCreated": true, "regionalUpdated": false, "favoriteUpdated": true },
+              "queries": [{ "tag_key": "playground" }] },
+            { "id": "temple_shrine", "glotLabel": "changeFeed_temple_shrine", "label": "寺社仏閣", "use": false,
+              "notify": { "regionalCreated": true, "regionalUpdated": false, "favoriteUpdated": true },
+              "queries": [{ "tag_key": "amenity", "tag_value": "place_of_worship" }],
+              "matchTags": { "religion": ["buddhist", "shinto"] } },
+            { "id": "cinema", "glotLabel": "changeFeed_cinema", "label": "映画館", "use": false,
+              "notify": { "regionalCreated": true, "regionalUpdated": false, "favoriteUpdated": true },
+              "queries": [{ "tag_key": "amenity", "tag_value": "cinema" }] }
+        ]
+    },
     "intro": {
         "use": true, // 起動時の案内を1日1回表示する
         "storageKey": "playgrounds-intro-last-shown"
     },
     "areaFeatureLinker": {
         "use": true, // 敷地と、その内側にある地物・Activityを1敷地1レコードへまとめる
-        "areaTargets": ["Playgrounds_Park"], // 親となる敷地のOverpass target
+        "areaTargets": ["Playgrounds_Park"], // 検索対象のOverpass target（公園以外も指定可能）
         "featureTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // 敷地へ紐づける地物のtarget（空配列なら全target）
+        "detailPlayTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // 公園詳細の設備欄で遊具としてまとめるtarget
         "mapMode": "allVisibleFeatures", // 通常時は敷地外を含む表示対象POIも地図に表示
         "parentMarkerBelowZoomTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // カテゴリ選択時、各targetのpoiZoom未満では親敷地マーカーを表示。空配列・未指定なら無効
         "maxParentDepth": 8, // 入れ子の敷地を親方向へたどる上限
@@ -59,89 +96,36 @@
         "scoreCodeOffset": 1
     },
     "areaSearch": {
+        "previewCounts": false,
         "apiUrl": "activity-search.php", // basic設定の低ズーム検索。activity.urlを基準に解決
         "use": true, // AreaFeatureLinkerが作ったレコードを検索・調査リストに利用する
         "sparseInformationCount": 2, // 「情報が少ない」とする登録項目数の上限
         "ratingActionId": "area-rating",
-        "attributeLabels": {
-            "act_good_points_1": "見守りやすい",
-            "act_good_points_2": "遊具が多い",
-            "act_good_points_3": "広い",
-            "act_good_points_4": "静か",
-            "act_good_points_5": "日陰がある",
-            "act_good_points_6": "ベンチがある",
-            "act_good_points_7": "小さい子向き",
-            "act_good_points_8": "小学生向き",
-            "act_good_points_9": "写真よりきれい",
-            "act_good_points_10": "駅・バス停が近い"
-        },
+        "attributes": ["act_good_points_1", "act_good_points_2", "act_good_points_3",
+            "act_good_points_4", "act_good_points_5", "act_good_points_6",
+            "act_good_points_7", "act_good_points_8", "act_good_points_9", "act_good_points_10"],
         "presets": {
-            "small": { "label": "小さい子と遊ぶ", "attributes": ["act_good_points_7", "act_good_points_1"], "matchMode": "or" },
-            "play": { "label": "たくさん遊ぶ", "attributes": ["act_good_points_2", "act_good_points_3", "act_good_points_8"], "matchMode": "or" },
-            "relax": { "label": "ゆっくり過ごす", "attributes": ["act_good_points_4", "act_good_points_5", "act_good_points_6"], "matchMode": "or" },
-            "hot": { "label": "暑い日に休む", "attributes": ["act_good_points_5", "act_good_points_6"], "matchMode": "and" },
-            "access": { "label": "行きやすさ重視", "attributes": ["act_good_points_10"], "matchMode": "and" },
-            "rated": { "label": "高評価の公園", "scoreMin": 4, "attributes": [], "matchMode": "and" }
-        },
-        "labels": {
-            "count": "{count}件",
-            "status": { "missing": "未調査", "stale": "情報が古い", "recent": "最近確認済み" },
-            "research": { "missing": "詳細情報なし", "stale": "1年以上未確認", "photo": "写真なし", "sparse": "情報が少ない" },
-            "criteria": {
-                "researchMode": "調査モード",
-                "scoreMinimum": "平均評価 ★{score}以上",
-                "matchAny": "いずれか",
-                "matchAll": "すべて",
-                "recent": "1年以内に確認",
-                "photo": "写真あり",
-                "detail": "詳細情報あり",
-                "allAreas": "すべての公園"
-            },
-            "listTitles": {
-                "missing": "詳細情報無しリスト",
-                "stale": "1年以上未確認リスト",
-                "photo": "写真無しリスト",
-                "sparse": "情報が少ない公園リスト",
-                "research": "調査対象リスト",
-                "search": "公園検索結果リスト"
-            },
-            "heading": { "search": "公園を探す", "rating": "評価で公園を探す", "research": "口コミ・情報提供に参加" },
-            "description": {
-                "search": "いま地図に表示している範囲が対象です",
-                "rating": "投稿された星の平均評価で、いま表示している範囲を絞り込みます",
-                "research": "口コミや写真を追加できそうな公園を探します"
-            },
-            "rating": { "default": "評価で探す", "minimum": "★{score}以上", "activeTitle": "平均評価 {label}で絞り込み中" },
-            "report": {
-                "area": "公園",
-                "detail": "詳細情報あり",
-                "recent": "1年以内に確認",
-                "photo": "写真あり",
-                "score": "★{score}",
-                "unrated": "未評価"
-            },
-            "facts": { "score": "平均評価 ★{score}", "recent": "1年以内に確認", "photo": "写真あり" },
-            "matchReason": {
-                "title": "この公園が該当した理由",
-                "registered": "登録情報:",
-                "empty": "まだ詳しい登録情報がありません。"
-            }
-        },
-        "sourceBaseUrl": "" // 外部の検索用データを使う場合の基点URL（現在は未使用）
+            "small": { "icon": "🧒", "attributes": ["act_good_points_7", "act_good_points_1"], "matchMode": "or" },
+            "play": { "icon": "🛝", "attributes": ["act_good_points_2", "act_good_points_3", "act_good_points_8"], "matchMode": "or" },
+            "relax": { "icon": "🌿", "attributes": ["act_good_points_4", "act_good_points_5", "act_good_points_6"], "matchMode": "or" },
+            "hot": { "icon": "🌳", "attributes": ["act_good_points_5", "act_good_points_6"], "matchMode": "and" },
+            "access": { "icon": "🚌", "attributes": ["act_good_points_10"], "matchMode": "and" },
+            "rated": { "icon": "⭐", "scoreMin": 4, "attributes": [], "matchMode": "and" }
+        }
+    },
+    "directions": { "use": true }, // Open external route planning from feature details
+    "discovery": {
+        "use": true,
+        "presetIds": ["small", "play", "relax", "hot", "access", "rated"],
+        "featureFacts": [
+            { "key": "amenity", "value": "toilets", "labelKey": "discovery_fact_restrooms" },
+            { "key": "amenity", "value": "bench", "labelKey": "discovery_fact_seating" },
+            { "key": "amenity", "value": "drinking_water", "labelKey": "discovery_fact_water" }
+        ]
     },
     "listActions": {
         "use": true, // リスト上部の汎用アクションボタンを表示する
         "items": [
-            {
-                "id": "area-search",
-                "use": true,
-                "glotLabel": "",
-                "icon": "fa-solid fa-sliders",
-                "buttonClass": "btn-success",
-                "glotAriaLabel": "listActionSearchAria",
-                "handler": "areaSearchController.open",
-                "args": ["search"]
-            },
             {
                 "id": "area-rating",
                 "use": false,
@@ -170,7 +154,7 @@
         "attention": 0.8,
         "green": 0.6,
         "middle": 0.8,
-        "visited": 0.4,
+        "visited": 0.6,
         "normal": 0.8,
         "flag": 0.5,
         "zoomSteps": { // ズームレベルに応じたマーカー倍率
@@ -223,13 +207,16 @@
                 "fill": "#ffffff",
                 "stroke": "#bfbfe1"
             },
+            "favorite": {
+                "badgeColor": "#d14970"
+            },
             "visited": {
                 "fill": "#ffffff",
                 "stroke": "#9c9c9c"
             }
         }
     },
-    "playground3d": {
+    "feature3d": {
         "use": true, // false: 従来のアイコン表示。表示ズームはアイコンと共通
         "visualScale": 1.0, // 地図記号として見やすくする全モデル共通倍率
         "hitArea": {
@@ -258,6 +245,10 @@
             "climbingframe": {
                 "url": "./assets/models/playground/poly-pizza/jungle-gym/jungle-gym.glb",
                 "size": 5
+            },
+            "monkey_bars": {
+                "url": "./assets/models/playground/handmade/playground_monkey_bars.glb",
+                "size": 3.1
             },
             "structure": {
                 "url": "./assets/models/playground/poly-pizza/composite-play-structure/composite-play-structure.glb",
@@ -339,6 +330,12 @@
                     ]
                 },
                 "model": "climbingframe"
+            },
+            {
+                "tags": {
+                    "playground": "monkey_bars"
+                },
+                "model": "monkey_bars"
             },
             {
                 "tags": {
@@ -444,7 +441,7 @@
         "targetName": "activity",
         "local": {
             "use": true,
-            "hosts": ["127.0.0.1", "localhost", "::1"],
+            "hosts": ["127.0.0.1", "localhost", "::1", "192.168.1.6", "100.64.18.48"],
             "url": "http://127.0.0.1:18080/api/activities.php?app=playgrounds",
             "schemaUrl": "http://127.0.0.1:18080/api/activity-schema.php",
             "app": "playgrounds",
@@ -516,7 +513,8 @@
         "tag": "wikipedia"
     },
     "etc": {
-        "localSave": "", // 訪問済み機能フラグ(有効時はアプリ名、無効時は"")
+        "publicUrl": "https://playgrounds.openacrossbase.net/", // URL sharing destination
+        "localSave": "playgrounds", // POI記録のアプリ固有キー(無効時は"")
         "reverseIcon": false, // true:訪問済みを目立たせる / false:訪問済みを目立たせない
         "editMode": true, // 編集メニューの表示/非表示
         "splashUrl": "./image/ogimage.png",
@@ -542,7 +540,7 @@
             },
             {
                 "glot-model": "develop_site",
-                "linkto": "https://playgrounds.openacrossbase.net/",
+                "linkto": "https://github.com/armd-02/Playgrounds",
                 "divider": false
             },
             {
@@ -596,7 +594,7 @@
         // 詳細モーダルの追加ボタン
         "activities": [
             {
-                "btn_class": "btn btn-light btn-lg border-secondary w-50 m-2 p-1",
+                "btn_class": "btn btn-light btn-lg border-secondary w-75 m-2 p-1",
                 "code": "modalActs.edit({form:'Playgrounds'})",
                 "icon_class": "fas fa-clone",
                 "btn_glot_name": "reviewAdd"

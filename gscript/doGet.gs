@@ -156,6 +156,12 @@ function doGet(e) {
           return makeOutput_(e, retdata);
         }
 
+        if (params.some(function (param) {
+          return param.latitude !== undefined || param.longitude !== undefined;
+        })) {
+          ensureActivityCoordinateColumns_(sheet);
+        }
+
         var rows = sheet.getDataRange().getValues();
         var keys = rows.splice(0, 1)[0];
         var updateSucceeded = true;
@@ -185,6 +191,10 @@ function doGet(e) {
             } else if (key === ACTIVITY_DELETED_COLUMN || key === ACTIVITY_DELETED_AT_COLUMN || key === ACTIVITY_DELETED_BY_COLUMN) {
 
               row.push(rownum > 0 ? sheet.getRange(rownum, keyIndex + 1).getValue() : "");
+
+            } else if ((key === "latitude" || key === "longitude") && param[key] === undefined && rownum > 0) {
+
+              row.push(sheet.getRange(rownum, keyIndex + 1).getValue());
 
             } else {
 
@@ -273,6 +283,17 @@ function getData(sheet) {
     });
 
     return obj;
+  });
+}
+
+function ensureActivityCoordinateColumns_(sheet) {
+  var lastColumn = Math.max(sheet.getLastColumn(), 1);
+  var headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+
+  ["latitude", "longitude"].forEach(function (name) {
+    if (headers.indexOf(name) >= 0) return;
+    headers.push(name);
+    sheet.getRange(1, headers.length).setValue(name);
   });
 }
 

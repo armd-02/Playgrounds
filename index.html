@@ -5,11 +5,13 @@
     <title>遊具のある公園マップ | すべり台・ブランコなど公園遊具を地図で探せます</title>
     <meta name="google-site-verification" content="TwbTRVYGqZKuaBwbe1gbdD9HEf1tc9eueQG6uTVb60Q" />
     <meta charset="utf-8" />
+    <script src="./lib/startuplocalization.js?ver=20261007-01"></script>
     <meta name="description"
         content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
 
     <meta property="og:description"
         content="全国の公園にある遊具情報をOpenStreetMapをもとに表示するWeb地図です。すべり台・ブランコ・砂場など、子どもと遊べる公園探しや地域の公園調査に使えます。" />
+    <link rel="canonical" href="https://playgrounds.openacrossbase.net/" />
     <meta property="og:url" content="https://playgrounds.openacrossbase.net/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="遊具のある公園マップ | すべり台・ブランコなど公園遊具を地図で探せます" />
@@ -30,8 +32,8 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link rel="preconnect" href="https://tile.openstreetmap.jp" crossorigin />
-    <link rel="stylesheet" href="system.css?ver=20260902-05" />
-    <script type="module" src="./loader.module.js?ver=20260912-04"></script>
+    <link rel="stylesheet" href="system.css?ver=20260928-02" />
+    <script type="module" src="./loader.module.js?ver=20261007-10"></script>
 </head>
 
 <body>
@@ -44,6 +46,7 @@
             <button id="startupRetry" type="button" onclick="location.reload()">再読み込み</button>
         </div>
     </div>
+    <script>window.initStartupLocalization();</script>
     <div class="container-fluid m-0 p-0">
         <article id="article" class="two-pane d-none" style="display: none">
             <main id="top-pane">
@@ -51,16 +54,16 @@
                     <canvas id="snow"></canvas>
                     <section id="cMapIntro" class="cMap-intro" aria-labelledby="cMapIntroTitle" hidden>
                         <div class="cMap-intro__body">
-                            <h2 id="cMapIntroTitle">遊具のある公園を探してみましょう</h2>
-                            <p>地図や「公園を探す」から、目的に合った公園と遊具を見つけられます。口コミは公園の詳細から投稿できます。</p>
+                            <h2 id="cMapIntroTitle" glot-model="intro_title">遊具のある公園を探してみましょう</h2>
+                            <p glot-model="intro_body">地図や「公園を探す」から、目的に合った公園と遊具を見つけられます。口コミは公園の詳細から投稿できます。</p>
                         </div>
                         <button id="cMapIntroClose" class="cMap-intro__close" type="button"
-                            aria-label="案内を閉じる">&times;</button>
+                            aria-label="案内を閉じる" data-glot-aria-label="intro_close">&times;</button>
                     </section>
                 </div>
             </main>
             <aside id="bottom-pane" class="row m-0">
-                <div id="sidebarResizeHandle" title="ドラッグしてサイズ変更" aria-label="ドラッグしてリストのサイズを変更"></div>
+                <div id="sidebarResizeHandle" title="ドラッグしてサイズ変更" data-glot-title="sidebar_resize" aria-label="ドラッグしてリストのサイズを変更" data-glot-aria-label="sidebar_resizeList"></div>
                 <div id="btmHeader" class="accordion p-2 h-100">
 
                     <!-- Detail -->
@@ -79,10 +82,10 @@
                             <span class="detailTitle d-flex align-items-center" id="btmWindow_title"></span>
                             <span id="detailWindowControls"
                                 class="sidebar-window-controls btn-group ms-auto" role="group"
-                                aria-label="詳細表示サイズ"></span>
+                                aria-label="詳細表示サイズ" data-glot-aria-label="sidebar_detailSize"></span>
                             <button id="detailHeaderClose" type="button"
                                 class="btn btn-light border-secondary p-0 ms-1 flex-shrink-0"
-                                onclick="cMapMaker.changeMode('list')" aria-label="詳細を閉じる" title="詳細を閉じる">
+                                onclick="cMapMaker.changeMode('list')" aria-label="詳細を閉じる" data-glot-aria-label="sidebar_closeDetail" title="詳細を閉じる" data-glot-title="sidebar_closeDetail">
                                 <span aria-hidden="true" class="fs-1">&times;</span>
                             </button>
                         </h2>
@@ -100,16 +103,17 @@
                     <div class="accordion-item">
                         <h2 class="d-flex align-items-center m-0 p-2" id="listHeader">
                             <span class="detailTitle ms-1" id="listTitle"></span>
+                            <span id="changesButtonDesktop" class="ms-2 flex-shrink-0"></span>
                             <span id="listWindowControls" class="sidebar-window-controls btn-group ms-auto"
-                                role="group" aria-label="リスト表示サイズ">
+                                role="group" aria-label="リスト表示サイズ" data-glot-aria-label="sidebar_listSize">
                                 <button id="sidebarMinimize" class="btn btn-light border-secondary p-0"
                                     type="button" onclick="winCont.setSidebar('mini')"
-                                    aria-label="リストを最小化" title="最小化">
+                                    aria-label="リストを最小化" data-glot-aria-label="sidebar_minimizeList" title="最小化" data-glot-title="sidebar_minimize">
                                     <i class="fa-solid fa-window-minimize" aria-hidden="true"></i>
                                 </button>
                                 <button id="sidebarChange" class="btn btn-light border-secondary p-0"
                                     type="button" onclick="winCont.setSidebar('change')"
-                                    aria-label="リストを最大化" title="最大化">
+                                    aria-label="リストを最大化" data-glot-aria-label="sidebar_maximizeList" title="最大化" data-glot-title="sidebar_maximize">
                                     <i class="fa-regular fa-window-maximize" aria-hidden="true"></i>
                                 </button>
                             </span>
@@ -117,16 +121,20 @@
 
                         <div id="listAccordion" class="accordion-collapse collapse show" aria-labelledby="listHeader">
                             <div class="accordion-body p-0">
-                                <div class="d-flex align-items-center gap-2 p-2 border-bottom">
-                                    <label for="listRatingFilter" class="text-nowrap mb-0" glot-model="listActionRating">評価で絞る</label>
-                                    <select id="listRatingFilter" class="form-select form-select-sm"
-                                        onchange="areaSearchController.applyRating(this.value)">
-                                        <option value="0">指定なし</option>
-                                        <option value="3">★3以上</option>
-                                        <option value="4">★4以上</option>
-                                        <option value="5">★5</option>
-                                    </select>
+                                <div id="placeResume" class="place-resume" hidden></div>
+                                <div class="place-list-toolbar">
+                                    <section id="placeDiscovery" class="place-discovery" hidden></section>
+                                    <div class="place-list-mode">
+                                        <label for="listDisplayMode" data-area-label="placeListView"></label>
+                                        <select id="listDisplayMode" class="form-select form-select-sm"
+                                            onchange="listTable.setDisplayMode(this.value)">
+                                            <option value="nearby" data-area-label="placeListNearby"></option>
+                                            <option value="favorite" data-area-label="placeListFavorites"></option>
+                                            <option value="recent" data-area-label="placeListRecent"></option>
+                                        </select>
+                                    </div>
                                 </div>
+                                <div id="listDistanceOrigin" class="small text-muted px-2 py-1"></div>
                                 <!-- リスト -->
                                 <div class="col-12 p-0" id="listArea"></div>
 
@@ -171,102 +179,89 @@
         </div>
     </div>
 
-    <aside id="areaFeatureSummary" class="area-feature-summary" aria-live="polite" hidden>
-        <div id="areaFeatureChips" class="area-feature-chips"></div>
-        <strong id="areaFeatureResultCount"></strong>
-        <button class="btn btn-sm btn-light border-secondary" type="button" onclick="areaSearchController.reapplyCurrentView()">この範囲で再検索</button>
-        <button class="btn btn-sm btn-outline-danger" type="button" onclick="areaSearchController.clear()" aria-label="検索条件を解除">解除</button>
-    </aside>
-
-    <div id="areaFeaturePanel" class="modal area-feature-panel" tabindex="-1"
-        aria-labelledby="areaFeatureHeading" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable area-feature-dialog">
-        <div class="modal-content area-feature-sheet">
-            <header class="area-feature-header">
+    <div id="poiFilterModal" class="modal" tabindex="-1"
+        aria-labelledby="poiFilterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content poi-filter-panel">
+            <div class="modal-header app-modal-header">
                 <div>
-                    <strong id="areaFeatureHeading">公園を探す</strong>
-                    <small id="areaFeatureDescription">いま地図に表示している範囲が対象です</small>
+                    <strong id="poiFilterTitle"></strong>
                 </div>
-                <button class="btn btn-light border-secondary" type="button" data-bs-dismiss="modal" aria-label="閉じる"><i class="fas fa-xmark"></i></button>
-            </header>
+                <button class="btn btn-light border-secondary app-modal-close" type="button" data-bs-dismiss="modal" aria-label="" data-area-aria="areaSearchUi_close"><i class="fas fa-xmark"></i></button>
+            </div>
 
-            <section id="areaFeatureSearchContent">
-                <div id="areaFeatureZoomNotice" class="alert alert-info" hidden>
-                    この縮尺では公園データをまだ読み込んでいません。
-                    <button class="btn btn-sm btn-primary ms-1" type="button" onclick="areaSearchController.zoomForSearch()">拡大して読み込む</button>
+            <div class="modal-body">
+            <fieldset id="poiFilterPersonal" class="poi-filter-personal">
+                <legend glot-model="poiFilter_personal">自分の記録で絞り込む</legend>
+                <div class="poi-filter-options">
+                    <label><input type="radio" name="poiFilterVisitState" id="poiFilterVisitAny" value="off" checked><span glot-model="poiFilter_visitAny">すべて</span></label>
+                    <label><input type="radio" name="poiFilterVisitState" id="poiFilterVisited" value="visited"><span glot-model="visited_filter_visited">訪問済み</span></label>
+                    <label><input type="radio" name="poiFilterVisitState" id="poiFilterUnvisited" value="unvisited"><span glot-model="visited_filter_unvisited">未訪問</span></label>
                 </div>
-                <h2>目的から探す</h2>
-                <div class="area-preset-grid">
-                    <button type="button" onclick="areaSearchController.applyPreset('small')">🧒 小さい子と遊ぶ</button>
-                    <button type="button" onclick="areaSearchController.applyPreset('play')">🛝 たくさん遊ぶ</button>
-                    <button type="button" onclick="areaSearchController.applyPreset('relax')">🌿 ゆっくり過ごす</button>
-                    <button type="button" onclick="areaSearchController.applyPreset('hot')">🌳 暑い日に休む</button>
-                    <button type="button" onclick="areaSearchController.applyPreset('access')">🚌 行きやすさ重視</button>
-                    <button type="button" onclick="areaSearchController.applyPreset('rated')">⭐ 高評価の公園</button>
+            </fieldset>
+            <section id="poiFilterSearchContent">
+                <div id="poiFilterZoomNotice" class="alert alert-info" hidden>
+                    <span data-area-label="areaSearchUi_zoomNotice"></span>
+                    <button class="btn btn-sm btn-primary ms-1" type="button" onclick="poiFilterController.zoomForSearch()" data-area-label="areaSearchUi_zoom"></button>
                 </div>
-                <form id="areaFeatureForm">
+                <p id="placeCriteriaContext" class="small text-muted"></p>
+                <form id="poiFilterForm">
                     <div class="area-feature-field">
-                        <label for="areaFeatureScore">評価</label>
-                        <select id="areaFeatureScore" name="scoreMin" class="form-select">
-                            <option value="0">指定なし</option>
-                            <option value="3">★3以上</option>
-                            <option value="4">★4以上</option>
-                            <option value="5">★5</option>
+                        <label for="poiFilterScore" data-area-label="areaSearchUi_rating"></label>
+                        <select id="poiFilterScore" name="scoreMin" class="form-select">
+                            <option value="0" data-area-label="areaSearchUi_any"></option>
+                            <option value="3" data-area-label="areaSearchUi_star3"></option>
+                            <option value="4" data-area-label="areaSearchUi_star4"></option>
+                            <option value="5" data-area-label="areaSearchUi_star5"></option>
                         </select>
                     </div>
                     <fieldset class="area-feature-field">
-                        <legend>よかった点</legend>
-                        <div id="areaFeatureAttributes" class="area-feature-check-grid"></div>
+                        <legend data-area-label="areaSearchUi_goodPoints"></legend>
+                        <div id="poiFilterAttributes" class="area-feature-check-grid"></div>
                         <div class="area-match-mode">
-                            <label><input type="radio" name="matchMode" value="and" checked> すべて満たす</label>
-                            <label><input type="radio" name="matchMode" value="or"> いずれかを満たす</label>
+                            <label><input type="radio" name="matchMode" value="and" checked><span data-area-label="areaSearchUi_matchAll"></span></label>
+                            <label><input type="radio" name="matchMode" value="or"><span data-area-label="areaSearchUi_matchAny"></span></label>
                         </div>
                     </fieldset>
                     <fieldset class="area-feature-field">
-                        <legend>情報の状態</legend>
+                        <legend data-area-label="areaSearchUi_infoState"></legend>
                         <div class="area-feature-check-grid">
-                            <label class="area-feature-check"><input type="checkbox" name="recentOnly">1年以内に確認</label>
-                            <label class="area-feature-check"><input type="checkbox" name="photoOnly">写真あり</label>
-                            <label class="area-feature-check"><input type="checkbox" name="detailOnly">詳細情報あり</label>
+                            <label class="area-feature-check"><input type="checkbox" name="recentOnly"><span data-area-label="areaSearchUi_recent"></span></label>
+                            <label class="area-feature-check"><input type="checkbox" name="photoOnly"><span data-area-label="areaSearchUi_photo"></span></label>
+                            <label class="area-feature-check"><input type="checkbox" name="detailOnly"><span data-area-label="areaSearchUi_detail"></span></label>
                         </div>
                     </fieldset>
-                    <div class="area-feature-actions">
-                        <button class="btn btn-light border-secondary" type="reset" onclick="setTimeout(() => areaSearchController.updatePreviewCount())">条件をリセット</button>
-                        <button class="btn btn-success" type="button" onclick="areaSearchController.applyFromForm()"><span id="areaFeaturePreviewCount">0件</span>を表示</button>
-                    </div>
                 </form>
             </section>
 
-            <section id="areaFeatureRatingContent" hidden>
-                <h2>星の数で表示を絞り込む</h2>
-                <p>同じ公園に複数の評価がある場合は、その平均値を使います。</p>
+            <section id="poiFilterRatingContent" hidden>
+                <h2 data-area-label="areaSearchUi_ratingHeading"></h2>
+                <p data-area-label="areaSearchUi_ratingHelp"></p>
                 <div class="area-rating-grid">
-                    <button type="button" onclick="areaSearchController.applyRating(3)"><strong>★3以上</strong><small>平均3.0以上</small></button>
-                    <button type="button" onclick="areaSearchController.applyRating(4)"><strong>★4以上</strong><small>平均4.0以上</small></button>
-                    <button type="button" onclick="areaSearchController.applyRating(5)"><strong>★5</strong><small>平均5.0</small></button>
-                    <button type="button" onclick="areaSearchController.applyRating(0)"><strong>指定なし</strong><small>評価の絞り込みを解除</small></button>
+                    <button type="button" onclick="poiFilterController.applyRating(3)"><strong data-area-label="areaSearchUi_star3"></strong><small data-area-label="areaSearchUi_average3"></small></button>
+                    <button type="button" onclick="poiFilterController.applyRating(4)"><strong data-area-label="areaSearchUi_star4"></strong><small data-area-label="areaSearchUi_average4"></small></button>
+                    <button type="button" onclick="poiFilterController.applyRating(5)"><strong data-area-label="areaSearchUi_star5"></strong><small data-area-label="areaSearchUi_average5"></small></button>
+                    <button type="button" onclick="poiFilterController.applyRating(0)"><strong data-area-label="areaSearchUi_any"></strong><small data-area-label="areaSearchUi_ratingClear"></small></button>
                 </div>
             </section>
 
-            <section id="areaFeatureReportContent" hidden>
-                <h2>この範囲の公園レポート</h2>
-                <div id="areaFeatureReportMetrics" class="area-report-metrics"></div>
-                <div class="area-report-columns">
-                    <div><h3>評価</h3><ul id="areaFeatureReportScores"></ul></div>
-                    <div><h3>よかった点</h3><ul id="areaFeatureReportAttributes"></ul></div>
-                </div>
-            </section>
-
-            <section id="areaFeatureResearchContent" hidden>
-                <h2>口コミ・情報を募集中の公園を探す</h2>
-                <p>感想や評価、写真などを追加できそうな公園だけを地図と一覧に表示します。</p>
+            <section id="poiFilterResearchContent" hidden>
+                <h2 data-area-label="areaSearchUi_researchHeading"></h2>
+                <p data-area-label="areaSearchUi_researchDescription"></p>
                 <div class="area-research-grid">
-                    <button type="button" onclick="areaSearchController.applyResearch('missing')"><i class="far fa-file-lines"></i><strong>詳細情報がない</strong><small>評価・特徴・メモなどが未登録</small></button>
-                    <button type="button" onclick="areaSearchController.applyResearch('stale')"><i class="far fa-clock"></i><strong>1年以上未確認</strong><small>現地の変化を確認したい公園</small></button>
-                    <button type="button" onclick="areaSearchController.applyResearch('photo')"><i class="far fa-image"></i><strong>写真がない</strong><small>現在の様子が分かる写真を募集</small></button>
-                    <button type="button" onclick="areaSearchController.applyResearch('sparse')"><i class="fas fa-list-check"></i><strong>情報が少ない</strong><small>登録項目が2つ未満の公園</small></button>
+                    <button type="button" onclick="poiFilterController.applyResearch('missing')"><i class="far fa-file-lines"></i><strong data-area-label="areaSearchUi_missing"></strong><small data-area-label="areaSearchUi_missingHelp"></small></button>
+                    <button type="button" onclick="poiFilterController.applyResearch('stale')"><i class="far fa-clock"></i><strong data-area-label="areaSearchUi_stale"></strong><small data-area-label="areaSearchUi_staleHelp"></small></button>
+                    <button type="button" onclick="poiFilterController.applyResearch('photo')"><i class="far fa-image"></i><strong data-area-label="areaSearchUi_noPhoto"></strong><small data-area-label="areaSearchUi_noPhotoHelp"></small></button>
+                    <button type="button" onclick="poiFilterController.applyResearch('sparse')"><i class="fas fa-list-check"></i><strong data-area-label="areaSearchUi_sparse"></strong><small data-area-label="areaSearchUi_sparseHelp"></small></button>
                 </div>
             </section>
+            </div>
+            <footer id="poiFilterActions" class="modal-footer">
+                <span id="poiFilterPreviewCount" class="poi-filter-preview small text-muted" role="status"></span>
+                <button class="btn btn-light border-secondary" type="reset" form="poiFilterForm" onclick="poiFilterController.resetDraft()" data-area-label="areaSearchUi_reset"></button>
+                <button class="btn btn-success" type="button" onclick="poiFilterController.applyFromForm()"><span data-area-label="placeFilter_apply">適用</span></button>
+                <button id="placeCriteriaSearch" class="btn btn-outline-primary" type="button" onclick="poiFilterController.searchFromForm()" data-area-label="placeFilter_search"></button>
+            </footer>
         </div>
         </div>
     </div>
@@ -277,10 +272,10 @@
         </div>
     </div>
     <img id="PinchImage" draggable="false" onclick="modalActs.toggleImageSize(this, event)"></img>
-    <button type="button" id="PinchImageClose" aria-label="画像を閉じる" title="閉じる"
+    <button type="button" id="PinchImageClose" aria-label="画像を閉じる" data-glot-aria-label="image_close" title="閉じる" data-glot-title="ui_close"
         onclick="event.stopPropagation(); modalActs.closeMedia()">✕</button>
     <video id="FullScreenVideo" playsinline onclick="modalActs.toggleVideo(this)"></video>
-    <button type="button" id="FullScreenVideoClose" aria-label="動画を閉じる" title="閉じる"
+    <button type="button" id="FullScreenVideoClose" aria-label="動画を閉じる" data-glot-aria-label="video_close" title="閉じる" data-glot-title="ui_close"
         onclick="event.stopPropagation(); modalActs.closeMedia()">✕</button>
 
     <div id="scrollHand" class="d-flex justify-content-center d-none">

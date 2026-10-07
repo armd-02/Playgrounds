@@ -74,14 +74,16 @@
                         "id": "features",
                         "value": "linkedFeatures",
                         "formatter": "featureList",
-                        "className": "col-9 list-area-features",
+                        "className": "col list-area-features",
                         "preserveSpace": true,
                         "options": {
-                            "targets": ["Playgrounds_Play"],
+                            "targets": ["Playgrounds_Play", "Playgrounds_Etc"],
+                            "excludeAmenities": ["toilets"],
                             "label": "category",
                             "separator": "・",
                             "unique": true,
                             "maxItems": 4,
+                            "moreLabelKey": "facility_moreCount",
                             "moreLabel": "ほか{count}件"
                         }
                     },
@@ -89,11 +91,11 @@
                         "id": "distance",
                         "value": "distance",
                         "formatter": "distance",
-                        "className": "col-3 text-end list-area-distance",
+                        "className": "col-auto text-end list-area-distance",
                         "options": {
                             "origin": "userLocation",
                             "unavailable": "mapCenter",
-                            "prefix": "約",
+                            "prefixGlotKey": "placeListDistancePrefix",
                             "units": "auto",
                             "roundMeters": 50,
                             "kilometerDecimals": 1
