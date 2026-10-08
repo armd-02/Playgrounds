@@ -18,8 +18,8 @@ assert.equal(c.tickerItems().find(item=>item.activityId==='Playgrounds/1').edito
 const cached=make();await cached.checkActivityChanges({authMode:'basic',url:'https://example.test/api?app=playgrounds'});assert.equal(requests.length,2);assert.equal(cached.results.length,2);
 await cached.checkActivityChanges({authMode:'basic',url:'https://example.test/api?app=playgrounds'}, {force:true});
 assert.equal(requests.length,4);assert.equal(cached.results.length,2);
-const saved=JSON.parse(values.get('cmapmaker-changes.review-results'));saved.fetchedAt-=11*60*1000;
-values.set('cmapmaker-changes.review-results',JSON.stringify(saved));
+const saved=JSON.parse(values.get('cmapmaker-changes.review-results.region.大阪府'));saved.fetchedAt-=11*60*1000;
+values.set('cmapmaker-changes.review-results.region.大阪府',JSON.stringify(saved));
 await cached.checkActivityChanges({authMode:'basic',url:'https://example.test/api?app=playgrounds'});
 assert.equal(requests.length,6);assert.equal(cached.results.length,2);
 cached.region=async()=>({name:'兵庫県',code:'28',feature:{}});
@@ -28,7 +28,7 @@ await cached.checkActivityChanges({authMode:'basic',url:'https://example.test/ap
 assert.equal(requests.length,8);
 assert.equal(cached.results.length,1);
 assert.equal(cached.results[0].region.favorite,true);
-assert.equal(JSON.parse(values.get('cmapmaker-changes.review-results')).regionKey,'28');
+assert.equal(JSON.parse(values.get('cmapmaker-changes.review-results.region.28')).regionKey,'28');
 // The new region's cached results must be reusable without additional requests.
 await cached.checkActivityChanges({authMode:'basic',url:'https://example.test/api?app=playgrounds'});
 assert.equal(requests.length,8);
@@ -60,12 +60,13 @@ await Promise.all([names.resolveReviewNames(first),names.resolveReviewNames(seco
 assert.equal(batchCalls,1);assert.equal(first[0].item.name,'公園 node/10');assert.equal(second[0].item.name,'公園 node/10');
 await names.resolveReviewNames(batch());assert.equal(batchCalls,1);
 const reloaded=make();await reloaded.resolveReviewNames(batch());assert.equal(batchCalls,1);
-context.poiCont.adata=[{id:'Playgrounds/1',title:'<b>遊びやすい公園</b>',body:'あ'.repeat(81),score:'act_score_6',picture_url1:'File:park.jpg'},
+context.poiCont.adata=[{id:'Playgrounds/1',title:'<b>遊びやすい公園</b>',body:'あ'.repeat(81),actdate:'2026-09-02',good_points:'act_good_points_4,act_good_points_7',score:'act_score_6',picture_url1:'File:park.jpg'},
 {id:'unrelated',title:'別の口コミ',body:'違う本文'}];
 c.results[1].item.activityId='Playgrounds/1';
 const enriched=c.tickerItems().find(item=>item.activityId==='Playgrounds/1');
 assert.equal(enriched.review.title,'遊びやすい公園');assert.equal(enriched.review.excerpt,'あ'.repeat(80)+'…');
 assert.equal(enriched.review.score,5);assert.equal(enriched.review.hasPhoto,true);
+assert.equal(enriched.review.visitDate,'2026-09-02');assert.equal(enriched.review.goodPoints.join(','),'act_good_points_4,act_good_points_7');
 assert.equal(c.tickerItems().find(item=>item.activityId==='Playgrounds/2').review,null);
 context.poiCont.adata[0].score='act_score_1';
 context.poiCont.adata[0].updated_by_username='review_editor';

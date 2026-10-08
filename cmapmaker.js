@@ -116,6 +116,22 @@ class CMapMaker extends IndoorControl {
         return this.detailLibrariesPromise;
     }
 
+    async loadChangeReviewRows(osmId) {
+        this.changeReviewRequests ??= new Map();
+        if (this.changeReviewRequests.has(osmId)) return this.changeReviewRequests.get(osmId);
+        const request = (async () => {
+            const url = new URL(Conf.activity.url, location.href);
+            ["summary", "limit", "updated_since", "bbox", "osmids", "id"].forEach(key => url.searchParams.delete(key));
+            url.searchParams.set("osmid", osmId);
+            const rows = await gSheet.get(url.href, { throwOnError: true });
+            poiCont.setActdata([...poiCont.adata.filter(row => row.osmid !== osmId), ...rows]);
+            return rows;
+        })();
+        this.changeReviewRequests.set(osmId, request);
+        try { return await request; }
+        finally { this.changeReviewRequests.delete(osmId); }
+    }
+
     showChangeTicker() {
         const setting = Conf.changes?.ticker;
         if (setting?.use !== true || !mapLibre.map) return;
@@ -132,14 +148,24 @@ class CMapMaker extends IndoorControl {
                 await changesController.loadInitialHistory?.();
                 return changesController.tickerItems(setting.maxItems);
             },
+            detailsProvider: async events => {
+                const ids = [...new Set(events.filter(event => event.activityId
+                    && /^(node|way|relation)\/\d+$/.test(event.osmId || "")).map(event => event.osmId))];
+                await Promise.all(ids.map(id => this.loadChangeReviewRows(id)));
+                const reviews = new Map(changesController.tickerItems(setting.maxItems)
+                    .filter(event => event.activityId).map(event => [event.activityId, event]));
+                return events.map(event => {
+                    const updated = event.activityId ? reviews.get(event.activityId) || event : event;
+                    return updated.review ? { ...updated, review: { ...updated.review,
+                        goodPoints: (updated.review.goodPoints || []).map(key => glot.get?.(key) || key),
+                        visitDateLabel: glot.get?.("actdate") || "訪問日"
+                    } } : updated;
+                });
+            },
             onSelect: async (event) => {
                 if (!/^(node|way|relation)\/\d+$/.test(event.osmId || "")) return false;
                 if (event.activityId && !poiCont.adata.some(row => row.id === event.activityId)) {
-                    const url = new URL(Conf.activity.url, location.href);
-                    ["summary", "limit", "updated_since", "bbox", "osmids", "id"].forEach(key => url.searchParams.delete(key));
-                    url.searchParams.set("osmid", event.osmId);
-                    const rows = await gSheet.get(url.href, { throwOnError: true });
-                    poiCont.setActdata([...poiCont.adata.filter(row => row.osmid !== event.osmId), ...rows]);
+                    await this.loadChangeReviewRows(event.osmId);
                 }
                 await poiCont.select(event.osmId, true, 0, event.coordinates);
                 if (event.activityId) await this.viewDetail(event.osmId, event.activityId);

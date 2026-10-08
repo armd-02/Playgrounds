@@ -40,7 +40,7 @@ const make = (store = storage) => {
     const updates=await returned.checkOnStartup();
     assert.equal(updates.state,'changes');
     assert.equal(updates.results.length,2,'old OSM updates are excluded, new reviews retained');
-    assert.equal(values.get('sample.last-checked-at'),now.toISOString());
+    assert.equal(values.get('sample.last-checked-at.region.27'),now.toISOString());
     assert.equal(returned.tickerItems().find(item=>item.activityId).name,'Cinema A');
     const beforeCache=calls;
     assert.equal((await make().checkOnStartup()).state,'already');
@@ -49,8 +49,8 @@ const make = (store = storage) => {
     const failed=make();
     assert.equal((await failed.checkOnStartup()).state,'error');
     assert.equal(failed.results.length,0,'partial failures must not consume automatic notification day');
-    assert.equal(values.get('sample.last-checked-at'),'2026-10-09T00:00:00.000Z','review failure cannot advance successful checkpoint');
-    assert.equal(values.get('sample.last-shown-date'),'2026-10-09');
+    assert.equal(values.get('sample.last-checked-at.region.27'),'2026-10-09T00:00:00.000Z','review failure cannot advance successful checkpoint');
+    assert.equal(values.get('sample.last-shown-date.region.27'),'2026-10-09');
     failReviews=false;
     assert.equal((await make().checkOnStartup()).state,'empty','no updates after checkpoint');
     const manualFailure=make({getItem:()=>null,setItem:()=>{}});
