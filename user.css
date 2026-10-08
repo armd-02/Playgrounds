@@ -26,6 +26,14 @@
     margin-right: 0 !important;
 }
 
+.basemenu .dropdown:has(#main_menu.show) {
+    z-index: 1;
+}
+
+#mapid:has(#main_menu.show) .map-display-status {
+    display: none;
+}
+
 .basemenu a.col .title,
 .basemenu a.col .subtitle {
     display: inline-block;
@@ -1313,3 +1321,16 @@ img.slide {
 .change-feed-group details > summary { padding: .4rem .6rem; cursor: pointer; font-size: .85rem; }
 .change-feed-summary { display: block; color: #53635b; }
 .change-feed-unread { border-radius: .25rem; padding: .1rem .3rem; background: #e2f0ff; color: #13579c; font-weight: 600; }
+.changes-modal__item[data-read-state="unread"] { background: #f0f7ff; }
+.changes-modal__item[data-read-state="unread"]:hover { background: #e5f0fc; }
+.change-feed-group:has(> .changes-modal__item[data-read-state="unread"]) > details { background: #f0f7ff; }
+
+/* Optional app preference: keep map categories available with less emphasis. */
+.category-secondary .map-category-control { font-size: .8rem; color: #626b67; }
+.category-secondary .map-category-control select { font-size: .8rem; background-color: #f6f8f7; }
+.category-secondary .map-category-control label { margin: 0; }
+.place-purpose-notice { margin: 0; padding: .35rem .5rem; color: #59665f; background: #f5f8f6; font-size: .78rem; }
+.place-purpose-notice[hidden] { display: none; }
+
+.poi-filter-caption { margin-left: .3rem; font-size: .8rem; }
+@media (max-width: 1079px) { .poi-filter-caption { display: none; } }

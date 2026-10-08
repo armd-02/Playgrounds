@@ -127,8 +127,11 @@ class CMapMaker extends IndoorControl {
             buttonHosts: { desktop: "changesButtonDesktop", mobile: "changesButtonMobile" },
             seenStorageKey: `${Conf.etc?.localSave || "cmapmaker"}.changes-seen-items`,
             groupByPlace: true,
-            // Opening/reordering the panel must not initiate a refresh request.
-            itemsProvider: () => changesController.tickerItems(setting.maxItems),
+            // Fetch initial history only on an explicit opening; revisits reuse fetched results.
+            itemsProvider: async () => {
+                await changesController.loadInitialHistory?.();
+                return changesController.tickerItems(setting.maxItems);
+            },
             onSelect: async (event) => {
                 if (!/^(node|way|relation)\/\d+$/.test(event.osmId || "")) return false;
                 if (event.activityId && !poiCont.adata.some(row => row.id === event.activityId)) {
@@ -153,7 +156,7 @@ class CMapMaker extends IndoorControl {
     async autoShowChangeModal(regionCode) {
         const setting = Conf.changes?.ticker;
         if (Conf.changes?.use !== true || setting?.use !== true || setting.autoOpen === false
-            || !regionCode || this.changeAutoOpening || changeTicker.isOpen || changeTicker.opening) return false;
+            || changesController.initialVisit || !regionCode || this.changeAutoOpening || changeTicker.isOpen || changeTicker.opening) return false;
         this.changeAutoOpening = true;
         try {
             const map = mapLibre.map;
@@ -189,7 +192,6 @@ class CMapMaker extends IndoorControl {
                 changesController.results = [];
                 changeTicker.hide();
                 await changesController.checkOnStartup();
-                await changesController.checkActivityChanges?.(Conf.activity);
                 this.displayedChangeRegion = region.code;
                 this.showChangeTicker();
                 await this.autoShowChangeModal(region.code);
@@ -224,13 +226,12 @@ class CMapMaker extends IndoorControl {
 
         changesController.config = Conf.changes ?? {};
         const changeResult = await changesController.checkOnStartup();
-        await changesController.checkActivityChanges?.(Conf.activity);
         this.displayedChangeRegion = changesController.read?.(changesController.key("last-region"));
         if (Conf.changes?.ticker?.use === true) {
             this.showChangeTicker();
-            await this.autoShowChangeModal(this.displayedChangeRegion);
+            if (changeResult.state !== "first" && !shownToday) await this.autoShowChangeModal(this.displayedChangeRegion);
         }
-        if (Conf.changes?.ticker?.use === true && changesController.results.length) {
+        if (changeResult.state !== "first" && Conf.changes?.ticker?.use === true && changesController.results.length) {
             intro.hidden = true;
             return;
         }
@@ -440,6 +441,7 @@ class CMapMaker extends IndoorControl {
                         if (ready) cMapMaker.viewPoi(listTable.getSelCategory());
                     }).catch(error => console.warn("MapFeature3D: marker refresh failed", error));
                     mapLibre.addControl("top-left", "baselist", basehtml, "mapLibre-control m-0 p-0"); // Make: base list
+                    document.querySelector(".basemenu")?.classList.toggle("category-secondary", Conf.searchUi?.categoryPresentation === "secondary");
                     setBGImage(Conf.listTable.backgroundImage)
                     mapLibre.addControl("bottom-right", "dummy", " ", "");
 
@@ -1154,6 +1156,17 @@ class CMapMaker extends IndoorControl {
                     });
             }
         })
+    }
+
+    syncPoiStatus(osmid) {
+        const record = poiStatusCont.getRecord(osmid);
+        for (const kind of ["visited", "favorite"]) {
+            const button = document.getElementById(kind);
+            if (!button || button.name !== osmid) continue;
+            button.setAttribute("aria-pressed", String(record[kind]));
+            button.querySelector("i")?.classList.toggle("fa-solid", record[kind]);
+            button.querySelector("i")?.classList.toggle("fa-regular", !record[kind]);
+        }
     }
 
     togglePoiStatus(id) {

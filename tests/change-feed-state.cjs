@@ -38,8 +38,10 @@ const groups=ticker.eventGroups();assert.equal(groups.length,2);assert.equal(gro
  const displayed=ticker.content.querySelectorAll('.changes-modal__item');
  assert.equal(displayed.length,2); // Hidden group members are not instantiated yet.
  assert.ok(displayed[0].children[0].children.some(node=>node.className==='change-feed-unread'));
+ assert.equal(displayed[0].dataset.readState,'unread');
  observer.callback([{target:displayed[0],isIntersecting:true,intersectionRatio:1},{target:displayed[1],isIntersecting:false,intersectionRatio:0}]);
  assert.equal(ticker.unreadEvents().length,1);
+ assert.equal(displayed[0].dataset.readState,'unread'); // Keep the opening state visible while reading.
  assert.equal(ticker.unreadEvents([events[0]]).length,0); // Viewing a summary reads the updates it represents.
  assert.equal(ticker.unreadEvents([events[2]]).length,1); // An offscreen group remains unread.
  observer.callback([{target:displayed[1],isIntersecting:true,intersectionRatio:0.2}]);
@@ -50,7 +52,10 @@ const groups=ticker.eventGroups();assert.equal(groups.length,2);assert.equal(gro
  details.open=true;details.listeners.toggle();
  assert.equal(ticker.content.querySelectorAll('.changes-modal__item').length,3);
  ticker.markEventsSeen(events);assert.equal(ticker.unreadEvents().length,0);
+ ticker.renderList();
+ assert.ok(ticker.content.querySelectorAll('.changes-modal__item').every(item=>item.dataset.readState==='read'));
  ticker.setItems([...events,{...events[0],timestamp:400}]);assert.equal(ticker.unreadEvents().length,1);
+ assert.ok(ticker.content.querySelectorAll('.changes-modal__item').some(item=>item.dataset.readState==='unread'));
  const other=new context.Ticker();other.config={seenStorageKey:'sample.seen'};other.currentEvents=events;assert.equal(other.unreadEvents().length,0);
  context.window.localStorage.getItem=()=>{throw new Error('Denied');};context.window.localStorage.setItem=()=>{throw new Error('Denied');};
  assert.doesNotThrow(()=>ticker.markEventsSeen(events));assert.equal(requests,0);

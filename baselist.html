@@ -22,7 +22,7 @@
         <button class="btn btn-sm btn-outline-primary poi-toolbar-button flex-shrink-0" type="button"
             id="poiFilterButton" onclick="poiFilterController.open('search')"
             aria-haspopup="dialog" aria-controls="poiFilterModal" aria-label="詳しい条件" data-area-aria="placeFilter_title" title="詳しい条件" data-glot-title="placeFilter_title">
-            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i><span class="poi-filter-caption" data-area-label="placeFilter_title"></span>
         </button>
         <aside id="mapDisplayStatus" class="map-display-status" aria-label="地図の表示状態" data-area-aria="mapDisplay_label">
             <div class="map-display-row">
@@ -48,8 +48,8 @@
 
     </div>
     <!--セレクト&ボタン-->
-    <div class="col-4 d-flex align-items-center ps-0 pe-0">
-        <div class="h-100 d-flex align-items-center text-nowrap p-1"><span glot-model="cat_select"></span></div>
+    <div class="col-4 d-flex align-items-center ps-0 pe-0 map-category-control">
+        <div class="h-100 d-flex align-items-center text-nowrap p-1"><label for="list_category" glot-model="listCategory"></label></div>
         <select class="form-select me-1" id="list_category"></select>
     </div>
 

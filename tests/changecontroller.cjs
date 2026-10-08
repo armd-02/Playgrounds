@@ -44,8 +44,8 @@ const controller = new context.ChangeController({ use: true, apiUrl: 'https://ap
     assert.equal(outcome.state, 'changes');
     assert.equal(outcome.results.length, 3); // new, updated, favorite updated; duplicate query result removed
     assert(requests.some(url => url.includes('mode=objects') && url.includes('way%2F2')));
-    assert(requests.some(url => url.includes('created_from=2026-08-27') && url.includes('created_to=2026-09-27')));
-    assert(requests.some(url => url.includes('from=2026-08-27') && url.includes('to=2026-09-27')));
+    assert(requests.some(url => url.includes('created_from=2026-09-26') && url.includes('created_to=2026-09-27')));
+    assert(requests.some(url => url.includes('from=2026-09-26') && url.includes('to=2026-09-27')));
     assert.equal(controller.read(controller.key('last-checked-at')), '2026-09-27T00:00:00.000Z');
     const tickerItems = controller.tickerItems(3);
     assert.equal(tickerItems.length, 3);
@@ -73,15 +73,17 @@ const controller = new context.ChangeController({ use: true, apiUrl: 'https://ap
     assert.equal(requests.length, requestsBeforeCache + 1); // Prefecture data only; no OSM query.
     assert.equal(JSON.stringify(cachedController.tickerItems().find(item => item.osmId === 'way/1').coordinates), '[135.5,34.7]');
     values.delete('test.osm-cache-version');
+    values.set('test.last-checked-at', '2026-09-26T00:00:00.000Z');
     const beforeMigration=requests.length;
     assert.equal((await cachedController.checkOnStartup()).state,'changes');
     assert(requests.length>beforeMigration);
     assert.equal(cachedController.tickerItems().find(item=>item.osmId==='way/1').editorName,'osm_mapper');
-    assert.equal(values.get('test.osm-cache-version'),'2');
+    assert.equal(values.get('test.osm-cache-version'),'3');
     const beforeSameRegion = requests.length;
     await cachedController.checkOnStartup();
     assert.equal(requests.length, beforeSameRegion);
     cachedController.region = async () => ({code:'28',name:'兵庫県'});
+    values.set('test.last-checked-at', '2026-09-26T00:00:00.000Z');
     assert.equal((await cachedController.checkOnStartup()).state, 'changes');
     assert.equal(values.get('test.last-region'),'28');
     assert(requests.slice(beforeSameRegion).some(url => new URL(url).searchParams.get('prefecture_code') === '28'));
@@ -115,8 +117,13 @@ const controller = new context.ChangeController({ use: true, apiUrl: 'https://ap
     const requestsBeforeFirst = requests.length;
     const firstController = new context.ChangeController(controller.config,
         { fetch, storage: firstStorage, now: () => new Date('2026-09-27T00:00:00.000Z') });
-    assert.equal((await firstController.checkOnStartup()).state, 'changes');
-    assert(requests.length > requestsBeforeFirst);
+    assert.equal((await firstController.checkOnStartup()).state, 'first');
+    assert.equal(requests.length, requestsBeforeFirst + 1); // Region only, no historical queries.
+    assert.equal((await firstController.checkOnStartup()).state, 'first');
+    assert.equal(firstController.results.length, 0);
+    await firstController.loadInitialHistory();
+    assert.equal(firstController.results.length, 3);
+    assert.equal((await firstController.checkOnStartup()).state, 'first'); // Manual history never enables auto display.
     assert.equal(firstStorage.getItem('test.last-checked-at'), '2026-09-27T00:00:00.000Z');
     const monthEnd = new Date('2026-03-31T03:00:00.000Z');
     assert.equal(new Date(controller.monthsAgo(monthEnd, 1)).toISOString(), '2026-02-28T03:00:00.000Z');

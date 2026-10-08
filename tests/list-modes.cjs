@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const values = new Map();
-let listClick;
+let listClick;const synced=[];
 const listArea = { addEventListener: (type, listener) => { if (type === 'click') listClick = listener; },
     contains: () => true };
 const status = { visited: true, favorite: false, memo: 'keep' };
@@ -12,7 +12,7 @@ const context = { Conf: { etc: { localSave: 'playgrounds' } }, Date,
         setValueByOSMID: (_id, visited, favorite, memo) => {
             status.visited = visited; status.favorite = favorite; status.memo = memo;
         } },
-    cMapMaker: { viewPoi: () => {} }, list_category: { value: '-' },
+    cMapMaker: { viewPoi: () => {},syncPoiStatus:id=>synced.push(id) }, list_category: { value: '-' },
     localStorage: { getItem: key => values.get(key) ?? null,
         setItem: (key, value) => values.set(key, value) } };
 vm.createContext(context);
@@ -45,6 +45,6 @@ for (const [kind, expected] of [['favorite', true], ['visited', false]]) {
     assert.equal(status[kind], expected);
 }
 assert.equal(status.memo, 'keep');
-assert.equal(selected, 0);
+assert.equal(selected, 0);assert.deepEqual(synced,['way/1','way/1']);
 assert(prevented && stopped);
 console.log('PASS: recent history order, deduplication, limit, and active mode refresh');

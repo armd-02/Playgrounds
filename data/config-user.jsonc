@@ -39,8 +39,8 @@
         "use": true,
         "apiUrl": "https://armd-01.sakura.ne.jp/osm-japan-changes/api.php",
         "storageKeyPrefix": "playgrounds-changes",
-        "reviews": { "use": true },
-        "minLookbackMonths": 1, // 毎回最低1か月分を確認
+        "reviews": { "use": true, "labelKey": "changeFeed_reviewLabel", "placeLabelKey": "changeFeed_reviewPlace" },
+        "minLookbackMonths": 1, // 初回に手動で過去履歴を開く際は最低1か月分を確認
         "maxLookbackMonths": 6, // 前回が古くても半年で打ち切る
         "ticker": { "use": true, "autoOpen": true, "displayDuration": 10000, "maxItems": 30,
             "mobileLabelKey": "changeFeed_reviewsTitle", "mobileLabel": "公園／遊具の口コミや情報更新", "sourceLabel": "OpenStreetMap" },
@@ -78,7 +78,7 @@
         "use": true, // 敷地と、その内側にある地物・Activityを1敷地1レコードへまとめる
         "areaTargets": ["Playgrounds_Park"], // 検索対象のOverpass target（公園以外も指定可能）
         "featureTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // 敷地へ紐づける地物のtarget（空配列なら全target）
-        "detailPlayTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // 公園詳細の設備欄で遊具としてまとめるtarget
+        "detailPlayTargets": ["Playgrounds_Play"], // 公園詳細の設備欄で遊具としてまとめるtarget
         "mapMode": "allVisibleFeatures", // 通常時は敷地外を含む表示対象POIも地図に表示
         "parentMarkerBelowZoomTargets": ["Playgrounds_Play", "Playgrounds_Etc"], // カテゴリ選択時、各targetのpoiZoom未満では親敷地マーカーを表示。空配列・未指定なら無効
         "maxParentDepth": 8, // 入れ子の敷地を親方向へたどる上限
@@ -95,6 +95,7 @@
         "scoreCodePattern": "act_score_(\\d+)$",
         "scoreCodeOffset": 1
     },
+    "searchUi": { "categoryPresentation": "secondary" }, // 主導線は目的・表示。カテゴリ機能は控えめに残す
     "areaSearch": {
         "previewCounts": false,
         "apiUrl": "activity-search.php", // basic設定の低ズーム検索。activity.urlを基準に解決

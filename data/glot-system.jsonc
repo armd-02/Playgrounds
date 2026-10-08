@@ -1,4 +1,10 @@
 {
+    "facility_toilet_details": {"ja": "トイレの詳細を見る", "en": "View toilet details"},
+    "listCategory": {"ja": "種類", "en": "Category"},
+    "discovery_purposeHelp": {"ja": "登録済みの特徴・口コミで簡単に絞り込み", "en": "Quick filters using registered features and reviews"},
+    "discovery_registeredFeatures": {"ja": "登録済みの特徴・口コミで絞り込み中。情報未登録の場所も、条件に合う可能性があります。", "en": "Filtered by registered features and reviews. Places with missing information may also suit your purpose."},
+    "changeFeed_reviewPlace": {"ja": "場所の口コミ", "en": "Review of a place"},
+    "changeFeed_reviewLabel": {"ja": "口コミ", "en": "Reviews"},
     "poiFilter_visitAny": { "ja": "すべて", "en": "All" },
     "poiFilter_apply": { "ja": "条件で絞り込む", "en": "Apply filters" },
     "poiFilter_scope": { "ja": "表示中の地図の範囲から探します", "en": "Search within the current map view" },

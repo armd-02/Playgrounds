@@ -147,7 +147,7 @@ assert.equal(modal.changeHeadline({kind:'regionalCreated',name:'ブランコ',pa
 assert.equal(modal.changeHeadline({kind:'regionalCreated',name:'ブランコ',region:'福井県'}), 'ブランコが地図に追加されました');
 assert.equal(modal.changeHeadline({kind:'regionalUpdated',name:'丸山公園'}), '丸山公園の地図情報が更新されました');
 assert.equal(modal.changeHeadline({kind:'reviewCreated',name:'ブランコ',parkName:'十三東公園'}), '十三東公園に新しい口コミが投稿されました');
-assert.equal(modal.changeHeadline({kind:'reviewUpdated',name:'馬の乗物',review:{title:'馬の乗物'}}), '公園・遊具の口コミが更新されました');
+assert.equal(modal.changeHeadline({kind:'reviewUpdated',name:'馬の乗物',review:{title:'馬の乗物'}}), '施設の口コミが更新されました');
 assert.equal(changeButton.children[0].children[0].textContent, '新着');
 assert.equal(changeButton.children[0].children[2].textContent, '編集：osm_mapper');
 assert.equal(changeButton.children[0].children[2].className, 'changes-modal__editor');

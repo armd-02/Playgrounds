@@ -33,8 +33,8 @@ vm.runInContext(read('lib/newstickerview.js') + '\nthis.NewsTicker = NewsTicker;
 vm.runInContext(read('lib/changecontroller.js') + '\nthis.ChangeController = ChangeController;', context);
 const ticker = new context.NewsTicker();
 assert.equal(ticker.changeHeadline({ kind: 'reviewCreated' }), 'A new review was posted for Map feature');
-assert.equal(ticker.changeHeadline({ kind: 'reviewUpdated', name: '公園・遊具の口コミ' }),
-    'A review for Parks and playground equipment was updated');
+assert.equal(ticker.changeHeadline({ kind: 'reviewUpdated', name: dictionaries.changeFeed_reviewPlace[glot.lang] }),
+    'A review for Facility was updated');
 assert.equal(ticker.changeHeadline({ kind: 'regionalCreated', parkName: 'Central Park', name: 'Slide' }),
     'Slide in Central Park was added to the map');
 assert.equal(ticker.label('newCount', '', { count: 3 }), '3 new updates');
@@ -42,8 +42,8 @@ assert.equal(ticker.formatDate('2026-10-05'), 'Oct 5');
 assert.equal(ticker.formatDate('2026-10'), 'Oct');
 const config = vm.runInNewContext('(' + read('data/config-user.jsonc') + ')').changes;
 const controller = new context.ChangeController(config);
-controller.results = [{ kind: 'reviewUpdated', target: { label: '口コミ' },
-    item: { osmid: 'node/1', activityId: 'test/1', name: '公園・遊具の口コミ', updated_at: '2026-10-05T00:00:00Z' } }];
+controller.results = [{ kind: 'reviewUpdated', target: { id: 'review' },
+    item: { osmid: 'node/1', activityId: 'test/1', name: '', updated_at: '2026-10-05T00:00:00Z' } }];
 const event = controller.tickerItems()[0];
 assert.equal(event.name, 'Park and playground reviews');
 assert.equal(event.category, 'Reviews');
@@ -59,7 +59,7 @@ for (const match of source.matchAll(/this\.label\("([^"]+)"/g)) {
     assert.ok(dictionaries[`changeFeed_${match[1]}`]?.en, `English label missing: ${match[1]}`);
 }
 glot.lang = 'ja';
-assert.equal(ticker.changeHeadline({ kind: 'reviewCreated', name: '公園・遊具の口コミ' }), '公園・遊具に新しい口コミが投稿されました');
+assert.equal(ticker.changeHeadline({ kind: 'reviewCreated', name: dictionaries.changeFeed_reviewPlace[glot.lang] }), '施設に新しい口コミが投稿されました');
 assert.equal(ticker.formatDate('2026-10-05'), '10月5日');
 assert.equal(controller.targetLabel(config.targets.find(target => target.id === 'park')), '公園');
 console.log('PASS: startup language, English fallback, review/map updates, dates, config labels, and Japanese preservation');

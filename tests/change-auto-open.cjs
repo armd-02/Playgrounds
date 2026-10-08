@@ -22,10 +22,12 @@ class Changes {
     async checkActivityChanges() {}
     tickerItems() { return this.results; }
 }
+const intro = {hidden:true,style:{setProperty(){}},querySelector:()=>({}),addEventListener(){}};
+const closeButton = {addEventListener(){}};
 const context = {
     console, Date, Map,
-    window: { navigator: { language: 'ja' }, localStorage: { getItem: () => null } },
-    document: { getElementById: () => ({hidden:false}) },
+    window: { navigator: { language: 'ja' }, localStorage: { getItem: key => storage.get(key) ?? null, setItem: (key,value)=>storage.set(key,value) }, addEventListener(){},removeEventListener(){},requestAnimationFrame(fn){fn();} },
+    document: { getElementById: id => id==='cMapIntro'?intro:id==='cMapIntroClose'?closeButton:({hidden:false}),querySelector:()=>null },
     IndoorControl: stub, Glottologist: stub, Basic: stub, PoiStatusCont: stub, OverPassControl: stub,
     Maplibre: class { map = { getContainer: () => ({}), isMoving: () => moving, once: (_event, callback) => { moveEnded = callback; } }; },
     GeoCont: stub, ListTable: stub, PoiCont: stub, PlaygroundModelFactories: {}, MapFeature3D: stub,
@@ -34,10 +36,23 @@ const context = {
     Conf: { changes: {use:true,ticker:{use:true,mobileLabel:'更新'}}, intro:{use:false} }
 };
 vm.createContext(context);
-vm.runInContext(fs.readFileSync('cmapmaker.js','utf8') + '\nthis.fixture={cMapMaker,changeTicker,changesController};',context);
+vm.runInContext(fs.readFileSync('cmapmaker.js','utf8') + '\nthis.fixture={cMapMaker,changeTicker,changesController,poiStatusCont};',context);
 context.Conf = { changes: {use:true,ticker:{use:true,mobileLabel:"更新"}}, intro:{use:false} };
 const {cMapMaker:maker,changeTicker:ticker,changesController:controller} = context.fixture;
 (async () => {
+    const startup = controller.checkOnStartup.bind(controller);
+    controller.checkOnStartup = async () => {controller.initialVisit=true;controller.results=[];return {state:'first'};};
+    context.Conf.intro={use:true,storageKey:'intro'};
+    await maker.initDailyIntro();
+    assert.equal(opens,0,'first visit with updates must never auto-open history');
+    assert.equal(intro.hidden,false,'first visit prioritizes normal guide');
+    await maker.initDailyIntro();
+    assert.equal(intro.hidden,true,'same-day reload must not repeat guide');
+    controller.results=[{name:'historical update'}];
+    await maker.autoShowChangeModal('27');
+    assert.equal(opens,0,'first-day manual history cannot later auto-open on movement');
+    storage.delete('intro');context.Conf.intro={use:false};
+    controller.initialVisit=false;controller.checkOnStartup=startup;
     await maker.initDailyIntro();
     assert.equal(opens,1,'startup opens unseen changes');
     assert.equal(storage.get('test-changes.auto-shown.27'),day);
@@ -76,5 +91,14 @@ const {cMapMaker:maker,changeTicker:ticker,changesController:controller} = conte
     ticker.hide(); day='2026-10-10'; context.Conf.changes.ticker.autoOpen=false;
     await maker.autoShowChangeModal('28');
     assert.equal(opens,4,'configuration can disable automatic display');
+    const buttons = Object.fromEntries(['visited','favorite'].map(kind=>[kind,{name:'way/1',
+        setAttribute(key,value){this[key]=value;},querySelector:()=>({classList:{toggle(){}}})}]));
+    context.document.getElementById=id=>buttons[id];
+    context.fixture.poiStatusCont.getRecord=()=>({visited:true,favorite:false});
+    maker.syncPoiStatus('way/1');
+    assert.equal(buttons.visited['aria-pressed'],'true');
+    assert.equal(buttons.favorite['aria-pressed'],'false');
+    maker.syncPoiStatus('way/2');
+    assert.equal(buttons.visited['aria-pressed'],'true','another POI must not overwrite the open detail');
     console.log('PASS: prefecture/day auto display, seen/empty feeds, movement and overlapping calls');
 })().catch(error => { console.error(error); process.exitCode=1; });
