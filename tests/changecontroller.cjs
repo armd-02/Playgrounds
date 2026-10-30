@@ -54,14 +54,22 @@ const controller = new context.ChangeController({ use: true, apiUrl: 'https://ap
     assert.equal(newEntry.kind, 'regionalCreated');
     assert.equal(JSON.stringify(newEntry.coordinates), '[135.5,34.7]');
     assert.equal(newEntry.editorName, 'osm_mapper');
+    assert.equal(newEntry.mapInfo.tags.leisure, 'park');
+    assert.equal(newEntry.mapInfo.featureType, '公園');
+    context.poiCont = { get_osmid: () => ({ lnglat: [136, 35], geojson: { properties: {} } }) };
+    assert.equal(JSON.stringify(controller.tickerItems(3).find(item => item.osmId === 'way/1').coordinates),
+        '[135.5,34.7]', 'API coordinates take priority over an already loaded location');
     context.poiCont = { getCatnames: tags => {
         assert.equal(tags.playground, 'slide');
         return ['すべり台'];
     } };
     const categoryController = new context.ChangeController({}, { fetch, storage });
     categoryController.results = [{kind:'regionalCreated',target:{label:'遊具'},
-        item:{type:'node',id:10,tags:'{"playground":"slide"}'}}];
+        item:{type:'node',id:10,tags:'{"playground":"slide","material":"wood","min_age":"3"}'}}];
     assert.equal(categoryController.tickerItems()[0].name, 'すべり台');
+    assert.equal(categoryController.tickerItems()[0].mapInfo.featureType, 'すべり台');
+    assert.equal(categoryController.tickerItems()[0].mapInfo.tags.material, 'wood');
+    assert.equal(categoryController.tickerItems()[0].mapInfo.tags.min_age, '3');
     delete context.poiCont;
     assert(tickerItems.some(item => item.headline.includes('新しい公園')
         && item.url === 'https://www.openstreetmap.org/way/1'));

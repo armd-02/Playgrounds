@@ -50,6 +50,32 @@ function make(responses) {
     assert.equal(await once.controller.getOsmIds(['way/1566318775'], null, null, { retry: false }), undefined);
     assert.equal(once.calls.length, 1, 'explicit no-retry name hydration stays a single request');
 
+    const domestic = make([current]);
+    domestic.controller.UseServer = 2;
+    await domestic.controller.getOsmIds(['way/1566318775'], null, null, { fromChanges: true });
+    assert.deepEqual(domestic.calls.map(call => call.url), [servers[0]], 'new changes always try domestic first');
+    assert.equal(domestic.controller.UseServer, 2, 'domestic success preserves the ordinary server');
+
+    const changes = make([stale, current, current]);
+    changes.controller.UseServer = 2;
+    const cooldown = Date.now() + 60000;
+    changes.controller.ServerCooldowns.set(servers[0], cooldown);
+    await changes.controller.getOsmIds(['way/1566318775'], null, null, { fromChanges: true });
+    assert.deepEqual(changes.calls.map(call => call.url), servers.slice(0, 2));
+    assert.equal(changes.controller.UseServer, 2, 'fallback does not change the ordinary server');
+    assert.equal(changes.controller.ServerCooldowns.get(servers[0]), cooldown);
+    await changes.controller.getOsmIds(['way/1566318775']);
+    assert.equal(changes.calls.at(-1).url, servers[2], 'ordinary lookup still uses its original server');
+
+    const changesFailed = make([stale, stale]);
+    await assert.rejects(changesFailed.controller.getOsmIds(['way/1566318775'], null, null, { fromChanges: true }));
+    assert.deepEqual(changesFailed.calls.map(call => call.url), servers.slice(0, 2), 'changes never try the third server');
+    assert.equal(changesFailed.controller.UseServer, 0);
+
+    const httpFailed = make([Object.assign(new Error('bad gateway'), { status: 502 }), current]);
+    await httpFailed.controller.getOsmIds(['way/1566318775'], null, null, { fromChanges: true });
+    assert.deepEqual(httpFailed.calls.map(call => call.url), servers.slice(0, 2), 'HTTP failure falls back to the official server');
+
     const syntax = Object.assign(new Error('invalid query'), { status: 400 });
     const stopped = make([syntax, current]);
     await assert.rejects(stopped.controller.getOsmIds(['way/1566318775']), error => error === syntax);

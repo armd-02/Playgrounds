@@ -167,7 +167,10 @@ class CMapMaker extends IndoorControl {
                 if (event.activityId && !poiCont.adata.some(row => row.id === event.activityId)) {
                     await this.loadChangeReviewRows(event.osmId);
                 }
-                await poiCont.select(event.osmId, true, 0, event.coordinates);
+                const selection = poiCont.select(event.osmId, true, 0, event.coordinates, { fromChanges: true });
+                // 座標で移動を始めたら、詳細取得を待たず地図を見せる。
+                if (event.coordinates) changeTicker.modalInstance?.hide();
+                await selection;
                 if (event.activityId) await this.viewDetail(event.osmId, event.activityId);
                 return true;
             },
@@ -659,6 +662,7 @@ class CMapMaker extends IndoorControl {
         let msg = glot.get("about_message");
         msg = msg.replace(/\n/g, "<br>")  // 改行コードを<br>に変換
         msg = "<span class=`fs-5`>" + msg + "</span>"
+        msg += `<p class="mt-3 mb-0"><button type="button" class="participation-link fs-6" onclick="areaSearchController.open('research')" aria-haspopup="dialog" aria-controls="poiFilterModal">${glot.get("contribute_firstTime")}</button></p>`;
         mapLibre.viewMiniMap(false)
         winCont.makeDetail({ "title": glot.get("about"), "message": msg, "mode": "close", "menu": false })
         cMapMaker.changeMode("map")

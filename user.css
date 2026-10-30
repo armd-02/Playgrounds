@@ -65,7 +65,7 @@
     color: #126d49;
     padding: 3px 0;
     font: inherit;
-    font-size: 0.8rem;
+    font-size: 1rem;
     line-height: 1.4;
     text-align: left;
     text-decoration: underline;
@@ -196,6 +196,7 @@
 .changes-modal__badge { padding: 3px 9px; border-radius: 5px; background: #e5efff; color: #174b8a; font-weight: 700; }
 .changes-modal__badge--new { background: #dff3e8; color: #176342; }
 .changes-modal__name { display: block; margin: 9px 0 6px; font-size: 1.12rem; line-height: 1.5; overflow-wrap: anywhere; }
+.changes-modal__map-info { display: grid; gap: 3px; margin: 6px 0; color: #384957; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
 .changes-modal__hint { color: #526170; font-size: 0.8rem; }
 .changes-modal__review-title { display: block; margin: 6px 0; font-weight: 600; }
 .changes-modal__review-body { display: block; margin: 6px 0 10px; color: #384957; font-size: 0.9rem; line-height: 1.6; overflow-wrap: anywhere; }

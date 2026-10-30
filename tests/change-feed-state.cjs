@@ -48,7 +48,7 @@ const groups=ticker.eventGroups();assert.equal(groups.length,2);assert.equal(gro
  assert.equal(ticker.unreadEvents().length,1); // A sliver at the edge is not enough.
  observer.callback([{target:displayed[1],isIntersecting:true,intersectionRatio:1}]);
  assert.equal(ticker.unreadEvents().length,0); // Scrolling through the cards clears all unread updates.
- const section=ticker.content.children[1];const details=section.children[1].children[1];
+ const section=ticker.content.children[0];const details=section.children[1].children[1];
  ticker.config.detailsProvider=async events=>{detailsRequests++;return events.map(event=>({...event,review:{title:'口コミ '+event.activityId,body:'個別の本文 '+event.activityId,excerpt:'短い要約',score:3}}));};
  assert.equal(detailsRequests,0);
  details.open=true;await details.listeners.toggle();
@@ -63,7 +63,7 @@ const groups=ticker.eventGroups();assert.equal(groups.length,2);assert.equal(gro
  ticker.markEventsSeen(events);assert.equal(ticker.unreadEvents().length,0);
  ticker.renderList();
  assert.ok(ticker.content.querySelectorAll('.changes-modal__item').every(item=>item.dataset.readState==='read'));
- const retryDetails=ticker.content.children[1].children[1].children[1];
+ const retryDetails=ticker.content.children[0].children[1].children[1];
  ticker.config.detailsProvider=async()=>{throw Error('Unavailable');};
  retryDetails.open=true;await retryDetails.listeners.toggle();
  assert.equal(retryDetails.dataset.loaded,undefined);

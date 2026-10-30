@@ -4,6 +4,7 @@ const vm = require('node:vm');
 
 const calls = [];
 class Ticker {
+    modalInstance = { hide: () => calls.push(['hideModal']) };
     init(container, config) { calls.push(['init', container, config]); }
     setItems(items, options) { calls.push(['setItems', items, options]); }
     hide() { calls.push(['hide']); }
@@ -52,7 +53,13 @@ context.Conf = { changes: { ticker: { use: true, maxItems: 30, mobileLabel: '公
     assert.equal(calls[1][0], 'setItems');
     assert.equal(calls[1][1][0].headline, '新しい公園');
     assert.equal(await calls[0][2].onSelect({ osmId: 'way/219004605', coordinates: [135.5, 34.7] }), true);
-    assert.deepEqual(calls.at(-1), ['select', 'way/219004605', true, 0, [135.5, 34.7]]);
+    assert.equal(JSON.stringify(calls.find(call => call[0] === 'select')), JSON.stringify(['select', 'way/219004605', true, 0, [135.5, 34.7], { fromChanges: true }]));
+    let completeSelection;
+    context.fixture.poiCont.select = () => new Promise(resolve => { completeSelection = resolve; });
+    const pendingSelection = calls[0][2].onSelect({ osmId: 'way/1', coordinates: [135.5, 34.7] });
+    assert.equal(calls.at(-1)[0], 'hideModal', 'map is revealed before detail loading completes');
+    completeSelection();
+    assert.equal(await pendingSelection, true);
     assert.equal(await calls[0][2].onSelect({}), false);
     const mock = context.window.previewRandomChanges(3);
     assert.equal(mock.length, 3);
