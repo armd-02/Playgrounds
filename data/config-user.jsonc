@@ -160,8 +160,11 @@
         "flag": 0.5,
         "zoomSteps": { // ズームレベルに応じたマーカー倍率
             "marker": {
-                "baseScale": 0.5, // 最初のsteps.zoom未満
+                "baseScale": 0.005, // ズーム8未満はごく小さく表示
                 "steps": [
+                    { "zoom": 8, "scale": 0.01 },
+                    { "zoom": 10, "scale": 0.025 },
+                    { "zoom": 11, "scale": 0.05 },
                     { "zoom": 12, "scale": 0.1 },
                     { "zoom": 13, "scale": 0.2 },
                     { "zoom": 14, "scale": 0.3 },
@@ -171,8 +174,11 @@
                 ]
             },
             "shadow": {
-                "baseScale": 0.5, // 最初のsteps.zoom未満
+                "baseScale": 0.005, // ズーム8未満はごく小さく表示
                 "steps": [
+                    { "zoom": 8, "scale": 0.01 },
+                    { "zoom": 10, "scale": 0.025 },
+                    { "zoom": 11, "scale": 0.05 },
                     { "zoom": 12, "scale": 0.1 },
                     { "zoom": 13, "scale": 0.2 },
                     { "zoom": 14, "scale": 0.3 },
