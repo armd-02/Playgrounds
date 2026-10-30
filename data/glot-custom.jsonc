@@ -70,7 +70,7 @@
     "changeFeed_playground": {"ja": "遊具", "en": "Playground equipment"},
     "changeFeed_temple_shrine": {"ja": "寺社仏閣", "en": "Temples and shrines"},
     "changeFeed_cinema": {"ja": "映画館", "en": "Cinema"},
-    "placeFilter_title": {"ja": "詳しい条件", "en": "Detailed filters"},
+    "placeFilter_title": {"ja": "絞り込み", "en": "Detailed filters"},
     "placeFilter_apply": {"ja": "適用", "en": "Apply"},
     "placeFilter_search": {"ja": "この地図範囲を検索", "en": "Search this map area"},
     "placeFilter_loadedCount": {"ja": "読み込み済み：{count}件", "en": "Loaded matches: {count}"},
