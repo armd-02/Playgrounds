@@ -503,10 +503,18 @@ class CMapMaker extends IndoorControl {
                     list_keyword.setAttribute("placeholder", glot.get("searchKeyword"));
                     listTitle.innerHTML = glot.get("listTitle");
                     let resizeWaitTime;
+                    const isFormInputFocused = () => {
+                        const active = document.activeElement;
+                        return ["INPUT", "TEXTAREA", "SELECT"].includes(active?.tagName)
+                            || active?.isContentEditable === true;
+                    };
                     window.onresize = () => { // 画面サイズに合わせたコンテンツ表示切り替え
-                        winCont.resizeWindow();
                         clearTimeout(resizeWaitTime);
+                        // ソフトキーボードによる高さ変更では、入力欄を含むパネルを再配置しない。
+                        if (isFormInputFocused()) return;
+                        winCont.resizeWindow();
                         resizeWaitTime = setTimeout(() => {
+                            if (isFormInputFocused()) return;
                             winCont.setSidebar("redraw").then(() => {
                                 cMapMaker.makeImages(Conf.thumbnail.use);
                             });
